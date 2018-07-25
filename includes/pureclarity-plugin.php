@@ -4,6 +4,7 @@ class PureClarity_Plugin
 {
     static $pureclarity;
     private $settings;
+    private $template;
 
     public static function getInstance() {
         if ( self::$pureclarity === null ) {
@@ -16,6 +17,7 @@ class PureClarity_Plugin
     public function __construct() {
 
         $this->settings = new PureClarity_Settings();
+        $this->template = new PureClarity_Template( $this );
 		
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );

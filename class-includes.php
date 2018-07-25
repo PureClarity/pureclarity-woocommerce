@@ -8,6 +8,7 @@ if ( ! defined( 'PURECLARITY_PATH' ) ) {
 // Include required PureClarity classes
 require_once PURECLARITY_PATH . 'includes/pureclarity-plugin.php';
 require_once PURECLARITY_PATH . 'includes/pureclarity-settings.php';
+require_once PURECLARITY_PATH . 'includes/pureclarity-template.php';
 
 // Add admin only classes
 if ( is_admin() ) {
