@@ -19,6 +19,16 @@ class PureClarity_Admin
         add_action( 'admin_init', array( $this, 'add_settings' ) );
         wp_register_script( 'pureclarity-adminjs', plugin_dir_url( __FILE__ ) . 'js/pc-admin.js', array( 'jquery' ), PURECLARITY_VERSION );
         wp_enqueue_script(  'pureclarity-adminjs' );
+        add_action( 'wp_ajax_pureclarity_run_datafeed', array( $this, 'run_data_feed' ) );
+    }
+
+    public function run_data_feed() {
+        $response = array(
+            'totalPagesCount' => 23,
+            'finished'        => false,
+        );
+
+        wp_send_json( $response );
     }
 
     public function add_menus() {
