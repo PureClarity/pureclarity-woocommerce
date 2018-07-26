@@ -29,7 +29,8 @@ class PureClarity_Plugin
     }
 
     public function register_assets() {
-
+        wp_register_script( 'pureclarityjs', plugin_dir_url( __FILE__ ) . '../js/pc.js', array( 'jquery', 'wp-util' ), PURECLARITY_VERSION );
+        wp_enqueue_script(  'pureclarityjs' );
     }
 
     public function init() {

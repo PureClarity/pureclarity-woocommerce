@@ -29,4 +29,20 @@ class PureClarity_Settings
     public function get_prod_enabled() {
         return (string) get_option( 'pureclarity_prodlist_enabled', '' );
     }
+
+    public function get_api_url() {
+        $url = getenv('PURECLARITY_SCRIPT_URL');
+        if (empty($url)){
+            $url = "http://";
+        }
+        return $url;
+    }
+
+    public function get_search_selector() {
+        return "woocommerce-product-search-field-0";
+    }
+
+    public function get_search_result_element() {
+        return ".site-main";
+    }
 }
