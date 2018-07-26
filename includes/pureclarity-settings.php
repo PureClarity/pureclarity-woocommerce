@@ -8,6 +8,10 @@ class PureClarity_Settings
         add_option( 'pureclarity_search_enabled', 'no' );
         add_option( 'pureclarity_merch_enabled', 'no' );
         add_option( 'pureclarity_prodlist_enabled', 'no' );
+        add_option( 'pureclarity_prodfeed_run', '0' );
+        add_option( 'pureclarity_catfeed_run', '0' );
+        add_option( 'pureclarity_brandfeed_run', '0' );
+        add_option( 'pureclarity_userfeed_run', '0' );
     }
     
     public function get_accesskey() {
@@ -44,5 +48,21 @@ class PureClarity_Settings
 
     public function get_search_result_element() {
         return ".site-main";
+    }
+
+    public function get_prodfeed_run() {
+        return get_option( 'pureclarity_prodfeed_run', '0' ) == '1';
+    }
+
+    public function get_catfeed_run() {
+        return get_option( 'pureclarity_catfeed_run', '0' ) == '1';
+    }
+
+    public function get_brandfeed_run() {
+        return get_option( 'pureclarity_brandfeed_run', '0' ) == '1';
+    }
+
+    public function get_userfeed_run() {
+        return get_option( 'pureclarity_userfeed_run', '0' ) == '1';
     }
 }

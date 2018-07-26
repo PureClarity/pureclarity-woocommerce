@@ -2,9 +2,12 @@
 
 class PureClarity_Admin
 {
-    private $slug = 'pureclarity';
-    private $section = 'pureclarity_section_settings';
-    private $option_group = 'pureclarity_settings';
+    private $settings_slug = 'pureclarity-settings';
+    private $settings_section = 'pureclarity_section_settings';
+    private $datafeed_slug = 'pureclarity-datafeed';
+    private $datafeed_section = 'pureclarity_section_datafeed';
+    private $settings_option_group = 'pureclarity_settings';
+    private $datafeed_option_group = 'pureclarity_datafeed';
     private $plugin;
     private $settings;
 
@@ -14,7 +17,8 @@ class PureClarity_Admin
         $this->settings = $this->plugin->get_settings();
         add_action( 'admin_menu', array( $this, 'add_menus' ) );
         add_action( 'admin_init', array( $this, 'add_settings' ) );
-
+        wp_register_script( 'pureclarity-adminjs', plugin_dir_url( __FILE__ ) . 'js/pc-admin.js', array( 'jquery' ), PURECLARITY_VERSION );
+        wp_enqueue_script(  'pureclarity-adminjs' );
     }
 
     public function add_menus() {
@@ -22,70 +26,109 @@ class PureClarity_Admin
             'PureClarity',
             'PureClarity',
             'manage_options',
-            $this->slug,
-            array( $this, 'render' ),
+            $this->settings_slug,
+            array( $this, 'settings_render' ),
             ''
+        );
+
+        add_submenu_page(
+            $this->settings_slug,
+            'PureClarity: Settings',
+            'Settings',
+            "manage_options",
+            $this->settings_slug,
+            array( $this, 'settings_render' )
+        );
+
+        add_submenu_page(
+            $this->settings_slug,
+            'PureClarity: Data Feed Management',
+            'Data Feeds',
+            "manage_options",
+            $this->datafeed_slug,
+            array( $this, 'datafeed_render' )
         );
     }
 
-    public function render() {
+    public function settings_render() {
         include_once( 'views/settings-page.php' );
+    }
+
+    public function datafeed_render() {
+        include_once( 'views/datafeed-page.php' );
     }
 
     public function add_settings() {
 
         add_settings_section(
-			$this->section,
+			$this->settings_section,
 			null,
-			array( $this, 'print_section_text' ),
-			$this->slug
+			array( $this, 'print_settings_section_text' ),
+			$this->settings_slug
         );
         
         add_settings_field(
 			'pureclarity_accesskey',
 			'Access Key',
 			array( $this, 'accesskey_callback' ),
-			$this->slug,
-			$this->section
+			$this->settings_slug,
+			$this->settings_section
         );
 
         add_settings_field(
 			'pureclarity_secretkey',
 			'Secret Key',
 			array( $this, 'secretkey_callback' ),
-			$this->slug,
-			$this->section
+			$this->settings_slug,
+			$this->settings_section
         );
 
         add_settings_field(
 			'pureclarity_search_enabled',
 			'Enable Search',
 			array( $this, 'search_enabled_callback' ),
-			$this->slug,
-			$this->section
+			$this->settings_slug,
+			$this->settings_section
         );
 
         add_settings_field(
 			'pureclarity_merch_enabled',
 			'Enable Merchandizing',
 			array( $this, 'merch_enabled_callback' ),
-			$this->slug,
-			$this->section
+			$this->settings_slug,
+			$this->settings_section
         );
 
         add_settings_field(
 			'pureclarity_prodlist_enabled',
 			'Enable Product Listing',
 			array( $this, 'prodlist_enabled_callback' ),
-			$this->slug,
-			$this->section
+			$this->settings_slug,
+			$this->settings_section
         );
 
-        register_setting( $this->option_group, 'pureclarity_accesskey', 'sanitize_callback' );
-        register_setting( $this->option_group, 'pureclarity_secretkey', 'sanitize_callback' );
-        register_setting( $this->option_group, 'pureclarity_search_enabled', array( $this, 'sanitize_checkbox' ) );
-        register_setting( $this->option_group, 'pureclarity_merch_enabled', array( $this, 'sanitize_checkbox' ) );
-        register_setting( $this->option_group, 'pureclarity_prodlist_enabled', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->settings_option_group, 'pureclarity_accesskey', 'sanitize_callback' );
+        register_setting( $this->settings_option_group, 'pureclarity_secretkey', 'sanitize_callback' );
+        register_setting( $this->settings_option_group, 'pureclarity_search_enabled', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->settings_option_group, 'pureclarity_merch_enabled', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->settings_option_group, 'pureclarity_prodlist_enabled', array( $this, 'sanitize_checkbox' ) );
+
+
+        add_settings_section(
+			$this->datafeed_section,
+			null,
+			array( $this, 'print_datafeed_section_text' ),
+			$this->datafeed_slug
+        );
+
+        add_settings_field(
+			'pureclarity_product_feed',
+			'Run Product Feed',
+			array( $this, 'product_feed_callback' ),
+			$this->datafeed_slug,
+			$this->datafeed_section
+        );
+
     }
 
     public function accesskey_callback() {
@@ -148,14 +191,20 @@ class PureClarity_Admin
         <?php
 
     }
+
     
     public function sanitize_checkbox( $value ) {
 		return $value === 'on' ? 'yes' : 'no';
     }
 
-    public function print_section_text() {
+    public function print_settings_section_text() {
 		echo '<p>' . 'Configure PureClarity access credentials. You can find them in PureClarity Admin console.' . '</p>';
 		echo '<p>' . 'Once you have input the credentials you can then run a data feed.' . '</p>';
+		echo '<p>' . wp_kses_post( 'To create an account simply contact the ? <a href="https://www.pureclarity.com" target="_blank">PureClarity</a> team to get one set up and start your free trial today!' ) . '</p>';
+    }
+    
+    public function print_datafeed_section_text() {
+		echo '<p>Data Feeds etc.</p>';
 		echo '<p>' . wp_kses_post( 'To create an account simply contact the ? <a href="https://www.pureclarity.com" target="_blank">PureClarity</a> team to get one set up and start your free trial today!' ) . '</p>';
 	}
 
