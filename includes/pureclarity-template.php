@@ -29,6 +29,7 @@ class PureClarity_Template {
             "apiUrl" => $settings->get_api_url(),
             "searchSelector" => $settings->get_search_selector(),
             "isSearch" => is_search(),
+            "isCategory" => is_product_category(),
             "searchResultsDOMSelector" => $searchResultsDOMSelector
         );
         

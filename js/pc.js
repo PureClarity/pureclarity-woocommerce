@@ -26,6 +26,12 @@ var PureClarity = {
             }
         }
 
+        if (this.config.prodListEnabled){
+            if (this.config.isCategory){
+                console.log("Is Category!");
+            }
+        }
+
         (function (w, d, s, u, f) {
             w['PureClarityObject'] = f;w[f] = w[f] || function () { 
                 (w[f].q = w[f].q || []).push(arguments)
