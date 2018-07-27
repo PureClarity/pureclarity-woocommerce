@@ -4,7 +4,8 @@
     $(document).on("click", ".pureclarity-product-datafeed", function() { runFeed("product"); } );
     $(document).on("click", ".pureclarity-category-datafeed", function() { runFeed("category"); } );
     $(document).on("click", ".pureclarity-brand-datafeed", function() { runFeed("brand"); } );
-    $(document).on("click", ".pureclarity-user-datafeed", function() { runFeed("user"); } );
+	$(document).on("click", ".pureclarity-user-datafeed", function() { runFeed("user"); } );
+	$(document).on("click", ".pureclarity-order-datafeed", function() { runFeed("order"); } );
 
 
     function runFeed(type, currentPage) {

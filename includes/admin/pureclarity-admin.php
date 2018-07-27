@@ -40,7 +40,7 @@ class PureClarity_Admin
 			}
             $type = $_POST['type'];
             
-            if ($type !== "product" && $type !== "category" && $type !== "brand" && $type !== "user") {
+            if ($type !== "product" && $type !== "category" && $type !== "brand" && $type !== "user" && $type !== "order") {
 				throw new RuntimeException( 'Unknown type.' );
             }
             

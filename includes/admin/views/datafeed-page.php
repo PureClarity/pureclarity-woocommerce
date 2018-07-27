@@ -36,5 +36,12 @@
 		<p><input type="button" class="button button-primary pureclarity-buttons pureclarity-user-datafeed" value="Run User Feed"/></p>
 		<p id="pureclarity-user-message" class="pureclarity-message">Running Feed...</p>
 	</div>
+
+	<div class="<?php echo $this->settings->get_userfeed_run() ? "updated" : "error" ?>">
+		<p><strong><?php echo $this->settings->get_userfeed_run() ? "Note: A feed has succesfully been submitted!" : "Note: An Order Feed has never been run." ?></strong></p>
+		<p>Click this button to run the ORDER data feed and submit it to PureClarity</strong></p>
+		<p><input type="button" class="button button-primary pureclarity-buttons pureclarity-order-datafeed" value="Run Order Feed"/></p>
+		<p id="pureclarity-order-message" class="pureclarity-message">Running Feed...</p>
+	</div>
 	
 </div>

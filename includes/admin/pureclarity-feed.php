@@ -36,7 +36,10 @@ class PureClarity_Feed {
                 return 1;
             case "user":
                 return $this->get_users_count();
+            case "order":
+                return $this->get_order_count();
         }   
+        return 0;
     }
 
     public function start_feed( $type ) {
@@ -52,6 +55,9 @@ class PureClarity_Feed {
             break;
             case "user":
                 $body = $this->get_request_body( $type, '{ "Version": 2, "Users": [' );
+            break;
+            case "order":
+                $body = $this->get_request_body( $type, "OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,UnityPrice,LinePrice" . PHP_EOL );
             break;
         }
         $this->http_post( $url, $body );
@@ -105,6 +111,9 @@ class PureClarity_Feed {
             break;
             case "user":
                 $items = $this->get_users( $currentPage, $this->pageSize );
+            break;
+            case "order":
+                $items = $this->get_orders( $currentPage, $this->pageSize );
             break;
         }
         return $items;
@@ -346,6 +355,7 @@ class PureClarity_Feed {
         return $users->get_total();
     }
 
+
     public function get_users( $currentPage, $pageSize ) {
 
         $offset = $pageSize * ( $currentPage - 1 );
@@ -400,5 +410,69 @@ class PureClarity_Feed {
         }
         return $items;
     }
+
+
+
+    public function get_order_count() {
+        $args = array(
+            'status' => 'completed',
+            'type' => 'shop_order',
+            'date_created' => '>' . date('Y-m-d', strtotime("-6 month")),
+            'paginate' => true
+        );
+        
+        $results = wc_get_orders( $args );
+        
+        return $results->total;
+    }
+
+
+    public function get_orders( $currentPage, $pageSize ) {
+
+        $args = array(
+            'limit' => $pageSize,
+            'paged' => $currentPage,
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'status' => 'completed',
+            'type' => 'shop_order',
+            'date_created' => '>' . date('Y-m-d', strtotime("-6 month"))
+        );
+
+        $dp = wc_get_price_decimals();
+        
+        $orders = new WC_Order_Query( $args );
+
+        $items = "";
+        foreach($orders->get_orders() as $order) {
+            // OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,UnityPrice,LinePrice
+            //22,1,,2018-07-27T21:02:27+01:00,9,1,3.99,3.99
+
+            foreach ( $order->get_items() as $item_id => $item ) {
+                $product      = $order->get_product_from_item( $item );
+                $product_id   = 0;
+                $variation_id = 0;
+                $product_sku  = null;
+                if ( is_object( $product ) ) {
+                    $product_id   = $item->get_product_id();
+                    $variation_id = $item->get_variation_id();
+                    $product_sku  = $product->get_sku();
+                    $items .= $order->get_id() . ',';
+                    $items .= $order->get_customer_id() . ',,';
+                    $items .= (string) $order->get_date_created("c") . ',';
+                    $items .= $product_id . ',';
+                    $items .= $item['qty'] . ',';
+                    $items .= wc_format_decimal( $order->get_item_total( $item, false, false ), $dp ) . ',';
+                    $items .= wc_format_decimal( $order->get_line_total( $item, false, false ), $dp ) . PHP_EOL;
+                }
+            }            
+        }
+
+        error_log($items);
+
+        return $items;
+    }
+
+    
 
 }
