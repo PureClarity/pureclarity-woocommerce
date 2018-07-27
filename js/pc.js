@@ -12,8 +12,10 @@ var PureClarity = {
         if (!this.config.enabled) return;
 
         if (this.config.searchEnabled){
-            var searchInput = document.getElementById(this.config.searchSelector);
-            searchInput.id = "pc_search";
+            $searchFields = jQuery(this.config.searchSelector);
+            if ($searchFields){
+                $searchFields.attr("id", "pc_search");
+            }
             if (this.config.isSearch){
                 console.log("Search Page");
                 var pcContainer = document.createElement('div');

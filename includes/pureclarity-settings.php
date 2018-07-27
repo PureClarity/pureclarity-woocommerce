@@ -59,7 +59,7 @@ class PureClarity_Settings
     }
 
     public function get_search_selector() {
-        return "woocommerce-product-search-field-0";
+        return ".search-field";
     }
 
     public function get_search_result_element() {
