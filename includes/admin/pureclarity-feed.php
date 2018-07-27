@@ -34,6 +34,8 @@ class PureClarity_Feed {
                 return (int) $query->found_posts;
             case "category":
                 return 1;
+            case "user":
+                return $this->get_users_count();
         }   
     }
 
@@ -47,6 +49,9 @@ class PureClarity_Feed {
             break;
             case "category":
                 $body = $this->get_request_body( $type, '{ "Version": 2, "Categories": [' );
+            break;
+            case "user":
+                $body = $this->get_request_body( $type, '{ "Version": 2, "Users": [' );
             break;
         }
         $this->http_post( $url, $body );
@@ -96,7 +101,10 @@ class PureClarity_Feed {
                 $items = $this->get_products( $currentPage, $this->pageSize );
             break;
             case "category":
-                $items = $this->get_categories( $currentPage, $this->pageSize );
+                $items = $this->get_categories();
+            break;
+            case "user":
+                $items = $this->get_users( $currentPage, $this->pageSize );
             break;
         }
         return $items;
@@ -138,7 +146,7 @@ class PureClarity_Feed {
     }
 
     public function parse_product( $product ) {
-        
+
         if ( $product->get_catalog_visibility() == "hidden")
             return null;
 
@@ -324,6 +332,73 @@ class PureClarity_Feed {
             $json .= wp_json_encode($data);
         }
         return $json;
+    }
+
+
+    public function get_users_count() {
+        $args = array(
+			'order'   => 'ASC',
+            'orderby' => 'ID',
+            'role' => 'Customer'
+        );
+        
+        $users = new WP_User_Query( $args );
+        return $users->get_total();
+    }
+
+    public function get_users( $currentPage, $pageSize ) {
+
+        $offset = $pageSize * ( $currentPage - 1 );
+        $args = array(
+			'order'   => 'ASC',
+            'orderby' => 'ID',
+            'role' => 'Customer',
+			'offset'  => $offset,
+			'number'  => $pageSize,
+        );
+        
+        $users = new WP_User_Query( $args );
+
+        $first = false;
+        if ($currentPage == 1 || $pageSize == 1)
+            $first = true;
+
+        $items = "";
+        foreach($users->get_results() as $user) {
+            $customer = new WC_Customer( $user->ID );
+            if ($customer->get_id() > 0) {
+
+                $data = array(
+                    'UserId' => $customer->get_id(),
+                    'Email' => $customer->get_email(),
+                    'FirstName' => $customer->get_first_name(),
+                    'LastName' => $customer->get_last_name()
+                );
+
+                $billing = $customer->get_billing();
+                if (!empty($billing)) {
+                    if (!empty($billing['city'])) {
+                        $data['City'] = $billing['city'];
+                    }
+                    if (!empty($billing['state'])) {
+                        $data['State'] = $billing['state'];
+                    }
+                    if (!empty($billing['country'])) {
+                        $data['Country'] = $billing['country'];
+                    }
+                }
+
+                if ($first) {
+                    $first = false;
+                }
+                else {
+                    $items .= ",";
+                }
+
+                $items .= wp_json_encode($data);
+            }
+        }
+        return $items;
     }
 
 }
