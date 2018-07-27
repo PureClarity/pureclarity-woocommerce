@@ -57,7 +57,7 @@ class PureClarity_Feed {
                 $body = $this->get_request_body( $type, '{ "Version": 2, "Users": [' );
             break;
             case "order":
-                $body = $this->get_request_body( $type, "OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,UnityPrice,LinePrice" . PHP_EOL );
+                $body = $this->get_request_body( $type, "OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,UnityPrice,LinePrice" );
             break;
         }
         $this->http_post( $url, $body );
@@ -445,15 +445,14 @@ class PureClarity_Feed {
 
         $items = "";
         foreach($orders->get_orders() as $order) {
-            // OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,UnityPrice,LinePrice
-            //22,1,,2018-07-27T21:02:27+01:00,9,1,3.99,3.99
-
+            
             foreach ( $order->get_items() as $item_id => $item ) {
                 $product      = $order->get_product_from_item( $item );
                 $product_id   = 0;
                 $variation_id = 0;
                 $product_sku  = null;
                 if ( is_object( $product ) ) {
+                    $items .= PHP_EOL;
                     $product_id   = $item->get_product_id();
                     $variation_id = $item->get_variation_id();
                     $product_sku  = $product->get_sku();
@@ -463,12 +462,10 @@ class PureClarity_Feed {
                     $items .= $product_id . ',';
                     $items .= $item['qty'] . ',';
                     $items .= wc_format_decimal( $order->get_item_total( $item, false, false ), $dp ) . ',';
-                    $items .= wc_format_decimal( $order->get_line_total( $item, false, false ), $dp ) . PHP_EOL;
+                    $items .= wc_format_decimal( $order->get_line_total( $item, false, false ), $dp );
                 }
             }            
         }
-
-        error_log($items);
 
         return $items;
     }
