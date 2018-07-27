@@ -2,6 +2,8 @@
 
 class PureClarity_Settings
 {
+    public $scriptUrl = '//pcs.pureclarity.net';
+
     public function __construct() {
 		add_option( 'pureclarity_accesskey', '' );
         add_option( 'pureclarity_secretkey', '' );
@@ -37,9 +39,23 @@ class PureClarity_Settings
     public function get_api_url() {
         $url = getenv('PURECLARITY_SCRIPT_URL');
         if (empty($url)){
-            $url = "http://";
+            $url = $this->scriptUrl . '/' . $this->get_accesskey() . '/cs.js'; ;
         }
         return $url;
+    }
+
+    public function get_feed_baseurl() {
+
+        $url = "http://hostip"; //getenv('PURECLARITY_FEED_HOST');
+        $port = getenv('PURECLARITY_FEED_PORT');
+        if (empty($url)){
+            $url = "https://sftp.pureclarity.net";
+        }
+        if (!empty($port)){
+            $url = $url . ":" . $port;
+        }
+
+        return $url . "/";
     }
 
     public function get_search_selector() {

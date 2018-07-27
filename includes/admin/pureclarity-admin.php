@@ -10,11 +10,15 @@ class PureClarity_Admin
     private $datafeed_option_group = 'pureclarity_datafeed';
     private $plugin;
     private $settings;
+    private $feed;
 
     public function __construct( $plugin ) {
 
         $this->plugin = $plugin;
         $this->settings = $this->plugin->get_settings();
+        $this->feed = new PureClarity_Feed($plugin);
+
+        add_action( 'admin_notices', array( $this, 'display_dependency_notices' ) );
         add_action( 'admin_menu', array( $this, 'add_menus' ) );
         add_action( 'admin_init', array( $this, 'add_settings' ) );
         wp_register_script( 'pureclarity-adminjs', plugin_dir_url( __FILE__ ) . 'js/pc-admin.js', array( 'jquery' ), PURECLARITY_VERSION );
@@ -23,12 +27,50 @@ class PureClarity_Admin
     }
 
     public function run_data_feed() {
-        $response = array(
-            'totalPagesCount' => 23,
-            'finished'        => false,
-        );
+        try {
 
-        wp_send_json( $response );
+            if ( ! isset( $_POST['page'] ) ) {
+				throw new RuntimeException( 'Page has not been set.' );
+			}
+            $currentPage = (int) $_POST['page'];
+            
+            if ( ! isset( $_POST['type'] ) ) {
+				throw new RuntimeException( 'Type has not been set.' );
+			}
+            $type = $_POST['type'];
+            
+            if ($type !== "product" && $type !== "category" && $type !== "brand" && $type !== "user") {
+				throw new RuntimeException( 'Unknown type.' );
+            }
+            
+            $totalPagesCount = $this->feed->get_total_pages($type);
+
+            if ( $currentPage ===1 ) {
+                $this->feed->start_feed( $type );
+            }
+
+            if ( $currentPage <= $totalPagesCount || $totalPagesCount === 0 ) {
+                $data = $this->feed->build_items( $type, $currentPage );
+                $this->feed->send_data( $type, $data );
+            }
+
+            $finished = $currentPage >= $totalPagesCount;
+
+            if ($finished) {
+                $this->feed->end_feed( $type );
+            }
+
+            $response = array(
+                'totalPagesCount' => $totalPagesCount,
+                'finished'        => $finished,
+            );
+
+            wp_send_json( $response );
+
+        } catch ( \Exception $exception ) {
+            error_log("PureClarity: An Error occured generating " . $type . " feed: " . $exception->getMessage() );
+            wp_send_json( array( "error" => "An Error occured generating the " . $type . " feed. See error logs for more information.") );
+        }
     }
 
     public function add_menus() {
@@ -216,6 +258,17 @@ class PureClarity_Admin
     public function print_datafeed_section_text() {
 		echo '<p>Data Feeds etc.</p>';
 		echo '<p>' . wp_kses_post( 'To create an account simply contact the ? <a href="https://www.pureclarity.com" target="_blank">PureClarity</a> team to get one set up and start your free trial today!' ) . '</p>';
+    }
+    
+
+    public function display_dependency_notices() {
+		if ( ! extension_loaded( 'curl' ) ) {
+			echo '<div class="error notice">
+					  <p>PureClarity requires the "cURL" PHP extension to be installed and enabled. Please contact your hosting provider.</p>
+				  </div>';
+
+			return;
+		}
 	}
 
 }

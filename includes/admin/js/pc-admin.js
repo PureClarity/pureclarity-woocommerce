@@ -1,6 +1,3 @@
-console.log("HELLO ADMIN!");
-
-
 (function($) {
 
     var $buttons = $('.pureclarity-buttons ');
@@ -13,7 +10,7 @@ console.log("HELLO ADMIN!");
     function runFeed(type, currentPage) {
         $('.pureclarity-buttons ').prop("disabled", true);
         $('.pureclarity-message ').hide();
-        $('#pureclarity-' + type + '-message ').show();
+        updateMessage(type, "Running feed...");
 
 
         if (!currentPage) {
@@ -22,12 +19,19 @@ console.log("HELLO ADMIN!");
 
         var data = {
 			'action': 'pureclarity_run_datafeed',
-            'p': currentPage,
+            'page': currentPage,
             'type': type
         };
 
-		$.post(
-			ajaxurl, data, function(response) {
+		$.post(ajaxurl, data, 
+			function(response) {
+				
+				if (response && response.error){
+					updateMessage( type, response.error );
+					resetFeedProcess( type );
+					return;
+				}
+
 				if (typeof response.totalPagesCount === 'undefined') {
                     updateMessage(type, 'An error occurred');
 					resetFeedProcess( type );
@@ -42,28 +46,30 @@ console.log("HELLO ADMIN!");
 				progress = Math.round( (currentPage / response.totalPagesCount) * 100 );
 				updateMessage( type, "Processing Feed... " + progress + "% done" );
 
-				if (response.finished === true) {
-                    updateMessage(type, 'Data Feed generation complete.');
+				if (response.finished !== true) {
+                    
 					//reIndex( type, index, ++currentPage );
+					resetFeedProcess( type );
 				} else {
+					updateMessage(type, 'Data Feed generation complete.');
 					resetFeedProcess( type );
 				}
 			}
 		).fail(
 			function(response) {
-				alert( 'An error occurred: ' + response.responseText );
+				updateMessage( type, response.responseText );
 				resetFeedProcess( type );
 			}
 		);
     }
 
     function updateMessage(type, message) {
-        $('#pureclarity-' + type + '-message ').html(message);
+		$('#pureclarity-' + type + '-message ').html(message);
+		$('#pureclarity-' + type + '-message ').show();
     }
 
     function resetFeedProcess(type) {
         $('.pureclarity-buttons ').removeAttr( 'disabled' );
-        $('#pureclarity-' + type + '-message ').show();
 	}
 
 

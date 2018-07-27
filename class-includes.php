@@ -13,4 +13,5 @@ require_once PURECLARITY_PATH . 'includes/pureclarity-template.php';
 // Add admin only classes
 if ( is_admin() ) {
     require_once PURECLARITY_PATH . 'includes/admin/pureclarity-admin.php';
+    require_once PURECLARITY_PATH . 'includes/admin/pureclarity-feed.php';
 }
