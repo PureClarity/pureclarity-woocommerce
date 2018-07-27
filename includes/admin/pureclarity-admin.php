@@ -26,6 +26,7 @@ class PureClarity_Admin
         add_action( 'wp_ajax_pureclarity_run_datafeed', array( $this, 'run_data_feed' ) );
     }
 
+
     public function run_data_feed() {
         try {
 
@@ -266,9 +267,18 @@ class PureClarity_Admin
 			echo '<div class="error notice">
 					  <p>PureClarity requires the "cURL" PHP extension to be installed and enabled. Please contact your hosting provider.</p>
 				  </div>';
-
-			return;
-		}
+        }
+        
+        $whitelist_admin_pages = array( 'toplevel_page_pureclarity-settings' );
+        $admin_page = get_current_screen();
+ 
+        if( in_array( $admin_page->base, $whitelist_admin_pages ) && isset( $_GET[ 'settings-updated' ] ) &&  $_GET[ 'settings-updated' ] ):
+        ?>
+            <div class="notice notice-success is-dismissible"> 
+                <p><strong>Settings saved.</strong></p>
+            </div>
+        <?php
+        endif;
 	}
 
 }
