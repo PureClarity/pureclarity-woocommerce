@@ -44,8 +44,8 @@ var PureClarity = {
         _pc('page_view');
         
         if (this.config.product){
-            console.log("PureClarity: product_view:", this.config.product.sku);
-            _pc('product_view', { sku: this.config.product.sku });
+            console.log("PureClarity: product_view:", this.config.product.sku, this.config.product.id);
+            _pc('product_view', { id: this.config.product.id });
         }
     }
 }

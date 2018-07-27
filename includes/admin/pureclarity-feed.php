@@ -138,10 +138,9 @@ class PureClarity_Feed {
     }
 
     public function parse_product( $product ) {
-
+        
         if ( $product->get_catalog_visibility() == "hidden")
             return null;
-
 
         $productUrl = get_permalink( $product->get_id() );
         $productUrl = str_replace(array("https:", "http:"), "", $productUrl);
@@ -152,11 +151,22 @@ class PureClarity_Feed {
             $imageUrl = str_replace(array("https:", "http:"), "", $imageUrl);
         }
 
-	    $allImageUrls = array();
-        foreach( $product->get_gallery_image_ids() as $attachmentId ) {
-            $additionalImageUrl = wp_get_attachment_url( $attachmentId );
-            $allImageUrls[] = str_replace(array("https:", "http:"), "", $additionalImageUrl);
+        $categoryIds = array();
+        foreach($product->get_category_ids() as $categoryId){
+            $categoryIds[] = (string) $categoryId;
         }
+
+        $json = array(
+            "Id" => $product->get_id(),
+            "Sku"   => $product->get_sku(),
+            "Title" => $product->get_title(),
+            "Description" => $product->get_description() . " " . $product->get_short_description(),
+            "Categories" => $categoryIds,
+            "InStock" => $product->get_stock_status() == "instock",
+            "Link" => $productUrl,
+            "Image" => $imageUrl,
+            "ProductType" => $product->get_type()
+        );
 
         $searchTags = array();
         foreach( $product->get_tag_ids() as $tagId) {
@@ -164,25 +174,18 @@ class PureClarity_Feed {
                 $searchTags[] = $this->productTagsMap[$tagId];
             }
         }
-
-        $categoryIds = array();
-        foreach($product->get_category_ids() as $categoryId){
-            $categoryIds[] = (string) $categoryId;
+        if (sizeof($searchTags) >0) {
+            $json["SearchTags"] = $searchTags;
         }
 
-        $json = array(
-            "Sku"   => $product->get_sku(),
-            "Title" => $product->get_title(),
-            "Description" => $product->get_description() . " " . $product->get_short_description(),
-            "Categories" => $categoryIds,
-            "InStock" => $product->get_stock_status() == "instock",
-            "Link" => $productUrl,
-            "Prices" => [$product->get_regular_price() . ' ' . get_woocommerce_currency()],
-            "SalesPrices" => [$product->get_price() . ' ' . get_woocommerce_currency()],
-            "Image" => $imageUrl,
-            "AllImages" => $allImageUrls,
-            "SearchTags" => $searchTags
-        );
+        $allImageUrls = array();
+        foreach( $product->get_gallery_image_ids() as $attachmentId ) {
+            $additionalImageUrl = wp_get_attachment_url( $attachmentId );
+            $allImageUrls[] = str_replace(array("https:", "http:"), "", $additionalImageUrl);
+        }
+        if (sizeof($allImageUrls) >0) {
+            $json["AllImages"] = $allImageUrls;
+        }
 
         if (!empty($product->get_stock_quantity())){
             $json["StockQty"] = $product->get_stock_quantity();
@@ -204,7 +207,73 @@ class PureClarity_Feed {
             $json['SalesPriceEndDate'] = (string) $product->get_date_on_sale_to("c");
         }
 
-        error_log(wp_json_encode($json));
+        if (!empty($product->get_weight())) {
+            $json['Weight'] = [$product->get_weight()];
+        }
+
+        if (!empty($product->get_length())) {
+            $json['Length'] = [$product->get_length()];
+        }
+
+        if (!empty($product->get_width())) {
+            $json['Width'] = [$product->get_width()];
+        }
+
+        if (!empty($product->get_height())) {
+            $json['Height'] = [$product->get_height()];
+        }
+
+        $prices = array();
+        if ($product->get_regular_price()) {
+            $prices[] = $product->get_regular_price() . ' ' . get_woocommerce_currency();
+        }
+        $json["Prices"] = $prices;
+
+        $salesPrices = array();
+        if ($product->get_price()) {
+            $salesPrices[] = $product->get_price() . ' ' . get_woocommerce_currency();
+        }
+        $json["SalesPrices"] = $salesPrices;
+
+        if ($product->get_type() == 'variable') {
+
+            $json["AssociatedSkus"] = array();
+
+            foreach($product->get_attributes() as $key => $attribute ) {
+                $json[$key] = array();
+            }
+
+            $available_variations = $product->get_available_variations();
+            foreach($available_variations as $variant) {
+                
+                $json["AssociatedSkus"][] = $variant['sku'];
+                $price = $variant['display_price'] . ' ' . get_woocommerce_currency();
+                $regularPrice = $variant['display_regular_price'] . ' ' . get_woocommerce_currency();
+
+                if ($price != $regularPrice) {
+                    if (!in_array($regularPrice, $json["Prices"])){
+                        $json["Prices"][] = $regularPrice;
+                    }
+                    if (!in_array($price, $json["SalesPrices"])){
+                        $json["SalesPrices"][] = $price;
+                    }
+                } else {
+                    if (!in_array($price, $json["Prices"])){
+                        $json["Prices"][] = $price;
+                    }
+                }
+
+                foreach($product->get_attributes() as $key => $attribute ) {
+                    if (!empty($variant['attributes']['attribute_' . $key])) {
+                        $attributeValue = $variant['attributes']['attribute_' . $key];
+                        if (!in_array($attributeValue, $json[$key])){
+                            $json[$key][] = $attributeValue;
+                        }
+                    }
+                }
+            }   
+        }
+        
         return $json;
     }
 

@@ -36,6 +36,7 @@ class PureClarity_Template {
         $product = $this->get_product();
         if (!empty($product)){
             $config['product'] = array(
+                'id' => $product->get_id(),
                 'sku' => $product->get_sku()
             );
             wp_reset_postdata();

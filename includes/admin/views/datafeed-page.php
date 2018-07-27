@@ -1,5 +1,5 @@
 <style>
-	.pureclarity-message {display:none; color:red; font-weight:bold; }
+	.pureclarity-message {display:none; color:#0085ba; font-weight:bold; }
 </style>
 
 <div class="wrap">
@@ -23,12 +23,12 @@
 		<p id="pureclarity-category-message" class="pureclarity-message">Running Feed...</p>
 	</div>
 
-	<div class="<?php echo $this->settings->get_brandfeed_run() ? "updated" : "error" ?>">
+	<!-- <div class="<?php echo $this->settings->get_brandfeed_run() ? "updated" : "error" ?>">
 		<p><strong><?php echo $this->settings->get_brandfeed_run() ? "Note: A feed has succesfully been submitted!" : "Note: A Brand Feed has never been run." ?></strong></p>
 		<p>Click this button to run the BRAND data feed and submit it to PureClarity</strong></p>
 		<p><input type="button" class="button button-primary pureclarity-buttons pureclarity-brand-datafeed" value="Run Brand Feed"/></p>
 		<p id="pureclarity-brand-message" class="pureclarity-message">Running Feed...</p>
-	</div>
+	</div> -->
 
 	<div class="<?php echo $this->settings->get_userfeed_run() ? "updated" : "error" ?>">
 		<p><strong><?php echo $this->settings->get_userfeed_run() ? "Note: A feed has succesfully been submitted!" : "Note: A User Feed has never been run." ?></strong></p>
