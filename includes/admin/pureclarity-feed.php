@@ -5,6 +5,7 @@ class PureClarity_Feed {
     private $plugin;
     private $settings;
     private $pageSize = 10;
+    private $productTagsMap;
 
     public function __construct( $plugin ) {
         $this->plugin = $plugin;
@@ -20,14 +21,20 @@ class PureClarity_Feed {
     }
 
     public function get_total_items( $type ) {
-        $query = new WP_Query(
-			array(
-				'post_type'        => $type,
-				'post_status'      => 'publish',
-				'suppress_filters' => true,
-			)
-		);
-		return (int) $query->found_posts;
+
+        switch($type){
+            case "product":
+                $query = new WP_Query(
+                    array(
+                        'post_type'        => $type,
+                        'post_status'      => 'publish',
+                        'suppress_filters' => true,
+                    )
+                );
+                return (int) $query->found_posts;
+            case "category":
+                return 1;
+        }   
     }
 
     public function start_feed( $type ) {
@@ -35,7 +42,11 @@ class PureClarity_Feed {
         $body;
         switch($type) {
             case "product":
+                $this->loadProductTagsMap();
                 $body = $this->get_request_body( $type, '{ "Version": 2, "Products": [' );
+            break;
+            case "category":
+                $body = $this->get_request_body( $type, '{ "Version": 2, "Categories": [' );
             break;
         }
         $this->http_post( $url, $body );
@@ -84,6 +95,9 @@ class PureClarity_Feed {
             case "product":
                 $items = $this->get_products( $currentPage, $this->pageSize );
             break;
+            case "category":
+                $items = $this->get_categories( $currentPage, $this->pageSize );
+            break;
         }
         return $items;
     }
@@ -115,7 +129,9 @@ class PureClarity_Feed {
             else {
                 $items .= ",";
             }
-            $items .= wp_json_encode($this->parse_product($product));
+            $item = $this->parse_product($product);
+            if (!empty($item))
+                $items .= wp_json_encode($item);
         }
 
         return $items;
@@ -123,7 +139,9 @@ class PureClarity_Feed {
 
     public function parse_product( $product ) {
 
-        error_log($product);
+        if ( $product->get_catalog_visibility() == "hidden")
+            return null;
+
 
         $productUrl = get_permalink( $product->get_id() );
         $productUrl = str_replace(array("https:", "http:"), "", $productUrl);
@@ -138,23 +156,105 @@ class PureClarity_Feed {
         foreach( $product->get_gallery_image_ids() as $attachmentId ) {
             $additionalImageUrl = wp_get_attachment_url( $attachmentId );
             $allImageUrls[] = str_replace(array("https:", "http:"), "", $additionalImageUrl);
-	    }
+        }
+
+        $searchTags = array();
+        foreach( $product->get_tag_ids() as $tagId) {
+            if (array_key_exists($tagId, $this->productTagsMap)){
+                $searchTags[] = $this->productTagsMap[$tagId];
+            }
+        }
+
+        $categoryIds = array();
+        foreach($product->get_category_ids() as $categoryId){
+            $categoryIds[] = (string) $categoryId;
+        }
 
         $json = array(
             "Sku"   => $product->get_sku(),
             "Title" => $product->get_title(),
             "Description" => $product->get_description() . " " . $product->get_short_description(),
-            "Categories" => $product->get_category_ids(),
+            "Categories" => $categoryIds,
             "InStock" => $product->get_stock_status() == "instock",
             "Link" => $productUrl,
             "Prices" => [$product->get_regular_price() . ' ' . get_woocommerce_currency()],
             "SalesPrices" => [$product->get_price() . ' ' . get_woocommerce_currency()],
             "Image" => $imageUrl,
-            "AllImages" => $allImageUrls
+            "AllImages" => $allImageUrls,
+            "SearchTags" => $searchTags
         );
+
+        if (!empty($product->get_stock_quantity())){
+            $json["StockQty"] = $product->get_stock_quantity();
+        }
+
+        if ($product->get_catalog_visibility() == "catalog") {
+            $json['ExcludeFromSearch'] = true;
+        }
+
+        if ($product->get_catalog_visibility() == "search") {
+            $json['ExcludeFromProductListing'] = true;
+        }
+
+        if (!empty($product->get_date_on_sale_from())){
+            $json['SalesPriceStartDate'] = (string) $product->get_date_on_sale_from("c");
+        }
+
+        if (!empty($product->get_date_on_sale_to())){
+            $json['SalesPriceEndDate'] = (string) $product->get_date_on_sale_to("c");
+        }
+
         error_log(wp_json_encode($json));
         return $json;
+    }
 
+    public function loadProductTagsMap() {
+        $this->productTagsMap = [];
+        $terms = get_terms( 'product_tag' );
+        foreach( $terms as $term ) {
+            $this->productTagsMap[$term->term_id] = $term->name;
+        }
+    }
+
+
+    public function get_categories() {
+        $json = "";
+        $categories = get_terms( 'product_cat', array( "hide_empty" => 0 ) );
+        $first = true;
+        foreach( $categories as $category ) {
+
+            $url = get_term_link( $category->term_id, 'product_cat' );
+            if (!empty($url)) {
+                $url = str_replace(array("https:", "http:"), "", $url);
+            }
+
+            $data = array(
+                "Id" => (string) $category->term_id,
+                "DisplayName" => $category->name,
+                "Link" => $url
+            );
+
+            if (!empty($category->parent) && $category->parent > 0)
+                $data["ParentIds"] = [(string) $category->parent];
+
+            $thumbnail_id = get_woocommerce_term_meta( $category->term_id, 'thumbnail_id', true ); 
+            if (!empty($thumbnail_id)){
+                $imageUrl = wp_get_attachment_url( $thumbnail_id );
+                if (!empty($imageUrl)){
+                    $imageUrl = str_replace(array("https:", "http:"), "", $imageUrl);
+                    $data['Image'] = $imageUrl;
+                }   
+            }
+            
+            if ($first) {
+                $first = false;
+            }
+            else {
+                $json .= ",";
+            }
+            $json .= wp_json_encode($data);
+        }
+        return $json;
     }
 
 }
