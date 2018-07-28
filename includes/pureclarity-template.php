@@ -14,9 +14,9 @@ class PureClarity_Template {
     public function render_pureclarity_json() {
 
         $settings = $this->plugin->get_settings();
-        $searchEnabled = $settings->get_search_enabled() == "yes";
-        $merchEnabled = $settings->get_merch_enabled() == "yes";
-        $prodListEnabled = $settings->get_prod_enabled() == "yes";
+        $searchEnabled = $settings->get_search_enabled();
+        $merchEnabled = $settings->get_merch_enabled();
+        $prodListEnabled = $settings->get_prod_enabled();
         $searchResultsDOMSelector = $settings->get_search_result_element();
         $enabled = ($searchEnabled || $merchEnabled ||  $prodListEnabled) && ($settings->get_accesskey() != "");
 

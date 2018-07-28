@@ -204,7 +204,7 @@ class PureClarity_Admin
         $enabled = $this->settings->get_search_enabled();
         // die($enabled);
         $checked = '';
-        if ( $enabled == 'yes' ) {
+        if ( $enabled == true ) {
             $checked = 'checked';
         }
 
@@ -219,7 +219,7 @@ class PureClarity_Admin
 
         $enabled = $this->settings->get_merch_enabled();
         $checked = '';
-        if ( $enabled == 'yes' ) {
+        if ( $enabled == true ) {
             $checked = 'checked';
         }
 
@@ -234,7 +234,7 @@ class PureClarity_Admin
 
         $enabled = $this->settings->get_prod_enabled();
         $checked = '';
-        if ( $enabled == 'yes' ) {
+        if ( $enabled == true ) {
             $checked = 'checked';
         }
 

@@ -14,6 +14,7 @@ class PureClarity_Settings
         add_option( 'pureclarity_catfeed_run', '0' );
         add_option( 'pureclarity_brandfeed_run', '0' );
         add_option( 'pureclarity_userfeed_run', '0' );
+        add_option( 'pureclarity_bmz_debug', 'no' );
     }
     
     public function get_accesskey() {
@@ -25,15 +26,19 @@ class PureClarity_Settings
     }
 
     public function get_search_enabled() {
-        return (string) get_option( 'pureclarity_search_enabled', '' );
+        return get_option( 'pureclarity_search_enabled', '' ) == "yes";
     }
 
     public function get_merch_enabled() {
-        return (string) get_option( 'pureclarity_merch_enabled', '' );
+        return get_option( 'pureclarity_merch_enabled', '' ) == "yes";
     }
 
     public function get_prod_enabled() {
-        return (string) get_option( 'pureclarity_prodlist_enabled', '' );
+        return get_option( 'pureclarity_prodlist_enabled', '' ) == "yes";
+    }
+
+    public function get_bmz_debug_enabled() {
+        return get_option( 'pureclarity_bmz_debug', '' ) == "yes";
     }
 
     public function get_api_url() {

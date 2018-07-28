@@ -36,7 +36,9 @@ class PureClarity_Plugin
     public function init() {
         if ( is_admin() ) {
 			new PureClarity_Admin( $this );
-		}
+		} else {
+            new PureClarity_Bmz( $this );
+        }
     }
 
 }
