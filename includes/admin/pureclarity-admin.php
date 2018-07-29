@@ -19,7 +19,7 @@ class PureClarity_Admin
 
         $this->plugin = $plugin;
         $this->settings = $this->plugin->get_settings();
-        $this->feed = new PureClarity_Feed($plugin);
+        $this->feed = $this->plugin->get_feed();
 
         add_action( 'admin_notices', array( $this, 'display_dependency_notices' ) );
         add_action( 'admin_menu', array( $this, 'add_menus' ) );

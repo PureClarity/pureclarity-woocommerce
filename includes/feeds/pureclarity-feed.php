@@ -4,8 +4,8 @@ class PureClarity_Feed {
 
     private $plugin;
     private $settings;
-    private $pageSize = 10;
     private $productTagsMap;
+    public $pageSize = 20;
 
     public function __construct( $plugin ) {
         $this->plugin = $plugin;
@@ -99,7 +99,6 @@ class PureClarity_Feed {
         return $request;
     }
 
-    
     public function build_items( $type, $currentPage ) {
         $items = array();
         switch($type) {
@@ -124,7 +123,7 @@ class PureClarity_Feed {
             array(
                 'post_type'        => 'product',
                 'posts_per_page'   => $pageSize,
-                'post_status'      => 'any',
+                'post_status'      => 'publish',
                 'orderby'          => 'ID',
                 'order'            => 'ASC',
                 'paged'            => $currentPage,
@@ -302,7 +301,6 @@ class PureClarity_Feed {
         }
     }
 
-
     public function get_categories() {
         $json = "";
         $categories = get_terms( 'product_cat', array( "hide_empty" => 0 ) );
@@ -343,7 +341,6 @@ class PureClarity_Feed {
         return $json;
     }
 
-
     public function get_users_count() {
         $args = array(
 			'order'   => 'ASC',
@@ -354,7 +351,6 @@ class PureClarity_Feed {
         $users = new WP_User_Query( $args );
         return $users->get_total();
     }
-
 
     public function get_users( $currentPage, $pageSize ) {
 
@@ -411,8 +407,6 @@ class PureClarity_Feed {
         return $items;
     }
 
-
-
     public function get_order_count() {
         $args = array(
             'status' => 'completed',
@@ -425,7 +419,6 @@ class PureClarity_Feed {
         
         return $results->total;
     }
-
 
     public function get_orders( $currentPage, $pageSize ) {
 
@@ -469,7 +462,5 @@ class PureClarity_Feed {
 
         return $items;
     }
-
-    
 
 }

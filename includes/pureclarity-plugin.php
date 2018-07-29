@@ -5,6 +5,7 @@ class PureClarity_Plugin
     static $pureclarity;
     private $settings;
     private $template;
+    private $feed;
 
     public static function getInstance() {
         if ( self::$pureclarity === null ) {
@@ -18,6 +19,7 @@ class PureClarity_Plugin
 
         $this->settings = new PureClarity_Settings();
         $this->template = new PureClarity_Template( $this );
+        $this->feed = new PureClarity_Feed( $this );
 		
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
@@ -26,6 +28,10 @@ class PureClarity_Plugin
 
     public function get_settings() {
         return $this->settings;
+    }
+
+    public function get_feed() {
+        return $this->feed;
     }
 
     public function register_assets() {
@@ -42,6 +48,7 @@ class PureClarity_Plugin
 		} else {
             new PureClarity_Bmz( $this );
         }
+        new PureClarity_Products_Watcher( $this );
     }
 
 }
