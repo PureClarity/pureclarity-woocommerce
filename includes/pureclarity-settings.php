@@ -53,7 +53,7 @@ class PureClarity_Settings
 
     public function get_feed_baseurl() {
 
-        $url = "http://hostip"; //getenv('PURECLARITY_FEED_HOST');
+        $url = getenv('PURECLARITY_FEED_HOST');
         $port = getenv('PURECLARITY_FEED_PORT');
         if (empty($url)){
             $url = "https://sftp.pureclarity.net";
@@ -87,5 +87,18 @@ class PureClarity_Settings
 
     public function get_userfeed_run() {
         return get_option( 'pureclarity_userfeed_run', '0' ) == '1';
+    }
+
+    public function get_delta_url() {
+        $url = getenv('PURECLARITY_API_ENDPOINT');
+        $port =  getenv('PURECLARITY_API_PORT');
+        if (empty($url)){
+            $url = "https://api.pureclarity.net";
+        }
+        if (!empty($port)){
+            $url = $url . ":" . $port;
+        }
+
+        return $url . "/api/productdelta";
     }
 }

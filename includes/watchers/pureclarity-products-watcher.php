@@ -28,11 +28,9 @@ class PureClarity_Products_Watcher {
             $term = get_term($term_id);
             if ( ! empty($term) ) {
                 // Add category as delta
-                // error_log(wp_json_encode($term));
             }
             else {
                 // Delete as delta
-                // error_log('delete category: ' . $term_id);
             }
         }
     }
@@ -45,16 +43,14 @@ class PureClarity_Products_Watcher {
                 $product = wc_get_product($id);    
                 if ( ! empty($product) ){
                     // Add as delta
-
                     $this->feed->loadProductTagsMap();
                     $data = $this->feed->parse_product( $product );
-
-                    // error_log(wp_json_encode($data));
+                    $this->feed->send_product_delta( array($data), array());
                 }
             }
             else{
                 // Delete as delta
-                // error_log('deleting: ' . $id);
+                $this->feed->send_product_delta( array(), array($id));
             }
         }
         
@@ -63,7 +59,7 @@ class PureClarity_Products_Watcher {
     public function delete_item( $id ) {
         $post = get_post( $id );
         if ($post->post_type == "product"){
-            // error_log('deleting: ' . $id);
+            $this->feed->send_product_delta( array(), array($id));
         }
     }
 

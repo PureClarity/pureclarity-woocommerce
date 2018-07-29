@@ -75,14 +75,14 @@ class PureClarity_Feed {
         $this->http_post( $url, $body );
     }
 
-    public function http_post( $url, $body ) {
+    public function http_post( $url, $body, $checkOk = true ) {
         
         $request = new WP_Http;
         $response = $request->request( $url, array( 'method' => 'POST', 'body' => $body ) );
         if (!empty($response->errors)){
             throw new Exception("Couldn't upload data to the PureClarity server: " . wp_json_encode($response->errors));
         }
-        if ($response['body'] != "OK"){
+        if ($checkOk && $response['body'] != "OK"){
             throw new Exception("Couldn't upload data to the PureClarity server: " . $response['body']);
         }
     }
@@ -461,6 +461,22 @@ class PureClarity_Feed {
         }
 
         return $items;
+    }
+
+    public function send_product_delta( $products, $deletes) {
+
+        $request = array(
+            'AppKey'            => $this->settings->get_accesskey(),
+            'Secret'            => $this->settings->get_secretkey(),
+            'Products'          => $products,
+            'DeleteProducts'    => $deletes,
+            'Format'            => ''
+        );
+
+        $url = $this->settings->get_delta_url();
+        // error_log(wp_json_encode($request));
+        $this->http_post( $url, $request, false);
+
     }
 
 }
