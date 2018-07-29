@@ -29,8 +29,11 @@ class PureClarity_Plugin
     }
 
     public function register_assets() {
-        wp_register_script( 'pureclarityjs', plugin_dir_url( __FILE__ ) . '../js/pc.js', array( 'jquery', 'wp-util' ), PURECLARITY_VERSION );
-        wp_enqueue_script(  'pureclarityjs' );
+        wp_register_style( 'pureclarity-css', plugin_dir_url( __FILE__ ) . '../css/pc.css', array(), PURECLARITY_VERSION, 'screen' );
+        wp_enqueue_style( 'pureclarity-css' );
+
+        wp_register_script( 'pureclarity-js', plugin_dir_url( __FILE__ ) . '../js/pc.js', array( 'jquery', 'wp-util' ), PURECLARITY_VERSION );
+        wp_enqueue_script(  'pureclarity-js' );
     }
 
     public function init() {

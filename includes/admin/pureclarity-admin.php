@@ -6,8 +6,11 @@ class PureClarity_Admin
     private $settings_section = 'pureclarity_section_settings';
     private $datafeed_slug = 'pureclarity-datafeed';
     private $datafeed_section = 'pureclarity_section_datafeed';
+    private $advanced_section = 'pureclarity_section_advanced';
+    private $advanced_slug = 'pureclarity-advanced';
     private $settings_option_group = 'pureclarity_settings';
     private $datafeed_option_group = 'pureclarity_datafeed';
+    private $advanced_option_group = 'pureclarity_advanced';
     private $plugin;
     private $settings;
     private $feed;
@@ -101,6 +104,15 @@ class PureClarity_Admin
             $this->datafeed_slug,
             array( $this, 'datafeed_render' )
         );
+    
+        add_submenu_page(
+            $this->settings_slug,
+            'PureClarity: Advanced Settings',
+            'Advanced',
+            "manage_options",
+            $this->advanced_slug,
+            array( $this, 'advanced_render' )
+        );
     }
 
     public function settings_render() {
@@ -111,11 +123,16 @@ class PureClarity_Admin
         include_once( 'views/datafeed-page.php' );
     }
 
+    public function advanced_render() {
+        include_once( 'views/advanced-page.php' );
+    }
+
     public function add_settings() {
 
+        // General Settings
         add_settings_section(
 			$this->settings_section,
-			null,
+			"General Settings",
 			array( $this, 'print_settings_section_text' ),
 			$this->settings_slug
         );
@@ -166,11 +183,48 @@ class PureClarity_Admin
         register_setting( $this->settings_option_group, 'pureclarity_merch_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_prodlist_enabled', array( $this, 'sanitize_checkbox' ) );
 
+        // Advanced Settings
 
+        add_settings_section(
+			$this->advanced_section,
+			null,
+			array( $this, 'print_advanced_section_text' ),
+			$this->advanced_slug
+        );
+
+        add_settings_field(
+			'pureclarity_bmz_debug',
+			'Enable BMZ Debugging',
+			array( $this, 'pureclarity_bmz_debug_callback' ),
+			$this->advanced_slug,
+			$this->advanced_section
+        );
+
+        add_settings_field(
+			'pureclarity_search_selector',
+			'Autocomplete Input DOM Selector',
+			array( $this, 'searchselector_callback' ),
+			$this->advanced_slug,
+			$this->advanced_section
+        );
+
+        add_settings_field(
+			'pureclarity_search_result_selector',
+			'Search Results DOM Selector',
+			array( $this, 'searchresults_selector_callback' ),
+			$this->advanced_slug,
+			$this->advanced_section
+        );
+
+        register_setting( $this->advanced_option_group, 'pureclarity_bmz_debug', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', 'sanitize_callback' );
+        register_setting( $this->advanced_option_group, 'pureclarity_search_result_selector', 'sanitize_callback' );
+
+        // Data feed section
         add_settings_section(
 			$this->datafeed_section,
 			null,
-			array( $this, 'print_datafeed_section_text' ),
+			null,
 			$this->datafeed_slug
         );
 
@@ -245,6 +299,35 @@ class PureClarity_Admin
 
     }
 
+    public function pureclarity_bmz_debug_callback() {
+
+        $enabled = $this->settings->get_bmz_debug_enabled();
+        $checked = '';
+        if ( $enabled == true ) {
+            $checked = 'checked';
+        }
+
+        ?>
+		<input type="checkbox" id="checkbox_bmz_debug"  name="pureclarity_bmz_debug" class="regular-text" <?php echo $checked; ?> />
+		<p class="description" id="home-description">Check to activate debugging for PureClarity BMZs. They will show even if empty.</p>
+        <?php
+
+    }
+
+    public function searchselector_callback() {
+        ?>
+		<input type="text" name="pureclarity_search_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_search_selector() ); ?>" />
+		<p class="description" id="home-description">Enter DOM selector for the autocomplete input box. (Default is .search-field)</p>
+        <?php
+    }
+
+    public function searchresults_selector_callback() {
+        ?>
+		<input type="text" name="pureclarity_search_result_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_search_result_element() ); ?>" />
+		<p class="description" id="home-description">Enter DOM selector for the main body where search results will be displayed. (Default is .site-main)</p>
+        <?php
+    }
+
     
     public function sanitize_checkbox( $value ) {
 		return $value === 'on' ? 'yes' : 'no';
@@ -256,11 +339,11 @@ class PureClarity_Admin
 		echo '<p>' . wp_kses_post( 'To create an account simply contact the ? <a href="https://www.pureclarity.com" target="_blank">PureClarity</a> team to get one set up and start your free trial today!' ) . '</p>';
     }
     
-    public function print_datafeed_section_text() {
-		echo '<p>Data Feeds etc.</p>';
-		echo '<p>' . wp_kses_post( 'To create an account simply contact the ? <a href="https://www.pureclarity.com" target="_blank">PureClarity</a> team to get one set up and start your free trial today!' ) . '</p>';
+
+    public function print_advanced_section_text() {
+		echo '<p>Configure advanced settings for PureClarity. ' . wp_kses_post( 'For more information visit the <a href="https://support.pureclarity.com" target="_blank">PureClarity</a> support page.' ) . '</p>';
     }
-    
+
 
     public function display_dependency_notices() {
 		if ( ! extension_loaded( 'curl' ) ) {
@@ -269,9 +352,9 @@ class PureClarity_Admin
 				  </div>';
         }
         
-        $whitelist_admin_pages = array( 'toplevel_page_pureclarity-settings' );
+        $whitelist_admin_pages = array( 'toplevel_page_pureclarity-settings', 'pureclarity_page_pureclarity-advanced' );
         $admin_page = get_current_screen();
- 
+
         if( in_array( $admin_page->base, $whitelist_admin_pages ) && isset( $_GET[ 'settings-updated' ] ) &&  $_GET[ 'settings-updated' ] ):
         ?>
             <div class="notice notice-success is-dismissible"> 

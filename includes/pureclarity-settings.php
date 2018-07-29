@@ -15,6 +15,8 @@ class PureClarity_Settings
         add_option( 'pureclarity_brandfeed_run', '0' );
         add_option( 'pureclarity_userfeed_run', '0' );
         add_option( 'pureclarity_bmz_debug', 'no' );
+        add_option( 'pureclarity_search_selector', '.search-field' );
+        add_option( 'pureclarity_search_result_selector', '.site-main' );
     }
     
     public function get_accesskey() {
@@ -64,11 +66,11 @@ class PureClarity_Settings
     }
 
     public function get_search_selector() {
-        return ".search-field";
+        return (string) get_option( 'pureclarity_search_selector', '.search-field' );
     }
 
     public function get_search_result_element() {
-        return ".site-main";
+        return (string) get_option( 'pureclarity_search_result_selector', '.site-main' );
     }
 
     public function get_prodfeed_run() {
