@@ -35,25 +35,16 @@ class PureClarity_Template {
             "apiUrl" => $settings->get_api_url(),
             "searchSelector" => $settings->get_search_selector(),
             "isSearch" => is_search(),
+            "product" => $this->plugin->get_state()->get_product(),
             "isCategory" => is_product_category(),
-            "categoryId" => $categoryId,
+            "categoryId" => $this->plugin->get_state()->get_category_id(),
             "searchResultsDOMSelector" => $searchResultsDOMSelector
         );
-        
-        $product = $this->get_product();
-        if (!empty($product)){
-            $config['product'] = array(
-                'id' => $product->get_id(),
-                'sku' => $product->get_sku()
-            );
-            wp_reset_postdata();
-        }
 
         $style="";
         if ($enabled && ((is_search() && $searchEnabled) || (is_product_category() && $prodListEnabled))) {
             $style = "<style type='text/css'>" . $searchResultsDOMSelector . " {display:none}</style>";
         }
-
         
         $script = '<script type="text/javascript">window.pureclarityConfig = ' . wp_json_encode( $config ) . '; </script>';
 
