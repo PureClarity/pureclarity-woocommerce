@@ -58,6 +58,14 @@ var PureClarity = {
         else if (this.config.islogout) {
             _pc('customer_logout');
         }
+
+        if(this.config.order) {
+            _pc('order:addTrans', this.config.order.transaction);
+            for (var i=0; i<this.config.order.items.length; i++) {
+                _pc('order:addItem', this.config.order.items[i]);
+            }
+            _pc('order:track');
+        }
     }
 }
 PureClarity.init();

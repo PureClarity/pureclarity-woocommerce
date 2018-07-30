@@ -34,7 +34,8 @@ class PureClarity_Template {
             "categoryId" => $state->get_category_id(),
             "searchResultsDOMSelector" => $searchResultsDOMSelector,
             "customer" => $state->get_customer(),
-            "islogout" => $state->is_logout()
+            "islogout" => $state->is_logout(),
+            "order" => $state->get_order()
         );
 
         $style="";

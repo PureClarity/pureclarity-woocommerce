@@ -49,6 +49,7 @@ class PureClarity_Plugin
     }
 
     public function init() {
+        new PureClarity_Products_Watcher( $this );
         if ( is_admin() ) {
 			new PureClarity_Admin( $this );
 		} else {
@@ -56,7 +57,6 @@ class PureClarity_Plugin
             new PureClarity_Template( $this );
             new PureClarity_Bmz( $this );
         }
-        new PureClarity_Products_Watcher( $this );
     }
 
 
