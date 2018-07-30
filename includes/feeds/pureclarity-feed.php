@@ -481,7 +481,6 @@ class PureClarity_Feed {
         );
 
         $url = $this->settings->get_delta_url();
-        // error_log(wp_json_encode($request));
         $this->http_post( $url, $request, false);
 
     }
