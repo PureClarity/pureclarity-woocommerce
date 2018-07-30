@@ -20,6 +20,12 @@ class PureClarity_Template {
         $searchResultsDOMSelector = $settings->get_search_result_element();
         $enabled = ($searchEnabled || $merchEnabled ||  $prodListEnabled) && ($settings->get_accesskey() != "");
 
+        $categoryId = null;
+        if (is_product_category()) {
+            $category = get_queried_object();
+            $categoryId = $category->term_id;
+        }
+
         $config = array(
             'enabled' => $enabled,
             'accessKey' => $settings->get_accesskey(),
@@ -30,6 +36,7 @@ class PureClarity_Template {
             "searchSelector" => $settings->get_search_selector(),
             "isSearch" => is_search(),
             "isCategory" => is_product_category(),
+            "categoryId" => $categoryId,
             "searchResultsDOMSelector" => $searchResultsDOMSelector
         );
         
@@ -43,7 +50,7 @@ class PureClarity_Template {
         }
 
         $style="";
-        if (is_search() && $enabled && $searchEnabled){
+        if ($enabled && ((is_search() && $searchEnabled) || (is_product_category() && $prodListEnabled))) {
             $style = "<style type='text/css'>" . $searchResultsDOMSelector . " {display:none}</style>";
         }
 

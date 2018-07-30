@@ -17,7 +17,6 @@ var PureClarity = {
                 $searchFields.attr("id", "pc_search");
             }
             if (this.config.isSearch){
-                console.log("Search Page");
                 var pcContainer = document.createElement('div');
                 var wrapper = document.createElement('div');
                 jQuery(wrapper).addClass('pureclarity-wrapper');
@@ -30,7 +29,13 @@ var PureClarity = {
 
         if (this.config.prodListEnabled){
             if (this.config.isCategory){
-                console.log("Is Category!");
+                var pcContainer = document.createElement('div');
+                var wrapper = document.createElement('div');
+                jQuery(wrapper).addClass('pureclarity-wrapper');
+                jQuery(pcContainer).addClass('pureclarity-container').attr("data-pureclarity", "navigation_category:" + this.config.categoryId);
+                jQuery(pureclarityConfig.searchResultsDOMSelector).wrap(wrapper).hide();
+                jQuery(".pureclarity-wrapper").append(pcContainer);
+                jQuery(wrapper).addClass('site-main')
             }
         }
 
@@ -44,7 +49,6 @@ var PureClarity = {
         _pc('page_view');
         
         if (this.config.product){
-            console.log("PureClarity: product_view:", this.config.product.sku, this.config.product.id);
             _pc('product_view', { id: this.config.product.id });
         }
     }
