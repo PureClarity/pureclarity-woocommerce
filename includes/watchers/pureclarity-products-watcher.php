@@ -37,7 +37,7 @@ class PureClarity_Products_Watcher {
 
     public function save_item( $id ) {
         $post = get_post( $id );
-        if ($post->post_type == "product"){
+        if ($post->post_type == "product" && $this->settings->get_deltas_enabled()){
             if ($post->post_status == "publish") {
             
                 $product = wc_get_product($id);    
@@ -45,7 +45,9 @@ class PureClarity_Products_Watcher {
                     // Add as delta
                     $this->feed->loadProductTagsMap();
                     $data = $this->feed->parse_product( $product );
-                    $this->feed->send_product_delta( array($data), array());
+                    if ( ! empty($data) ) {
+                        $this->feed->send_product_delta( array($data), array());
+                    }
                 }
             }
             else{

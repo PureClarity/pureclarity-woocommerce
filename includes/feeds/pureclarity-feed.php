@@ -139,15 +139,18 @@ class PureClarity_Feed {
         while ( $query->have_posts() ) {
             $query->the_post(); 
             global $product;
-            if ($first) {
-                $first = false;
-            }
-            else {
-                $items .= ",";
-            }
             $item = $this->parse_product($product);
-            if (!empty($item))
+            if (!empty($item)) {
+                if ($first) {
+                    $first = false;
+                }
+                else {
+                    $items .= ",";
+                }
                 $items .= wp_json_encode($item);
+            } else  {
+                error_log("PureClarity: Product " . $product->get_id() . " excluded from the feed. Possible missing required data (e.g sku, title, price) or not visibile.");
+            }
         }
 
         return $items;
@@ -289,6 +292,10 @@ class PureClarity_Feed {
                 }
             }   
         }
+
+        // Check is valid
+        if (sizeof($json['Prices']) ==0 || empty($json['Sku']) || empty($json['Title']))
+            return null;
         
         return $json;
     }
@@ -470,7 +477,7 @@ class PureClarity_Feed {
             'Secret'            => $this->settings->get_secretkey(),
             'Products'          => $products,
             'DeleteProducts'    => $deletes,
-            'Format'            => ''
+            'Format'            => 'pureclarity_json'
         );
 
         $url = $this->settings->get_delta_url();

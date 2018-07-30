@@ -60,8 +60,9 @@ class PureClarity_Admin
 
             $finished = $currentPage >= $totalPagesCount;
 
-            if ($finished) {
+            if ($finished && $totalPagesCount > 0) {
                 $this->feed->end_feed( $type );
+                $this->update_successfeed( $type );
             }
 
             $response = array(
@@ -74,6 +75,26 @@ class PureClarity_Admin
         } catch ( \Exception $exception ) {
             error_log("PureClarity: An Error occured generating " . $type . " feed: " . $exception->getMessage() );
             wp_send_json( array( "error" => "An Error occured generating the " . $type . " feed. See error logs for more information.") );
+        }
+    }
+
+    public function update_successfeed( $type ) {
+        switch($type) {
+            case "product":
+                $this->settings->update_prodfeed_run();
+            break;
+            case "category":
+                $this->settings->update_catfeed_run();
+            break;
+            case "brand":
+                $this->settings->update_brandfeed_run();
+            break;
+            case "user":
+                $this->settings->update_userfeed_run();
+            break;
+            case "order":
+                $this->settings->update_orderfeed_run();
+            break;
         }
     }
 
@@ -177,11 +198,20 @@ class PureClarity_Admin
 			$this->settings_section
         );
 
+        add_settings_field(
+			'pureclarity_deltas_enabled',
+			'Enable Product Delta Sync',
+			array( $this, 'enabled_deltas_callback' ),
+			$this->settings_slug,
+			$this->settings_section
+        );
+
         register_setting( $this->settings_option_group, 'pureclarity_accesskey', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_secretkey', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_search_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_merch_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_prodlist_enabled', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->settings_option_group, 'pureclarity_deltas_enabled', array( $this, 'sanitize_checkbox' ) );
 
         // Advanced Settings
 
@@ -295,6 +325,21 @@ class PureClarity_Admin
         ?>
 		<input type="checkbox" id="checkbox_prodlist"  name="pureclarity_prodlist_enabled" class="regular-text" <?php echo $checked; ?> />
 		<p class="description" id="home-description">Check to activate PureClarity Product Listing</p>
+        <?php
+
+    }
+
+    public function enabled_deltas_callback() {
+
+        $enabled = $this->settings->get_deltas_enabled();
+        $checked = '';
+        if ( $enabled == true ) {
+            $checked = 'checked';
+        }
+
+        ?>
+		<input type="checkbox" id="checkbox_deltas"  name="pureclarity_deltas_enabled" class="regular-text" <?php echo $checked; ?> />
+		<p class="description" id="home-description">Check to activate automatic data synchronisation</p>
         <?php
 
     }

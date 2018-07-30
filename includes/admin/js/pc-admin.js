@@ -40,7 +40,7 @@
 				}
 
 				if (response.totalPagesCount === 0) {
-                    updateMessage(type, 'No items to work with.');
+                    updateMessage(type, 'No ' + type + ' items to submit.');
 					resetFeedProcess( type );
 					return;
 				}
@@ -53,6 +53,9 @@
 					resetFeedProcess( type );
 				} else {
 					updateMessage(type, 'Data Feed generation complete.');
+					$('#' + type + '-container').removeClass("error").addClass("updated");
+					$('#' + type + '-heading').html("<strong>Note: A feed has been successfully submitted!</strong>");
+					"Note: A feed has succesfully been submitted!"
 					resetFeedProcess( type );
 				}
 			}
