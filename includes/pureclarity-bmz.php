@@ -4,10 +4,14 @@ class PureClarity_Bmz {
 
     private $plugin;
     private $settings;
+    private $currentProduct;
+    private $currentCategoryId;
 
     public function __construct( $plugin ) {
         $this->plugin = $plugin;
         $this->settings = $plugin->get_settings();
+        $this->currentProduct = $this->plugin->get_state()->get_product();
+        $this->currentCategoryId = $this->plugin->get_state()->get_category_id();
         add_shortcode( 'pureclarity-bmz', array( $this, 'pureclarity_render_bmz') );
     }
 
@@ -24,15 +28,23 @@ class PureClarity_Bmz {
             }
 
             $style = "";
-            if (! empty( $arguments['top'] )) {
+            if ( ! empty( $arguments['top'] )) {
                 $style .= "margin-top:" . $arguments['top'] . 'px;';
             }
 
-            if (! empty( $arguments['bottom'] )) {
+            if ( ! empty( $arguments['bottom'] )) {
                 $style .= "margin-bottom:" . $arguments['bottom'] . 'px;';
             }
 
-            $bmz = "<div class='" . $class . "' style='" . $style . "' data-pureclarity='bmz:" . $arguments['id'] . ";'>" . $html . "</div>";
+            $data = "";
+            if ( ! empty($this->currentProduct) ) {
+                $data = "id:".$this->currentProduct['id'];
+            }
+            elseif ( ! empty($this->currentCategoryId) ) {
+                $data = "categoryid:".$this->currentCategoryId;
+            }
+
+            $bmz = "<div class='" . $class . "' style='" . $style . "' data-pureclarity='bmz:" . $arguments['id'] . ";" . $data . "'>" . $html . "</div>";
             return $bmz;
         }
 
