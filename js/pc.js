@@ -51,6 +51,13 @@ var PureClarity = {
         if (this.config.product){
             _pc('product_view', { id: this.config.product.id });
         }
+        
+        if (this.config.customer) {
+            _pc('customer_details', this.config.customer);
+        }
+        else if (this.config.islogout) {
+            _pc('customer_logout');
+        }
     }
 }
 PureClarity.init();

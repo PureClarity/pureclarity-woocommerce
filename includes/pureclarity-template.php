@@ -6,8 +6,7 @@ class PureClarity_Template {
 
     public function __construct( $plugin ) {
 
-        $this->plugin = $plugin;
-        
+        $this->plugin = $plugin;        
         add_filter( 'wp_head', array( $this, 'render_pureclarity_json' ) );
     }
 
@@ -19,12 +18,7 @@ class PureClarity_Template {
         $prodListEnabled = $settings->get_prod_enabled();
         $searchResultsDOMSelector = $settings->get_search_result_element();
         $enabled = ($searchEnabled || $merchEnabled ||  $prodListEnabled) && ($settings->get_accesskey() != "");
-
-        $categoryId = null;
-        if (is_product_category()) {
-            $category = get_queried_object();
-            $categoryId = $category->term_id;
-        }
+        $state = $this->plugin->get_state();
 
         $config = array(
             'enabled' => $enabled,
@@ -35,10 +29,12 @@ class PureClarity_Template {
             "apiUrl" => $settings->get_api_url(),
             "searchSelector" => $settings->get_search_selector(),
             "isSearch" => is_search(),
-            "product" => $this->plugin->get_state()->get_product(),
+            "product" => $state->get_product(),
             "isCategory" => is_product_category(),
-            "categoryId" => $this->plugin->get_state()->get_category_id(),
-            "searchResultsDOMSelector" => $searchResultsDOMSelector
+            "categoryId" => $state->get_category_id(),
+            "searchResultsDOMSelector" => $searchResultsDOMSelector,
+            "customer" => $state->get_customer(),
+            "islogout" => $state->is_logout()
         );
 
         $style="";
