@@ -157,7 +157,7 @@ class PureClarity_Feed {
     }
 
     public function parse_product( $product ) {
-
+        
         if ( $product->get_catalog_visibility() == "hidden")
             return null;
 

@@ -13,6 +13,30 @@ class PureClarity_Bmz {
         $this->currentProduct = $this->plugin->get_state()->get_product();
         $this->currentCategoryId = $this->plugin->get_state()->get_category_id();
         add_shortcode( 'pureclarity-bmz', array( $this, 'pureclarity_render_bmz') );
+
+        // Product Page BMZs
+        remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
+        add_action( 'woocommerce_before_single_product', array( $this, 'product_page_before_product'), 10);
+        add_action( 'woocommerce_product_meta_end', array( $this, 'product_page_product_summary'), 10);
+        add_action( 'woocommerce_after_single_product_summary', array( $this, 'product_page_after_product_summary'), 10);
+        add_action( 'woocommerce_after_single_product', array( $this, 'product_page_after_product'), 10);
+        
+    }
+
+    public function product_page_before_product() {
+        return $this->pureclarity_render_bmz(array( 'id' => 'PP-01', 'bottom' => '10'));
+    }
+
+    public function product_page_product_summary() {
+        return $this->pureclarity_render_bmz(array( 'id' => 'PP-02', 'top' => '10' ));
+    }
+
+    public function product_page_after_product_summary() {
+        return $this->pureclarity_render_bmz(array( 'id' => 'PP-03', 'bottom' => '10' ));
+    }
+
+    public function product_page_after_product() {
+        return $this->pureclarity_render_bmz(array( 'id' => 'PP-04', 'top' => '10' ));
     }
 
     public function pureclarity_render_bmz( $atts, $content = null) {
@@ -45,7 +69,8 @@ class PureClarity_Bmz {
             }
 
             $bmz = "<div class='" . $class . "' style='" . $style . "' data-pureclarity='bmz:" . $arguments['id'] . ";" . $data . "'>" . $html . "</div>";
-            return $bmz;
+            
+            echo $bmz;
         }
 
         return "";
