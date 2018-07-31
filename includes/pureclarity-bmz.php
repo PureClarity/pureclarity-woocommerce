@@ -50,7 +50,7 @@ class PureClarity_Bmz {
         }
         
         // Order Received Page BMZs
-        if (is_order_received_page() && $this->settings->add_bmz_checkout() ) {
+        if (is_order_received_page() && $this->settings->add_bmz_checkoutpage() ) {
             add_filter( 'the_content', array( $this, 'order_received_page' ) );
         }
         

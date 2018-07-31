@@ -214,7 +214,6 @@ class PureClarity_Admin
         register_setting( $this->settings_option_group, 'pureclarity_deltas_enabled', array( $this, 'sanitize_checkbox' ) );
 
         // Advanced Settings
-
         add_settings_section(
 			$this->advanced_section,
 			null,
@@ -248,7 +247,7 @@ class PureClarity_Admin
 
         add_settings_field(
 			'pureclarity_add_bmz_homepage',
-			'Enable BMZ Debugging',
+			'Show Home Page BMZs',
 			array( $this, 'pureclarity_add_bmz_homepage_callback' ),
 			$this->advanced_slug,
 			$this->advanced_section
@@ -256,7 +255,7 @@ class PureClarity_Admin
 
         add_settings_field(
 			'pureclarity_add_bmz_categorypage',
-			'Enable BMZ Debugging',
+			'Show Product Listing BMZs',
 			array( $this, 'pureclarity_add_bmz_categorypage_callback' ),
 			$this->advanced_slug,
 			$this->advanced_section
@@ -264,7 +263,7 @@ class PureClarity_Admin
 
         add_settings_field(
 			'pureclarity_add_bmz_productpage',
-			'Enable BMZ Debugging',
+			'Show Product Page BMZs',
 			array( $this, 'pureclarity_add_bmz_productpage_callback' ),
 			$this->advanced_slug,
 			$this->advanced_section
@@ -272,16 +271,16 @@ class PureClarity_Admin
 
         add_settings_field(
 			'pureclarity_add_bmz_basketpage',
-			'Enable BMZ Debugging',
+			'Show Cart Page BMZs',
 			array( $this, 'pureclarity_add_bmz_basketpage_callback' ),
 			$this->advanced_slug,
 			$this->advanced_section
         );
 
         add_settings_field(
-			'pureclarity_add_bmz_checkout',
-			'Enable BMZ Debugging',
-			array( $this, 'pureclarity_add_bmz_checkout_callback' ),
+			'pureclarity_add_bmz_checkoutpage',
+            'Show Checkout Page BMZs',
+			array( $this, 'pureclarity_add_bmz_checkoutpage_callback' ),
 			$this->advanced_slug,
 			$this->advanced_section
         );
@@ -289,12 +288,11 @@ class PureClarity_Admin
         register_setting( $this->advanced_option_group, 'pureclarity_bmz_debug', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_search_selector', 'sanitize_callback' );
         register_setting( $this->advanced_option_group, 'pureclarity_search_result_selector', 'sanitize_callback' );
-
-        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
-        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
-        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
-        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
-        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_homepage', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_categorypage', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_productpage', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_basketpage', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_checkoutpage', array( $this, 'sanitize_checkbox' ) );
 
         // Data feed section
         add_settings_section(
@@ -404,6 +402,85 @@ class PureClarity_Admin
         <?php
 
     }
+
+    public function pureclarity_add_bmz_homepage_callback() {
+
+        $enabled = $this->settings->add_bmz_homepage();
+        $checked = '';
+        if ( $enabled == true ) {
+            $checked = 'checked';
+        }
+
+        ?>
+		<input type="checkbox" id="checkbox_bmz_homepage"  name="pureclarity_add_bmz_homepage" class="regular-text" <?php echo $checked; ?> />
+		<p class="description" id="home-description">Auto insert BMZs on Home Page.</p>
+        <?php
+
+    }
+
+    public function pureclarity_add_bmz_categorypage_callback() {
+
+        $enabled = $this->settings->add_bmz_categorypage();
+        $checked = '';
+        if ( $enabled == true ) {
+            $checked = 'checked';
+        }
+
+        ?>
+		<input type="checkbox" id="checkbox_bmz_categorypage"  name="pureclarity_add_bmz_categorypage" class="regular-text" <?php echo $checked; ?> />
+		<p class="description" id="home-description">Auto insert BMZs on Product Listing Page.</p>
+        <?php
+
+    }
+
+    public function pureclarity_add_bmz_productpage_callback() {
+
+        $enabled = $this->settings->add_bmz_productpage();
+        $checked = '';
+        if ( $enabled == true ) {
+            $checked = 'checked';
+        }
+
+        ?>
+		<input type="checkbox" id="checkbox_bmz_productpage"  name="pureclarity_add_bmz_productpage" class="regular-text" <?php echo $checked; ?> />
+		<p class="description" id="home-description">Auto insert BMZs on Product Page.</p>
+        <?php
+
+    }
+
+    public function pureclarity_add_bmz_basketpage_callback() {
+
+        $enabled = $this->settings->add_bmz_basketpage();
+        $checked = '';
+        if ( $enabled == true ) {
+            $checked = 'checked';
+        }
+
+        ?>
+		<input type="checkbox" id="checkbox_bmz_basketpage"  name="pureclarity_add_bmz_basketpage" class="regular-text" <?php echo $checked; ?> />
+		<p class="description" id="home-description">Auto insert BMZs on Cart Page.</p>
+        <?php
+
+    }
+
+    public function pureclarity_add_bmz_checkoutpage_callback() {
+
+        $enabled = $this->settings->add_bmz_checkoutpage();
+        $checked = '';
+        if ( $enabled == true ) {
+            $checked = 'checked';
+        }
+
+        ?>
+		<input type="checkbox" id="checkbox_bmz_checkoutpage"  name="pureclarity_add_bmz_checkoutpage" class="regular-text" <?php echo $checked; ?> />
+		<p class="description" id="home-description">Auto insert BMZs on Checkout Complete Page.</p>
+        <?php
+
+    }
+
+    
+
+
 
     public function searchselector_callback() {
         ?>

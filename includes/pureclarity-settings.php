@@ -23,7 +23,7 @@ class PureClarity_Settings
         add_option( 'pureclarity_add_bmz_categorypage', 'yes' );
         add_option( 'pureclarity_add_bmz_productpage', 'yes' );
         add_option( 'pureclarity_add_bmz_basketpage', 'yes' );
-        add_option( 'pureclarity_add_bmz_checkout', 'yes' );
+        add_option( 'pureclarity_add_bmz_checkoutpage', 'yes' );
     }
     
     public function get_accesskey() {
@@ -153,8 +153,8 @@ class PureClarity_Settings
         return get_option( 'pureclarity_add_bmz_basketpage', '' ) == "yes";
     }
 
-    public function add_bmz_checkout() {
-        return get_option( 'pureclarity_add_bmz_checkout', '' ) == "yes";
+    public function add_bmz_checkoutpage() {
+        return get_option( 'pureclarity_add_bmz_checkoutpage', '' ) == "yes";
     }
     
 }
