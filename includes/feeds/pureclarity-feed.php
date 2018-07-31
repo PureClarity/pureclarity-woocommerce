@@ -209,11 +209,11 @@ class PureClarity_Feed {
         }
 
         if (!empty($product->get_date_on_sale_from())){
-            $json['SalesPriceStartDate'] = (string) $product->get_date_on_sale_from("c");
+            $json['SalePriceStartDate'] = (string) $product->get_date_on_sale_from("c");
         }
 
         if (!empty($product->get_date_on_sale_to())){
-            $json['SalesPriceEndDate'] = (string) $product->get_date_on_sale_to("c");
+            $json['SalePriceEndDate'] = (string) $product->get_date_on_sale_to("c");
         }
 
         $this->set_search_tags( $json, $product );
@@ -254,7 +254,7 @@ class PureClarity_Feed {
 
             if ($price != $regularPrice) {
                 $this->add_to_array( "Prices", $json, $regularPrice );
-                $this->add_to_array( "SalesPrices", $json, $price );
+                $this->add_to_array( "SalePrices", $json, $price );
             } else {
                 $this->add_to_array( "Prices", $json, $price );
             }
@@ -307,7 +307,7 @@ class PureClarity_Feed {
 
         if ($product->get_price() && $product->get_price() != $product->get_regular_price()) {
             $salesPrice = $product->get_price() . ' ' . get_woocommerce_currency();
-            $this->add_to_array("SalesPrices", $json, $salesPrice);
+            $this->add_to_array("SalePrices", $json, $salesPrice);
         }
     }
 
