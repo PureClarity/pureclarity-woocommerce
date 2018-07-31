@@ -187,16 +187,6 @@ class PureClarity_Feed {
             "ProductType" => $product->get_type()
         );
 
-        $searchTags = array();
-        foreach( $product->get_tag_ids() as $tagId) {
-            if (array_key_exists($tagId, $this->productTagsMap)){
-                $searchTags[] = $this->productTagsMap[$tagId];
-            }
-        }
-        if (sizeof($searchTags) >0) {
-            $json["SearchTags"] = $searchTags;
-        }
-
         $allImageUrls = array();
         foreach( $product->get_gallery_image_ids() as $attachmentId ) {
             $additionalImageUrl = wp_get_attachment_url( $attachmentId );
@@ -226,79 +216,109 @@ class PureClarity_Feed {
             $json['SalesPriceEndDate'] = (string) $product->get_date_on_sale_to("c");
         }
 
-        if (!empty($product->get_weight())) {
-            $json['Weight'] = [$product->get_weight()];
-        }
-
-        if (!empty($product->get_length())) {
-            $json['Length'] = [$product->get_length()];
-        }
-
-        if (!empty($product->get_width())) {
-            $json['Width'] = [$product->get_width()];
-        }
-
-        if (!empty($product->get_height())) {
-            $json['Height'] = [$product->get_height()];
-        }
-
-        $prices = array();
-        if ($product->get_regular_price()) {
-            $prices[] = $product->get_regular_price() . ' ' . get_woocommerce_currency();
-        }
-        $json["Prices"] = $prices;
-
-        $salesPrices = array();
-        if ($product->get_price()) {
-            $salesPrices[] = $product->get_price() . ' ' . get_woocommerce_currency();
-        }
-        $json["SalesPrices"] = $salesPrices;
-
-        if ($product->get_type() == 'variable') {
-
-            $json["AssociatedSkus"] = array();
-
-            foreach($product->get_attributes() as $key => $attribute ) {
-                $json[$key] = array();
-            }
-
-            $available_variations = $product->get_available_variations();
-            foreach($available_variations as $variant) {
-                
-                $json["AssociatedSkus"][] = $variant['sku'];
-                $price = $variant['display_price'] . ' ' . get_woocommerce_currency();
-                $regularPrice = $variant['display_regular_price'] . ' ' . get_woocommerce_currency();
-
-                if ($price != $regularPrice) {
-                    if (!in_array($regularPrice, $json["Prices"])){
-                        $json["Prices"][] = $regularPrice;
-                    }
-                    if (!in_array($price, $json["SalesPrices"])){
-                        $json["SalesPrices"][] = $price;
-                    }
-                } else {
-                    if (!in_array($price, $json["Prices"])){
-                        $json["Prices"][] = $price;
-                    }
-                }
-
-                foreach($product->get_attributes() as $key => $attribute ) {
-                    if (!empty($variant['attributes']['attribute_' . $key])) {
-                        $attributeValue = $variant['attributes']['attribute_' . $key];
-                        if (!in_array($attributeValue, $json[$key])){
-                            $json[$key][] = $attributeValue;
-                        }
-                    }
-                }
-            }   
-        }
+        $this->set_search_tags( $json, $product );
+        $this->set_basic_attributes( $json, $product );
+        $this->set_product_price( $json, $product );
+        $this->add_variant_info( $json, $product );
+        $this->add_child_products( $json, $product);
 
         // Check is valid
-        if (sizeof($json['Prices']) ==0 || empty($json['Sku']) || empty($json['Title']))
+        if ((empty($json['Prices']) || sizeof($json['Prices']) ==0) || empty($json['Sku']) || empty($json['Title']))
             return null;
         
         return $json;
     }
+
+    private function add_to_array( $key, &$json, $value ) {
+        if ( ! empty($value) ) {
+            if (!array_key_exists($key, $json)) {
+                $json[$key] = array();
+            }
+            if (!in_array($value, $json[$key])) {
+                $json[$key][] = $value;
+            }
+        }
+    }
+
+
+    private function add_variant_info( &$json, &$product ) {
+        
+        if ($product->get_type() != 'variable') return;
+        
+        foreach($product->get_available_variations() as $variant) {
+            
+            $this->add_to_array("AssociatedSkus", $json, $variant['sku']);
+
+            $price = $variant['display_price'] . ' ' . get_woocommerce_currency();
+            $regularPrice = $variant['display_regular_price'] . ' ' . get_woocommerce_currency();
+
+            if ($price != $regularPrice) {
+                $this->add_to_array( "Prices", $json, $regularPrice );
+                $this->add_to_array( "SalesPrices", $json, $price );
+            } else {
+                $this->add_to_array( "Prices", $json, $price );
+            }
+
+            foreach($product->get_attributes() as $key => $attribute ) {
+                $this->add_to_array($key, $json, $variant['attributes']['attribute_' . $key]);
+            }
+        }
+    }
+
+    
+    private function add_child_products( &$json, &$product ) {
+
+        if ($product->get_type() != 'grouped') return;
+
+        foreach($product->get_children() as $childId) {
+            $childProduct = wc_get_product($childId);
+            if ( ! empty($childProduct) ) {
+
+                if ( $childProduct->get_catalog_visibility() != "hidden" && $childProduct->get_status() == 'publish') {
+
+                    $this->add_to_array("AssociatedIds", $json, $childProduct->get_id());
+                    $this->add_to_array("AssociatedSkus", $json, $childProduct->get_sku());
+                    $this->add_to_array("AssociatedTitles", $json, $childProduct->get_title());
+                    $this->set_search_tags( $json, $childProduct );
+                    $this->set_product_price( $json, $childProduct );
+                    $this->add_variant_info( $json, $childProduct );
+                    $this->add_child_products( $json, $childProduct );
+
+                }
+            }
+        }
+    }
+
+    private function set_search_tags( &$json, &$product ) {
+        
+        foreach( $product->get_tag_ids() as $tagId) {
+            if (array_key_exists($tagId, $this->productTagsMap)){
+                $this->add_to_array( "SearchTags", $json, $this->productTagsMap[$tagId]);
+            }
+        }
+    }
+
+    private function set_product_price( &$json, &$product ) {
+        
+        if ($product->get_regular_price()) {
+            $price = $product->get_regular_price() . ' ' . get_woocommerce_currency();
+            $this->add_to_array("Prices", $json, $price);
+        }
+
+        if ($product->get_price() && $product->get_price() != $product->get_regular_price()) {
+            $salesPrice = $product->get_price() . ' ' . get_woocommerce_currency();
+            $this->add_to_array("SalesPrices", $json, $salesPrice);
+        }
+    }
+
+    private function set_basic_attributes( &$json, &$product ) {
+        $this->add_to_array('Weight', $json, $product->get_weight());
+        $this->add_to_array('Length', $json, $product->get_length());
+        $this->add_to_array('Width', $json, $product->get_width());
+        $this->add_to_array('Height', $json, $product->get_height());
+    }
+
+
 
     public function loadProductTagsMap() {
         $this->productTagsMap = [];
