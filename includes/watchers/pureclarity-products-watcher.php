@@ -64,6 +64,10 @@ class PureClarity_Products_Watcher {
                     if ( ! empty($data) ) {
                         $this->feed->send_product_delta( array($data), array());
                     }
+                    else {
+                        // Delete as delta
+                        $this->feed->send_product_delta( array(), array($id));
+                    }
                 }
             }
             else{
