@@ -6,6 +6,8 @@ class PureClarity_State {
     public $customer;
     public $islogout = false;
     public $order;
+    public $currentProduct;
+    public $currentCategoryId;
 
     public function __construct( $plugin ) {
         $this->plugin = $plugin;
@@ -42,6 +44,10 @@ class PureClarity_State {
     }
 
     public function get_product() {
+        if (! empty($this->currentProduct)){
+            return $this->currentProduct;
+        }
+
         $product = $this->get_wc_product();
         if (!empty($product)){
             $data = array(
@@ -63,18 +69,24 @@ class PureClarity_State {
                     if ( empty($product) )
                         return null;
                 }
-                if ($product->get_sku())
-                    return $product;
+                if ($product->get_sku()){
+                    $this->currentProduct = $product;
+                    return $this->currentProduct;
+                }
             }
         }
         return null;
     }
 
     public function get_category_id() {
+        if (! empty($this->currentCategoryId)){
+            return $this->currentCategoryId;
+        }
         $categoryId = null;
         if (is_product_category()) {
             $category = get_queried_object();
-            return $category->term_id;
+            $this->currentCategoryId = $category->term_id;
+            return $this->currentCategoryId;
         }
         return null;
     }
