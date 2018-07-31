@@ -246,9 +246,55 @@ class PureClarity_Admin
 			$this->advanced_section
         );
 
+        add_settings_field(
+			'pureclarity_add_bmz_homepage',
+			'Enable BMZ Debugging',
+			array( $this, 'pureclarity_add_bmz_homepage_callback' ),
+			$this->advanced_slug,
+			$this->advanced_section
+        );
+
+        add_settings_field(
+			'pureclarity_add_bmz_categorypage',
+			'Enable BMZ Debugging',
+			array( $this, 'pureclarity_add_bmz_categorypage_callback' ),
+			$this->advanced_slug,
+			$this->advanced_section
+        );
+
+        add_settings_field(
+			'pureclarity_add_bmz_productpage',
+			'Enable BMZ Debugging',
+			array( $this, 'pureclarity_add_bmz_productpage_callback' ),
+			$this->advanced_slug,
+			$this->advanced_section
+        );
+
+        add_settings_field(
+			'pureclarity_add_bmz_basketpage',
+			'Enable BMZ Debugging',
+			array( $this, 'pureclarity_add_bmz_basketpage_callback' ),
+			$this->advanced_slug,
+			$this->advanced_section
+        );
+
+        add_settings_field(
+			'pureclarity_add_bmz_checkout',
+			'Enable BMZ Debugging',
+			array( $this, 'pureclarity_add_bmz_checkout_callback' ),
+			$this->advanced_slug,
+			$this->advanced_section
+        );
+
         register_setting( $this->advanced_option_group, 'pureclarity_bmz_debug', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_search_selector', 'sanitize_callback' );
         register_setting( $this->advanced_option_group, 'pureclarity_search_result_selector', 'sanitize_callback' );
+
+        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', array( $this, 'sanitize_checkbox' ) );
 
         // Data feed section
         add_settings_section(

@@ -24,12 +24,18 @@ class PureClarity_Bmz {
         $this->currentCategoryId = $this->state->get_category_id();
 
         // Homepage and Order Received Page BMZs
-        if (is_front_page()) {
+        if (is_front_page() && $this->settings->add_bmz_homepage()) {
             add_filter( 'the_content', array( $this, 'front_page' ) );
         }
 
+        // Category Page BMZs
+        if ( is_product_category() && $this->settings->add_bmz_categorypage() ) {
+            add_action( 'woocommerce_before_main_content', array( $this, 'cat_page_1'), 10);
+            add_action( 'woocommerce_after_main_content', array( $this, 'cat_page_2'), 10);
+        }
+
         // Product Page BMZs
-        if ( is_product() ) {
+        if ( is_product() && $this->settings->add_bmz_productpage() ) {
             remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
             add_action( 'woocommerce_before_single_product', array( $this, 'product_page_1'), 10);
             add_action( 'woocommerce_product_meta_end', array( $this, 'product_page_2'), 10);
@@ -37,19 +43,14 @@ class PureClarity_Bmz {
             add_action( 'woocommerce_after_single_product', array( $this, 'product_page_4'), 10);
         }
 
-        // Category Page BMZs
-        if ( is_product_category() ) {
-            add_action( 'woocommerce_before_main_content', array( $this, 'cat_page_1'), 10);
-            add_action( 'woocommerce_after_main_content', array( $this, 'cat_page_2'), 10);
-        }
-
         // Cart Page BMZs
-        if ( is_cart() ) {
+        if ( is_cart() && $this->settings->add_bmz_basketpage() ) {
             add_action( 'woocommerce_before_cart', array( $this, 'cart_page_1'), 10);
             add_action( 'woocommerce_after_cart', array( $this, 'cart_page_2'), 10);
         }
-
-        if (is_order_received_page()) {
+        
+        // Order Received Page BMZs
+        if (is_order_received_page() && $this->settings->add_bmz_checkout() ) {
             add_filter( 'the_content', array( $this, 'order_received_page' ) );
         }
         

@@ -19,6 +19,11 @@ class PureClarity_Settings
         add_option( 'pureclarity_deltas_enabled', 'no' );
         add_option( 'pureclarity_search_selector', '.search-field' );
         add_option( 'pureclarity_search_result_selector', '.site-main' );
+        add_option( 'pureclarity_add_bmz_homepage', 'yes' );
+        add_option( 'pureclarity_add_bmz_categorypage', 'yes' );
+        add_option( 'pureclarity_add_bmz_productpage', 'yes' );
+        add_option( 'pureclarity_add_bmz_basketpage', 'yes' );
+        add_option( 'pureclarity_add_bmz_checkout', 'yes' );
     }
     
     public function get_accesskey() {
@@ -131,4 +136,25 @@ class PureClarity_Settings
 
         return $url . "/api/productdelta";
     }
+
+    public function add_bmz_homepage() {
+        return get_option( 'pureclarity_add_bmz_homepage', '' ) == "yes";
+    }
+
+    public function add_bmz_categorypage() {
+        return get_option( 'pureclarity_add_bmz_categorypage', '' ) == "yes";
+    }
+
+    public function add_bmz_productpage() {
+        return get_option( 'pureclarity_add_bmz_productpage', '' ) == "yes";
+    }
+
+    public function add_bmz_basketpage() {
+        return get_option( 'pureclarity_add_bmz_basketpage', '' ) == "yes";
+    }
+
+    public function add_bmz_checkout() {
+        return get_option( 'pureclarity_add_bmz_checkout', '' ) == "yes";
+    }
+    
 }
