@@ -478,9 +478,6 @@ class PureClarity_Admin
 
     }
 
-    
-
-
 
     public function searchselector_callback() {
         ?>
