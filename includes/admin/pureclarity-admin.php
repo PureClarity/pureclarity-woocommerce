@@ -175,6 +175,14 @@ class PureClarity_Admin
         );
 
         add_settings_field(
+			'pureclarity_mode',
+			'Enable Mode',
+			array( $this, 'pureclarity_mode_callback' ),
+			$this->settings_slug,
+			$this->settings_section
+        );
+
+        add_settings_field(
 			'pureclarity_search_enabled',
 			'Enable Search',
 			array( $this, 'search_enabled_callback' ),
@@ -208,6 +216,7 @@ class PureClarity_Admin
 
         register_setting( $this->settings_option_group, 'pureclarity_accesskey', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_secretkey', 'sanitize_callback' );
+        register_setting( $this->settings_option_group, 'pureclarity_mode', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_search_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_merch_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_prodlist_enabled', array( $this, 'sanitize_checkbox' ) );
@@ -335,10 +344,25 @@ class PureClarity_Admin
 		<p class="description" id="home-description">Enter your Secret Key</p>
         <?php
     }
+
+
+    public function pureclarity_mode_callback() {
+
+        $mode = $this->settings->get_pureclarity_mode();
+
+        ?>
+        <select id="pureclarity_mode" name="pureclarity_mode">
+            <option  value="on" <?php echo $mode=="on"?"selected='selected'":"" ?> >On</option>
+            <option  value="admin" <?php echo $mode=="admin"?"selected='selected'":"" ?>>Admin only</option>
+            <option  value="off" <?php echo $mode=="off"?"selected='selected'":"" ?>>Off</option>
+        </select>
+        <p class="description" id="home-description">Set PureClarity Enable Mode. Then the mode is set to 'Admin only' PureClarity only shows for you.</p>
+        <?php
+    }
     
     public function search_enabled_callback() {
 
-        $enabled = $this->settings->get_search_enabled();
+        $enabled = $this->settings->get_search_enabled_admin();
         // die($enabled);
         $checked = '';
         if ( $enabled == true ) {
@@ -354,7 +378,7 @@ class PureClarity_Admin
     
     public function merch_enabled_callback() {
 
-        $enabled = $this->settings->get_merch_enabled();
+        $enabled = $this->settings->get_merch_enabled_admin();
         $checked = '';
         if ( $enabled == true ) {
             $checked = 'checked';
@@ -369,7 +393,7 @@ class PureClarity_Admin
     
     public function prodlist_enabled_callback() {
 
-        $enabled = $this->settings->get_prod_enabled();
+        $enabled = $this->settings->get_prod_enabled_admin();
         $checked = '';
         if ( $enabled == true ) {
             $checked = 'checked';
@@ -384,7 +408,7 @@ class PureClarity_Admin
 
     public function enabled_deltas_callback() {
 
-        $enabled = $this->settings->get_deltas_enabled();
+        $enabled = $this->settings->get_deltas_enabled_admin();
         $checked = '';
         if ( $enabled == true ) {
             $checked = 'checked';
@@ -513,7 +537,7 @@ class PureClarity_Admin
     public function searchresults_selector_callback() {
         ?>
 		<input type="text" name="pureclarity_search_result_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_search_result_element() ); ?>" />
-		<p class="description" id="home-description">Enter DOM selector for the main body where search results will be displayed. (Default is #site-main)</p>
+		<p class="description" id="home-description">Enter DOM selector for the main body where search results will be displayed. (Default is #main)</p>
         <?php
     }
 

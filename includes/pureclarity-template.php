@@ -19,7 +19,7 @@ class PureClarity_Template {
         $merchEnabled = $settings->get_merch_enabled();
         $prodListEnabled = $settings->get_prod_enabled();
         $searchResultsDOMSelector = $settings->get_search_result_element();
-        $enabled = ($searchEnabled || $merchEnabled ||  $prodListEnabled) && ($settings->get_accesskey() != "");
+        $enabled = ($searchEnabled || $merchEnabled ||  $prodListEnabled) && ($settings->get_accesskey() != "") &&  $settings->get_pureclarity_enabled();
         $state = $this->plugin->get_state();
 
         $searchBmz1 = null;

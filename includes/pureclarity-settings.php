@@ -7,6 +7,7 @@ class PureClarity_Settings
     public function __construct() {
 		add_option( 'pureclarity_accesskey', '' );
         add_option( 'pureclarity_secretkey', '' );
+        add_option( 'pureclarity_mode', 'off' );
         add_option( 'pureclarity_search_enabled', 'no' );
         add_option( 'pureclarity_merch_enabled', 'no' );
         add_option( 'pureclarity_prodlist_enabled', 'no' );
@@ -18,7 +19,7 @@ class PureClarity_Settings
         add_option( 'pureclarity_bmz_debug', 'no' );
         add_option( 'pureclarity_deltas_enabled', 'no' );
         add_option( 'pureclarity_search_selector', '.search-field' );
-        add_option( 'pureclarity_search_result_selector', '#site-main' );
+        add_option( 'pureclarity_search_result_selector', '#main' );
         add_option( 'pureclarity_add_bmz_homepage', 'yes' );
         add_option( 'pureclarity_add_bmz_categorypage', 'yes' );
         add_option( 'pureclarity_add_bmz_productpage', 'yes' );
@@ -34,20 +35,53 @@ class PureClarity_Settings
         return (string) get_option( 'pureclarity_secretkey', '' );
     }
 
-    public function get_search_enabled() {
+    public function get_pureclarity_mode() {
+        return get_option( 'pureclarity_mode', 'off' );
+    }
+
+    public function get_pureclarity_enabled() {
+        switch($this->get_pureclarity_mode()) {
+            case "on":
+                return true;
+                break;
+            case "admin":
+                return current_user_can('administrator');
+                break;
+        }
+        return false;
+    }
+
+    public function get_search_enabled_admin() {
         return get_option( 'pureclarity_search_enabled', '' ) == "yes";
     }
 
-    public function get_merch_enabled() {
+    public function get_merch_enabled_admin() {
         return get_option( 'pureclarity_merch_enabled', '' ) == "yes";
     }
 
-    public function get_prod_enabled() {
+    public function get_prod_enabled_admin() {
         return get_option( 'pureclarity_prodlist_enabled', '' ) == "yes";
     }
 
-    public function get_deltas_enabled() {
+    public function get_deltas_enabled_admin() {
         return get_option( 'pureclarity_deltas_enabled', '' ) == "yes";
+    }
+    
+
+    public function get_search_enabled() {
+        return get_option( 'pureclarity_search_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
+    }
+
+    public function get_merch_enabled() {
+        return get_option( 'pureclarity_merch_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
+    }
+
+    public function get_prod_enabled() {
+        return get_option( 'pureclarity_prodlist_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
+    }
+
+    public function get_deltas_enabled() {
+        return get_option( 'pureclarity_deltas_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
     }
 
     public function get_bmz_debug_enabled() {
