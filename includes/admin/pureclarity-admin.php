@@ -356,7 +356,7 @@ class PureClarity_Admin
             <option  value="admin" <?php echo $mode=="admin"?"selected='selected'":"" ?>>Admin only</option>
             <option  value="off" <?php echo $mode=="off"?"selected='selected'":"" ?>>Off</option>
         </select>
-        <p class="description" id="home-description">Set PureClarity Enable Mode. Then the mode is set to 'Admin only' PureClarity only shows for you.</p>
+        <p class="description" id="home-description">Set PureClarity Enable Mode. When the mode is set to 'Admin only' PureClarity only shows for you.</p>
         <?php
     }
     
