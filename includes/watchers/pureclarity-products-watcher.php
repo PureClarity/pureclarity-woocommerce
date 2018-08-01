@@ -104,7 +104,7 @@ class PureClarity_Products_Watcher {
     }
 
     public function moto_order_placed( $order_id ) {
-        // error_log("moto_order_placed: " . $order_id );
+        // Order is placed in the admin and is complete
     }
 
     public function order_placed( $order_id ) {

@@ -262,6 +262,14 @@ class PureClarity_Admin
         );
 
         add_settings_field(
+			'pureclarity_add_bmz_searchpage',
+			'Show Search Results BMZs',
+			array( $this, 'pureclarity_add_bmz_searchpage_callback' ),
+			$this->advanced_slug,
+			$this->advanced_section
+        );
+
+        add_settings_field(
 			'pureclarity_add_bmz_productpage',
 			'Show Product Page BMZs',
 			array( $this, 'pureclarity_add_bmz_productpage_callback' ),
@@ -290,6 +298,7 @@ class PureClarity_Admin
         register_setting( $this->advanced_option_group, 'pureclarity_search_result_selector', 'sanitize_callback' );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_homepage', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_categorypage', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_searchpage', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_productpage', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_basketpage', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_checkoutpage', array( $this, 'sanitize_checkbox' ) );
@@ -433,6 +442,21 @@ class PureClarity_Admin
 
     }
 
+    public function pureclarity_add_bmz_searchpage_callback() {
+
+        $enabled = $this->settings->add_bmz_searchpage();
+        $checked = '';
+        if ( $enabled == true ) {
+            $checked = 'checked';
+        }
+
+        ?>
+		<input type="checkbox" id="checkbox_bmz_searchpage"  name="pureclarity_add_bmz_searchpage" class="regular-text" <?php echo $checked; ?> />
+		<p class="description" id="home-description">Auto insert BMZs on Search Results Listing Page.</p>
+        <?php
+
+    }
+
     public function pureclarity_add_bmz_productpage_callback() {
 
         $enabled = $this->settings->add_bmz_productpage();
@@ -489,7 +513,7 @@ class PureClarity_Admin
     public function searchresults_selector_callback() {
         ?>
 		<input type="text" name="pureclarity_search_result_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_search_result_element() ); ?>" />
-		<p class="description" id="home-description">Enter DOM selector for the main body where search results will be displayed. (Default is .site-main)</p>
+		<p class="description" id="home-description">Enter DOM selector for the main body where search results will be displayed. (Default is #site-main)</p>
         <?php
     }
 

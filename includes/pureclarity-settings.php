@@ -18,7 +18,7 @@ class PureClarity_Settings
         add_option( 'pureclarity_bmz_debug', 'no' );
         add_option( 'pureclarity_deltas_enabled', 'no' );
         add_option( 'pureclarity_search_selector', '.search-field' );
-        add_option( 'pureclarity_search_result_selector', '.site-main' );
+        add_option( 'pureclarity_search_result_selector', '#site-main' );
         add_option( 'pureclarity_add_bmz_homepage', 'yes' );
         add_option( 'pureclarity_add_bmz_categorypage', 'yes' );
         add_option( 'pureclarity_add_bmz_productpage', 'yes' );
@@ -143,6 +143,10 @@ class PureClarity_Settings
 
     public function add_bmz_categorypage() {
         return get_option( 'pureclarity_add_bmz_categorypage', '' ) == "yes";
+    }
+
+    public function add_bmz_searchpage() {
+        return get_option( 'pureclarity_add_bmz_searchpage', '' ) == "yes";
     }
 
     public function add_bmz_productpage() {

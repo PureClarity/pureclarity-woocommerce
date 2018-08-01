@@ -4,7 +4,7 @@ class PureClarity_Plugin
 {
     static $pureclarity;
     private $settings;
-    private $template;
+    private $bmz;
     private $feed;
     private $state;
 
@@ -38,6 +38,10 @@ class PureClarity_Plugin
         return $this->state;
     }
 
+    public function get_bmz() {
+        return $this->bmz;
+    }
+
     
 
     public function register_assets() {
@@ -54,8 +58,8 @@ class PureClarity_Plugin
 			new PureClarity_Admin( $this );
 		} else {
             $this->state = new PureClarity_State( $this );
+            $this->bmz = new PureClarity_Bmz( $this );
             new PureClarity_Template( $this );
-            new PureClarity_Bmz( $this );
         }
     }
 

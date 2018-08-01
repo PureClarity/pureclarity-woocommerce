@@ -55,7 +55,8 @@ class PureClarity_State {
                 'sku' => $product->get_sku()
             );
             wp_reset_postdata();
-            return $data;
+            $this->currentProduct = $data;
+            return $this->currentProduct;
         }
         return null;
     }
@@ -70,8 +71,7 @@ class PureClarity_State {
                         return null;
                 }
                 if ($product->get_sku()){
-                    $this->currentProduct = $product;
-                    return $this->currentProduct;
+                    return $product;
                 }
             }
         }

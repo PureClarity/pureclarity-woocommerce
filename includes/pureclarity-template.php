@@ -3,10 +3,12 @@
 class PureClarity_Template {
 
     private $plugin;
+    private $bmz;
 
     public function __construct( $plugin ) {
 
         $this->plugin = $plugin;        
+        $this->bmz = $plugin->get_bmz();
         add_filter( 'wp_head', array( $this, 'render_pureclarity_json' ) );
     }
 
@@ -20,22 +22,50 @@ class PureClarity_Template {
         $enabled = ($searchEnabled || $merchEnabled ||  $prodListEnabled) && ($settings->get_accesskey() != "");
         $state = $this->plugin->get_state();
 
+        $searchBmz1 = null;
+        $searchBmz2 = null;
+        if ($settings->add_bmz_searchpage()){
+            $searchBmz1 = $this->bmz->pureclarity_render_bmz( array( "id" => "SR-01", "bottom" => "10" ));
+            $searchBmz2 = $this->bmz->pureclarity_render_bmz( array( "id" => "SR-02", "top" => "10" ));
+        }
+
+        $prodListBmz1 = null;
+        $prodListBmz2 = null;
+        if ($settings->add_bmz_categorypage()){
+            $prodListBmz1 = $this->bmz->pureclarity_render_bmz( array( "id" => "PL-01", "bottom" => "10" ));
+            $prodListBmz2 = $this->bmz->pureclarity_render_bmz( array( "id" => "PL-02", "top" => "10" ));
+        }
+        
         $config = array(
             'enabled' => $enabled,
-            'accessKey' => $settings->get_accesskey(),
-            'searchEnabled' => $searchEnabled,
-            'merchEnabled' => $merchEnabled,
-            'prodListEnabled' => $prodListEnabled,
-            "apiUrl" => $settings->get_api_url(),
-            "searchSelector" => $settings->get_search_selector(),
-            "isSearch" => is_search(),
             "product" => $state->get_product(),
-            "isCategory" => is_product_category(),
             "categoryId" => $state->get_category_id(),
-            "searchResultsDOMSelector" => $searchResultsDOMSelector,
-            "customer" => $state->get_customer(),
-            "islogout" => $state->is_logout(),
-            "order" => $state->get_order()
+            'autocomplete' => array(
+                "enabled" => $searchEnabled,
+                "searchSelector" => $settings->get_search_selector()
+            ),
+            'search' => array(
+                'do' => $searchEnabled && is_search(),
+                "domSelector" => $searchResultsDOMSelector,
+                'bmz1' => $searchBmz1,
+                'bmz2' => $searchBmz2
+            ),
+            'merch' => array(
+                'enabled' => $merchEnabled
+            ),
+            'prodlist' => array(
+                'do' => $prodListEnabled && is_product_category(),
+                "domSelector" => $searchResultsDOMSelector,
+                'bmz1' => $prodListBmz1,
+                'bmz2' => $prodListBmz2
+            ),
+            "tracking" => array(
+                'accessKey' => $settings->get_accesskey(),
+                "apiUrl" => $settings->get_api_url(),
+                "customer" => $state->get_customer(),
+                "islogout" => $state->is_logout(),
+                "order" => $state->get_order()
+            )
         );
 
         $style="";

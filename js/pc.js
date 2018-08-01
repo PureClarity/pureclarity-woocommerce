@@ -9,33 +9,46 @@ var PureClarity = {
             this.process();
     },
     process: function() {
+
         if (!this.config.enabled) return;
 
-        if (this.config.searchEnabled){
-            $searchFields = jQuery(this.config.searchSelector);
+        if (this.config.autocomplete.enabled){
+            $searchFields = jQuery(this.config.autocomplete.searchSelector);
             if ($searchFields){
                 $searchFields.attr("id", "pc_search");
             }
-            if (this.config.isSearch){
-                var pcContainer = document.createElement('div');
-                var wrapper = document.createElement('div');
-                jQuery(wrapper).addClass('pureclarity-wrapper');
-                jQuery(pcContainer).addClass('pureclarity-container').attr("data-pureclarity", "navigation_search");
-                jQuery(pureclarityConfig.searchResultsDOMSelector).wrap(wrapper).hide();
-                jQuery(".pureclarity-wrapper").append(pcContainer);
-                jQuery(wrapper).addClass('site-main')
+        }
+
+        if (this.config.search.do){
+            
+            var pcContainer = document.createElement('div');
+            var wrapper = document.createElement('div');
+            jQuery(wrapper).addClass('pureclarity-wrapper');
+            jQuery(pcContainer).addClass('pureclarity-container').attr("data-pureclarity", "navigation_search");
+            jQuery(this.config.search.domSelector).wrap(wrapper).hide();
+            jQuery(".pureclarity-wrapper").append(pcContainer);
+            jQuery(wrapper).addClass('site-main')
+            if (this.config.search.bmz1) {
+                jQuery(".pureclarity-wrapper").prepend(this.config.search.bmz1);
+            }
+            if (this.config.search.bmz2) {
+                jQuery(".pureclarity-wrapper").append(this.config.search.bmz2);
             }
         }
 
-        if (this.config.prodListEnabled){
-            if (this.config.isCategory){
-                var pcContainer = document.createElement('div');
-                var wrapper = document.createElement('div');
-                jQuery(wrapper).addClass('pureclarity-wrapper');
-                jQuery(pcContainer).addClass('pureclarity-container').attr("data-pureclarity", "navigation_category:" + this.config.categoryId);
-                jQuery(pureclarityConfig.searchResultsDOMSelector).wrap(wrapper).hide();
-                jQuery(".pureclarity-wrapper").append(pcContainer);
-                jQuery(wrapper).addClass('site-main')
+        if (this.config.prodlist.do){
+            var pcContainer = document.createElement('div');
+            var wrapper = document.createElement('div');
+            jQuery(wrapper).addClass('pureclarity-wrapper');
+            jQuery(pcContainer).addClass('pureclarity-container').attr("data-pureclarity", "navigation_category:" + this.config.categoryId);
+            jQuery(this.config.prodlist.domSelector).wrap(wrapper).hide();
+            jQuery(".pureclarity-wrapper").append(pcContainer);
+            jQuery(wrapper).addClass('site-main')
+            if (this.config.prodlist.bmz1) {
+                jQuery(".pureclarity-wrapper").prepend(this.config.prodlist.bmz1);
+            }
+            if (this.config.prodlist.bmz2) {
+                jQuery(".pureclarity-wrapper").append(this.config.prodlist.bmz2);
             }
         }
 
@@ -45,21 +58,21 @@ var PureClarity = {
             }
             var p = d.createElement(s), h = d.getElementsByTagName(s)[0];
             p.src = u;p.async=1;h.parentNode.insertBefore(p, h);
-        })(window, document, 'script', this.config.apiUrl, '_pc');
+        })(window, document, 'script', this.config.tracking.apiUrl, '_pc');
         _pc('page_view');
         
         if (this.config.product){
             _pc('product_view', { id: this.config.product.id });
         }
         
-        if (this.config.customer) {
+        if (this.config.tracking.customer) {
             _pc('customer_details', this.config.customer);
         }
-        else if (this.config.islogout) {
+        else if (this.config.tracking.islogout) {
             _pc('customer_logout');
         }
 
-        if(this.config.order) {
+        if(this.config.tracking.order) {
             _pc('order:addTrans', this.config.order.transaction);
             for (var i=0; i<this.config.order.items.length; i++) {
                 _pc('order:addItem', this.config.order.items[i]);
