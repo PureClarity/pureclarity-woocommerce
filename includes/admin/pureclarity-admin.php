@@ -549,7 +549,7 @@ class PureClarity_Admin
     public function print_settings_section_text() {
 		echo '<p>' . 'Configure PureClarity access credentials. You can find them in PureClarity Admin console.' . '</p>';
 		echo '<p>' . 'Once you have input the credentials you can then run a data feed.' . '</p>';
-		echo '<p>' . wp_kses_post( 'To create an account simply contact the ? <a href="https://www.pureclarity.com" target="_blank">PureClarity</a> team to get one set up and start your free trial today!' ) . '</p>';
+		echo '<p>' . wp_kses_post( 'To create an account simply contact the <a href="https://www.pureclarity.com" target="_blank">PureClarity</a> team to get one set up and start your free trial today!' ) . '</p>';
     }
     
 
