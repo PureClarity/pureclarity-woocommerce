@@ -178,7 +178,7 @@ class PureClarity_Feed {
         }
 
         $json = array(
-            "Id" => $product->get_id(),
+            "Id" => (string) $product->get_id(),
             "Sku"   => $product->get_sku(),
             "Title" => $product->get_title(),
             "Description" => $product->get_description() . " " . $product->get_short_description(),

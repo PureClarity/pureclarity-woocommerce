@@ -78,20 +78,5 @@ class PureClarity_Template {
         echo $style . $script;
     }
 
-    public function get_product() {
-        if (is_product()){
-            global $product;
-            if (!empty($product)){
-                if ( ! is_object( $product)) {
-                    $product = wc_get_product( get_the_ID() );
-                    if ( empty($product) )
-                        return null;
-                }
-                if ($product->get_sku())
-                    return $product;
-            }
-        }
-        return null;
-    }
 
 }

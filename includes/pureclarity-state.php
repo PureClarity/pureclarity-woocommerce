@@ -51,7 +51,7 @@ class PureClarity_State {
         $product = $this->get_wc_product();
         if (!empty($product)){
             $data = array(
-                'id' => $product->get_id(),
+                'id' => (string) $product->get_id(),
                 'sku' => $product->get_sku()
             );
             wp_reset_postdata();
