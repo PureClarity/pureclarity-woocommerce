@@ -5,7 +5,7 @@ class PureClarity_Feed {
     private $plugin;
     private $settings;
     private $productTagsMap;
-    public $pageSize = 2;
+    public $pageSize = 20;
 
     public function __construct( $plugin ) {
         $this->plugin = $plugin;

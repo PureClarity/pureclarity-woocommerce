@@ -49,7 +49,7 @@
 				if (response.finished !== true) {
 					setTimeout( function() {
 						runFeed( type, ++currentPage );
-					}, 1 );
+					}, 10 );
 					
 				} else {
 					updateMessage(type, 'Data Feed generation complete.');
