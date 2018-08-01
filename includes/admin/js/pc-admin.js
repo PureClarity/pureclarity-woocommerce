@@ -9,12 +9,11 @@
 
 
     function runFeed(type, currentPage) {
-        $('.pureclarity-buttons ').prop("disabled", true);
-        $('.pureclarity-message ').hide();
-        updateMessage(type, "Running feed...");
-
 
         if (!currentPage) {
+			$('.pureclarity-buttons ').prop("disabled", true);
+			$('.pureclarity-message ').hide();
+			updateMessage(type, "Running feed...");
 			currentPage = 1;
 		}
 
@@ -48,14 +47,14 @@
 				updateMessage( type, "Processing Feed... " + progress + "% done" );
 
 				if (response.finished !== true) {
-                    
-					//reIndex( type, index, ++currentPage );
-					resetFeedProcess( type );
+					setTimeout( function() {
+						runFeed( type, ++currentPage );
+					}, 1 );
+					
 				} else {
 					updateMessage(type, 'Data Feed generation complete.');
 					$('#' + type + '-container').removeClass("error").addClass("updated");
 					$('#' + type + '-heading').html("<strong>Note: A feed has been successfully submitted!</strong>");
-					"Note: A feed has succesfully been submitted!"
 					resetFeedProcess( type );
 				}
 			}

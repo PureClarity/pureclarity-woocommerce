@@ -5,7 +5,7 @@ class PureClarity_Feed {
     private $plugin;
     private $settings;
     private $productTagsMap;
-    public $pageSize = 20;
+    public $pageSize = 2;
 
     public function __construct( $plugin ) {
         $this->plugin = $plugin;
@@ -230,7 +230,7 @@ class PureClarity_Feed {
 
         // Check is valid
         $error = array();
-        if (empty($json['Prices'] || sizeof($json['Prices']) ==0)) {
+        if (empty($json['Prices'] || (is_array($json['Prices']) && sizeof($json['Prices']) == 0))) {
             $error[] = 'Prices';
         }
         if (empty($json['Sku'])) {
