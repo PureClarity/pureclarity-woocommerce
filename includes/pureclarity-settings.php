@@ -21,6 +21,7 @@ class PureClarity_Settings
         add_option( 'pureclarity_search_selector', '.search-field' );
         add_option( 'pureclarity_search_result_selector', '#main' );
         add_option( 'pureclarity_add_bmz_homepage', 'yes' );
+        add_option( 'pureclarity_add_bmz_searchpage', 'yes' );
         add_option( 'pureclarity_add_bmz_categorypage', 'yes' );
         add_option( 'pureclarity_add_bmz_productpage', 'yes' );
         add_option( 'pureclarity_add_bmz_basketpage', 'yes' );
