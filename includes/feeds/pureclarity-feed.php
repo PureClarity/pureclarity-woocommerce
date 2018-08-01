@@ -148,18 +148,20 @@ class PureClarity_Feed {
                     $items .= ",";
                 }
                 $items .= wp_json_encode($item);
-            } else  {
-                error_log("PureClarity: Product " . $product->get_id() . " excluded from the feed. Possible missing required data (e.g sku, title, price) or not visibile.");
             }
         }
 
         return $items;
     }
 
-    public function parse_product( $product ) {
+    public function parse_product( $product, $log_error = true ) {
         
-        if ( $product->get_catalog_visibility() == "hidden")
+        if ( $product->get_catalog_visibility() == "hidden"){
+            if ($log_error) {
+                error_log("PureClarity: Product " . $product->get_id() . " excluded from the feed. Reason: Catalog visibility = hidden.");
+            }
             return null;
+        }
 
         $productUrl = get_permalink( $product->get_id() );
         $productUrl = str_replace(array("https:", "http:"), "", $productUrl);
@@ -186,6 +188,10 @@ class PureClarity_Feed {
             "Image" => $imageUrl,
             "ProductType" => $product->get_type()
         );
+
+        if ($product->get_type() == 'external' && !empty( $product->get_button_text() )) {
+            $json["ButtonText"] = $product->get_button_text();
+        }
 
         $allImageUrls = array();
         foreach( $product->get_gallery_image_ids() as $attachmentId ) {
@@ -223,8 +229,23 @@ class PureClarity_Feed {
         $this->add_child_products( $json, $product);
 
         // Check is valid
-        if ((empty($json['Prices']) || sizeof($json['Prices']) ==0) || empty($json['Sku']) || empty($json['Title']))
+        $error = array();
+        if (empty($json['Prices'] || sizeof($json['Prices']) ==0)) {
+            $error[] = 'Prices';
+        }
+        if (empty($json['Sku'])) {
+            $error[] = 'Sku';
+        }
+        if (empty($json['Title'])) {
+            $error[] = 'Title';
+        }
+        
+        if (sizeof($error) > 0) {
+            if ($log_error) {
+                error_log("PureClarity: Product " . $product->get_id() . " excluded from the feed. Reason: Missing required fields = " . implode(", ",  $error));
+            }
             return null;
+        }
         
         return $json;
     }
