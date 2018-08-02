@@ -28,6 +28,11 @@ class PureClarity_Products_Watcher {
         add_action( 'edit_term', array( $this, 'save_term' ), 10, 3 );
         add_action( 'delete_term', array( $this, 'save_term' ), 10, 3 );
 
+        // Watch for User updates
+		add_action( 'profile_update', array( $this, 'save_user' ) );
+		add_action( 'user_register', array( $this, 'save_user' ) );
+		add_action( 'delete_user', array( $this, 'save_user' ) );
+
         // Watch user login and logout
         add_action('wp_login', array( $this, 'user_login'), 10, 2);
         add_action('wp_logout', array( $this, 'user_logout'), 10, 2);
@@ -53,6 +58,10 @@ class PureClarity_Products_Watcher {
                 $this->settings->set_category_feed_required();
             }
         }
+    }
+
+    public function save_user( $user_id ) {
+        $this->settings->set_user_feed_required();
     }
 
     public function save_meta_item( $meta_id, $post_id, $meta_key, $meta_value ) {

@@ -16,6 +16,7 @@ class PureClarity_Cron {
         if ($this->settings->get_deltas_enabled()) {
             $this->process_products();
             $this->process_categories();
+            //$this->process_users();
         }
 
         
@@ -89,6 +90,30 @@ class PureClarity_Cron {
                     $this->feed->end_feed( "category" );
                 } catch ( \Exception $exception ) {
                     error_log("PureClarity: An Error occured updating categories: " . $exception->getMessage() );
+                }
+            }
+
+        }
+    }
+
+
+    public function process_users() {
+
+        if ( ! $this->settings->get_userfeed_run() ) {
+            return;
+        }
+        
+        if ( !empty($this->settings->get_user_feed_required()) ) {
+
+            $this->settings->clear_user_feed_required();
+
+            if ( $count > 0 ) {
+                try {
+                    
+
+
+                } catch ( \Exception $exception ) {
+                    error_log("PureClarity: An Error occured updating users: " . $exception->getMessage() );
                 }
             }
 

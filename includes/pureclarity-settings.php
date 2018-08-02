@@ -245,7 +245,7 @@ class PureClarity_Settings
 
 
     public function set_user_feed_required() {
-        update_option( 'pureclarity_user_feed_required', date() );
+        update_option( 'pureclarity_user_feed_required', time() );
     }
 
     public function clear_user_feed_required() {
