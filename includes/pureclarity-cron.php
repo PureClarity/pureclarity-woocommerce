@@ -30,11 +30,14 @@ class PureClarity_Cron {
 
                     $this->settings->remove_prod_delta( $id );
                     if ($size > -1) {
-                        $product = get_post_meta($id, 'pc_delta');
-                        if ( ! empty( $product )) {
+                        $meta_value = get_post_meta($id, 'pc_delta');
+                        if ( ! empty( $meta_value ) && is_array( $meta_value ) && sizeof($meta_value) > 0) {
                             delete_post_meta($id, 'pc_delta');
-                            $totalpacket += $size;
-                            $products[] = $product;
+                            $product = json_decode($meta_value[0]);
+                            if ( ! empty($product ) ) {
+                                $totalpacket += $size;
+                                $products[] = $product;
+                            }
                         }
                     } else {
                         $totalpacket += strlen($id);
