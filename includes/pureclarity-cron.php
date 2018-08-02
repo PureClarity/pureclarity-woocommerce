@@ -14,6 +14,20 @@ class PureClarity_Cron {
         $this->feed = $plugin->get_feed();
 
         if ($this->settings->get_deltas_enabled()) {
+            $this->process_products();
+            $this->process_categories();
+        }
+
+        
+    }
+
+    public function process_products() {
+
+        try {
+
+            if ( ! $this->settings->get_prodfeed_run() ) {
+                return;
+            }
 
             $prodDeltas = $this->settings->get_prod_deltas();
             if (sizeof($prodDeltas) > 0) {
@@ -51,12 +65,35 @@ class PureClarity_Cron {
                     $this->feed->send_product_delta( $products, $deletes);
                 }
             }
-
+        } catch ( \Exception $exception ) {
+            error_log("PureClarity: An Error occured updating product deltas: " . $exception->getMessage() );
         }
-
-        
     }
 
+
+    public function process_categories() {
+
+        if ( ! $this->settings->get_catfeed_run() ) {
+            return;
+        }
+        
+        if ( !empty($this->settings->get_category_feed_required()) ) {
+
+            $this->settings->clear_category_feed_required();
+
+            $data = $this->feed->build_items( "category", 1 );
+            if ( !empty($data) ) {
+                try {
+                    $this->feed->start_feed( "category" );
+                    $this->feed->send_data( "category", $data );
+                    $this->feed->end_feed( "category" );
+                } catch ( \Exception $exception ) {
+                    error_log("PureClarity: An Error occured updating categories: " . $exception->getMessage() );
+                }
+            }
+
+        }
+    }
     
 
 

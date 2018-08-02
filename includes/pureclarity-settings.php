@@ -27,6 +27,8 @@ class PureClarity_Settings
         add_option( 'pureclarity_add_bmz_basketpage', 'yes' );
         add_option( 'pureclarity_add_bmz_checkoutpage', 'yes' );
         add_option( 'pureclarity_product_deltas', '{}' );
+        add_option( 'pureclarity_category_feed_required', '' );
+        add_option( 'pureclarity_user_feed_required', '' );
     }
     
     public function get_accesskey() {
@@ -229,6 +231,30 @@ class PureClarity_Settings
         return array();
     }
 
+    public function set_category_feed_required() {
+        update_option( 'pureclarity_category_feed_required', time() );
+    }
+
+    public function clear_category_feed_required() {
+        update_option( 'pureclarity_category_feed_required', '' );
+    }
+
+    public function get_category_feed_required() {
+        return get_option( 'pureclarity_category_feed_required', '' );
+    }
+
+
+    public function set_user_feed_required() {
+        update_option( 'pureclarity_user_feed_required', date() );
+    }
+
+    public function clear_user_feed_required() {
+        update_option( 'pureclarity_user_feed_required', '' );
+    }
+
+    public function get_user_feed_required() {
+        return get_option( 'pureclarity_user_feed_required', '' );
+    }
     
     
 }

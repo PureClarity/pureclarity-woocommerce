@@ -46,9 +46,11 @@ class PureClarity_Products_Watcher {
             $term = get_term($term_id);
             if ( ! empty($term) ) {
                 // Add category as delta
+                $this->settings->set_category_feed_required();
             }
             else {
                 // Delete as delta
+                $this->settings->set_category_feed_required();
             }
         }
     }
