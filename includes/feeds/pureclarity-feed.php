@@ -392,8 +392,7 @@ class PureClarity_Feed {
     public function get_users_count() {
         $args = array(
 			'order'   => 'ASC',
-            'orderby' => 'ID',
-            'role' => 'Customer'
+            'orderby' => 'ID'
         );
         
         $users = new WP_User_Query( $args );
@@ -406,7 +405,6 @@ class PureClarity_Feed {
         $args = array(
 			'order'   => 'ASC',
             'orderby' => 'ID',
-            'role' => 'Customer',
 			'offset'  => $offset,
 			'number'  => $pageSize,
         );

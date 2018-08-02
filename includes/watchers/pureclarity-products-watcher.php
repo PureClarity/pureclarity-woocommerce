@@ -107,7 +107,7 @@ class PureClarity_Products_Watcher {
     }
 
     public function user_login($user_login, $user) {
-        if ( ! empty($user) && in_array("customer", $user->roles )){
+        if ( ! empty($user) ){
             $customer = new WC_Customer( $user->ID );
             if ($customer->get_id() > 0) {
                 $_SESSION['pureclarity-customer'] = array(

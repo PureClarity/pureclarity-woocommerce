@@ -66,7 +66,7 @@ var PureClarity = {
         }
         
         if (this.config.tracking.customer) {
-            _pc('customer_details', this.config.customer);
+            _pc('customer_details', this.config.tracking.customer);
         }
         else if (this.config.tracking.islogout) {
             _pc('customer_logout');
