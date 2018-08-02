@@ -230,13 +230,13 @@ class PureClarity_Feed {
 
         // Check is valid
         $error = array();
-        if (empty($json['Prices'] || (is_array($json['Prices']) && sizeof($json['Prices']) == 0))) {
+        if (!array_key_exists('Prices', $json) || (is_array($json['Prices']) && sizeof($json['Prices']) == 0)) {
             $error[] = 'Prices';
         }
-        if (empty($json['Sku'])) {
+        if (!array_key_exists('Sku', $json) || empty($json['Sku'])) {
             $error[] = 'Sku';
         }
-        if (empty($json['Title'])) {
+        if (!array_key_exists('Title', $json) || empty($json['Title'])) {
             $error[] = 'Title';
         }
         

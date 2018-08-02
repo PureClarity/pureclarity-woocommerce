@@ -13,6 +13,7 @@ require_once PURECLARITY_PATH . 'includes/pureclarity-template.php';
 require_once PURECLARITY_PATH . 'includes/pureclarity-bmz.php';
 require_once PURECLARITY_PATH . 'includes/feeds/pureclarity-feed.php';
 require_once PURECLARITY_PATH . 'includes/watchers/pureclarity-products-watcher.php';
+require_once PURECLARITY_PATH . 'includes/pureclarity-cron.php';
 
 // Add admin only classes
 if ( is_admin() ) {

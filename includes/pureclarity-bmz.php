@@ -29,7 +29,7 @@ class PureClarity_Bmz {
         }
 
         // Category Page BMZs (Only add if PC is not controlling prod lists, otherwise we'll it through JS)
-        if ( is_product_category() && $this->settings->add_bmz_categorypage() && !$this->settings->get_prod_enabled()  ) {
+        if ( (is_product_category() || is_shop()) && $this->settings->add_bmz_categorypage() && !$this->settings->get_prod_enabled()  ) {
             add_action( 'woocommerce_before_main_content', array( $this, 'cat_page_1'), 10);
             add_action( 'woocommerce_after_main_content', array( $this, 'cat_page_2'), 10);
         }

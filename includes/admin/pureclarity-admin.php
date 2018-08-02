@@ -296,7 +296,7 @@ class PureClarity_Admin
 
         add_settings_field(
 			'pureclarity_add_bmz_checkoutpage',
-            'Show Checkout Page BMZs',
+            'Show Order Confirmation BMZs',
 			array( $this, 'pureclarity_add_bmz_checkoutpage_callback' ),
 			$this->advanced_slug,
 			$this->advanced_section
@@ -521,7 +521,7 @@ class PureClarity_Admin
 
         ?>
 		<input type="checkbox" id="checkbox_bmz_checkoutpage"  name="pureclarity_add_bmz_checkoutpage" class="regular-text" <?php echo $checked; ?> />
-		<p class="description" id="home-description">Auto insert BMZs on Checkout Complete Page.</p>
+		<p class="description" id="home-description">Auto insert BMZs on Order Confirmation Page.</p>
         <?php
 
     }

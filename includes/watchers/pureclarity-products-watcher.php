@@ -18,7 +18,9 @@ class PureClarity_Products_Watcher {
         }
 
         // Watch for product changes
-        add_action( 'save_post', array( $this, 'save_item' ) );
+        add_action( 'save_post_product', array( $this, 'save_product' ), 10, 3 );
+        add_action( 'added_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
+        add_action( 'updated_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
         add_action( 'before_delete_post', array( $this, 'delete_item' ) );
 
         // Watch for category changes
@@ -51,28 +53,46 @@ class PureClarity_Products_Watcher {
         }
     }
 
-    public function save_item( $id ) {
-        $post = get_post( $id );
+    public function save_meta_item( $meta_id, $post_id, $meta_key, $meta_value ) {
+        if ( $meta_key != '_edit_lock' && $meta_key != 'pc_delta' ) {
+            $post = get_post( $post_id );
+            if ( ! empty($post) ) {
+                $this->save_product( $post_id, $post, true );
+            }
+        }
+    }
+
+    public function save_product( $id, $post, $update  ) {
+
         if ($post->post_type == "product" && $this->settings->get_deltas_enabled()){
+
+            if ( ! current_user_can( 'edit_product', $id ) )
+                return $id;
+            
             if ($post->post_status == "publish") {
             
                 $product = wc_get_product($id);    
                 if ( ! empty($product) ){
+                    
                     // Add as delta
                     $this->feed->loadProductTagsMap();
                     $data = $this->feed->parse_product( $product );
                     if ( ! empty($data) ) {
-                        $this->feed->send_product_delta( array($data), array());
+                        $json = json_encode($data);
+                        $this->settings->add_prod_delta($id, strlen($json));
+                        update_post_meta($id, 'pc_delta', $json);
                     }
                     else {
                         // Delete as delta
-                        $this->feed->send_product_delta( array(), array($id));
+                        delete_post_meta($id, 'pc_delta');
+                        $this->settings->add_prod_delta_delete($id);
                     }
                 }
             }
-            else{
+            elseif ($post->post_status != "importing") {
                 // Delete as delta
-                $this->feed->send_product_delta( array(), array($id));
+                delete_post_meta($id, 'pc_delta');
+                $this->settings->add_prod_delta_delete($id);
             }
         }
         
@@ -80,8 +100,9 @@ class PureClarity_Products_Watcher {
 
     public function delete_item( $id ) {
         $post = get_post( $id );
-        if ($post->post_type == "product"){
-            $this->feed->send_product_delta( array(), array($id));
+        if ($post->post_type == "product" && $post->post_status != "trash"){
+            delete_post_meta($id, 'pc_delta');
+            $this->settings->add_prod_delta_delete($id, true);
         }
     }
 
