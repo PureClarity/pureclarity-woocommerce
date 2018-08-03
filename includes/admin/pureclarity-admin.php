@@ -365,7 +365,7 @@ class PureClarity_Admin
                 <option  value="<?php echo $key ?>" <?php echo $region==$key?"selected='selected'":"" ?>>Region <?php echo $key ?> </option>
             <?php endforeach; ?>
         </select>
-        <p class="description" id="home-description">Select the Region Id supplied with your PureClarity credientials</p>
+        <p class="description" id="home-description">Select the Region Id supplied with your PureClarity credentials</p>
         <?php
     }
 
