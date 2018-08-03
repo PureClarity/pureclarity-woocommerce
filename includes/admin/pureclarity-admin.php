@@ -208,7 +208,7 @@ class PureClarity_Admin
 
         add_settings_field(
 			'pureclarity_deltas_enabled',
-			'Enable Product Delta Sync',
+			'Enable Delta Sync',
 			array( $this, 'enabled_deltas_callback' ),
 			$this->settings_slug,
 			$this->settings_section

@@ -17,21 +17,23 @@ class PureClarity_Products_Watcher {
             session_start();
         }
 
-        // Watch for product changes
-        add_action( 'save_post_product', array( $this, 'save_product' ), 10, 3 );
-        add_action( 'added_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
-        add_action( 'updated_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
-        add_action( 'before_delete_post', array( $this, 'delete_item' ) );
+        if ($this->settings->get_deltas_enabled()){
+            // Watch for product changes
+            add_action( 'save_post_product', array( $this, 'save_product' ), 10, 3 );
+            add_action( 'added_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
+            add_action( 'updated_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
+            add_action( 'before_delete_post', array( $this, 'delete_item' ) );
 
-        // Watch for category changes
-        add_action( 'create_term', array( $this, 'save_term' ), 10, 3 );
-        add_action( 'edit_term', array( $this, 'save_term' ), 10, 3 );
-        add_action( 'delete_term', array( $this, 'save_term' ), 10, 3 );
+            // Watch for category changes
+            add_action( 'create_term', array( $this, 'save_term' ), 10, 3 );
+            add_action( 'edit_term', array( $this, 'save_term' ), 10, 3 );
+            add_action( 'delete_term', array( $this, 'save_term' ), 10, 3 );
 
-        // Watch for User updates
-		add_action( 'profile_update', array( $this, 'save_user' ) );
-		add_action( 'user_register', array( $this, 'save_user' ) );
-		add_action( 'delete_user', array( $this, 'save_user' ) );
+            // Watch for User updates
+            add_action( 'profile_update', array( $this, 'save_user' ) );
+            add_action( 'user_register', array( $this, 'save_user' ) );
+            add_action( 'delete_user', array( $this, 'delete_user' ) );
+        }
 
         // Watch user login and logout
         add_action('wp_login', array( $this, 'user_login'), 10, 2);
@@ -61,7 +63,16 @@ class PureClarity_Products_Watcher {
     }
 
     public function save_user( $user_id ) {
-        $this->settings->set_user_feed_required();
+        $data = $this->feed->parse_user( $user_id );
+        if ( ! empty($data) ) {
+            $json = json_encode($data);
+            $this->settings->add_user_delta( $user_id, strlen($json) );
+            update_user_meta($user_id, 'pc_delta', $json);
+        }
+    }
+
+    public function delete_user( $user_id ) {
+        $this->settings->add_user_delta_delete( $user_id );
     }
 
     public function save_meta_item( $meta_id, $post_id, $meta_key, $meta_value ) {
@@ -75,7 +86,7 @@ class PureClarity_Products_Watcher {
 
     public function save_product( $id, $post, $update  ) {
 
-        if ($post->post_type == "product" && $this->settings->get_deltas_enabled()){
+        if ($post->post_type == "product"){
 
             if ( ! current_user_can( 'edit_product', $id ) )
                 return $id;

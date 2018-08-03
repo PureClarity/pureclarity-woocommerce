@@ -417,28 +417,10 @@ class PureClarity_Feed {
 
         $items = "";
         foreach($users->get_results() as $user) {
-            $customer = new WC_Customer( $user->ID );
-            if ($customer->get_id() > 0) {
 
-                $data = array(
-                    'UserId' => $customer->get_id(),
-                    'Email' => $customer->get_email(),
-                    'FirstName' => $customer->get_first_name(),
-                    'LastName' => $customer->get_last_name()
-                );
+            $data = $this->parse_user( $user->ID );
 
-                $billing = $customer->get_billing();
-                if (!empty($billing)) {
-                    if (!empty($billing['city'])) {
-                        $data['City'] = $billing['city'];
-                    }
-                    if (!empty($billing['state'])) {
-                        $data['State'] = $billing['state'];
-                    }
-                    if (!empty($billing['country'])) {
-                        $data['Country'] = $billing['country'];
-                    }
-                }
+            if ( ! empty ($data) ) {
 
                 if ($first) {
                     $first = false;
@@ -451,6 +433,37 @@ class PureClarity_Feed {
             }
         }
         return $items;
+    }
+
+    public function parse_user( $userId ) {
+        
+        $customer = new WC_Customer( $userId );
+
+        if ( ! empty($customer) && $customer->get_id() > 0) {
+
+            $data = array(
+                'UserId' => $customer->get_id(),
+                'Email' => $customer->get_email(),
+                'FirstName' => $customer->get_first_name(),
+                'LastName' => $customer->get_last_name()
+            );
+
+            $billing = $customer->get_billing();
+            if (!empty($billing)) {
+                if (!empty($billing['city'])) {
+                    $data['City'] = $billing['city'];
+                }
+                if (!empty($billing['state'])) {
+                    $data['State'] = $billing['state'];
+                }
+                if (!empty($billing['country'])) {
+                    $data['Country'] = $billing['country'];
+                }
+            }
+
+            return $data;
+        }
+        return null;
     }
 
     public function get_order_count() {
@@ -516,6 +529,21 @@ class PureClarity_Feed {
             'Secret'            => $this->settings->get_secretkey(),
             'Products'          => $products,
             'DeleteProducts'    => $deletes,
+            'Format'            => 'pureclarity_json'
+        );
+
+        $url = $this->settings->get_delta_url();
+        $this->http_post( $url, $request, false);
+
+    }
+
+    public function send_user_delta( $users, $deletes) {
+
+        $request = array(
+            'AppKey'            => $this->settings->get_accesskey(),
+            'Secret'            => $this->settings->get_secretkey(),
+            'Users'             => $users,
+            'DeleteUsers'       => $deletes,
             'Format'            => 'pureclarity_json'
         );
 

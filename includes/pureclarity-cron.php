@@ -16,7 +16,7 @@ class PureClarity_Cron {
         if ($this->settings->get_deltas_enabled()) {
             $this->process_products();
             $this->process_categories();
-            //$this->process_users();
+            $this->process_users();
         }
 
         
@@ -99,24 +99,50 @@ class PureClarity_Cron {
 
     public function process_users() {
 
-        if ( ! $this->settings->get_userfeed_run() ) {
-            return;
-        }
-        
-        if ( !empty($this->settings->get_user_feed_required()) ) {
+        try {
 
-            $this->settings->clear_user_feed_required();
-
-            if ( $count > 0 ) {
-                try {
-                    
-
-
-                } catch ( \Exception $exception ) {
-                    error_log("PureClarity: An Error occured updating users: " . $exception->getMessage() );
-                }
+            if ( ! $this->settings->get_userfeed_run() ) {
+                return;
             }
 
+            $deltas = $this->settings->get_user_deltas();
+            if (sizeof($deltas) > 0) {
+
+                $users = array();
+                $deletes = array();
+
+                $totalpacket = 0;
+                $count = 0;
+
+                foreach($deltas as $id => $size ) {
+
+                    if ($totalpacket >= 250000 || $count > 100) break;
+
+                    $this->settings->remove_user_delta( $id );
+                    if ($size > -1) {
+                        $meta_value = get_user_meta($id, 'pc_delta');
+                        if ( ! empty( $meta_value ) && is_array( $meta_value ) && sizeof($meta_value) > 0) {
+                            delete_user_meta($id, 'pc_delta');
+                            $user = json_decode($meta_value[0]);
+                            if ( ! empty( $user ) ) {
+                                $totalpacket += $size;
+                                $users[] = $user;
+                            }
+                        }
+                    } else {
+                        $totalpacket += strlen($id);
+                        $deletes[] = (string)$id;
+                    }
+
+                    $count += 1;
+                }
+
+                if (sizeof( $users ) > 0 || sizeof( $deletes ) > 0 ){
+                    $this->feed->send_user_delta( $users, $deletes);
+                }
+            }
+        } catch ( \Exception $exception ) {
+            error_log("PureClarity: An Error occured updating user deltas: " . $exception->getMessage() );
         }
     }
     

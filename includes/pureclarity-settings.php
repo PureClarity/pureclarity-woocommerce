@@ -28,7 +28,7 @@ class PureClarity_Settings
         add_option( 'pureclarity_add_bmz_checkoutpage', 'yes' );
         add_option( 'pureclarity_product_deltas', '{}' );
         add_option( 'pureclarity_category_feed_required', '' );
-        add_option( 'pureclarity_user_feed_required', '' );
+        add_option( 'pureclarity_user_deltas', '{}' );
     }
     
     public function get_accesskey() {
@@ -164,7 +164,7 @@ class PureClarity_Settings
 
     public function get_delta_url() {
         $url = getenv('PURECLARITY_API_ENDPOINT');
-        $port =  getenv('PURECLARITY_API_PORT');
+        $port = getenv('PURECLARITY_API_PORT');
         if (empty($url)){
             $url = "https://api.pureclarity.net";
         }
@@ -172,7 +172,7 @@ class PureClarity_Settings
             $url = $url . ":" . $port;
         }
 
-        return $url . "/api/productdelta";
+        return $url . "/api/delta";
     }
 
     public function add_bmz_homepage() {
@@ -252,9 +252,38 @@ class PureClarity_Settings
         update_option( 'pureclarity_user_feed_required', '' );
     }
 
-    public function get_user_feed_required() {
-        return get_option( 'pureclarity_user_feed_required', '' );
-    }
+
     
+    public function add_user_delta_delete( $id ) {
+        $this->add_user_delta( $id, -1 );
+    }
+
+    public function add_user_delta( $id, $size ) {
+        $deltas = $this->get_user_deltas();
+        if ( empty($deltas) ) {
+            $deltas = array();
+        }
+        $json = json_encode($deltas, true);
+        $deltas[$id] = $size;
+        update_option( 'pureclarity_user_deltas', json_encode($deltas, true) );
+    }
+
+    public function remove_user_delta( $id ) {
+        $deltas = $this->get_user_deltas();
+        if ( !empty($deltas) && array_key_exists($id, $deltas) ) {
+            unset($deltas[$id]);
+            update_option( 'pureclarity_user_deltas', json_encode($deltas, true) );
+        }
+    }
+
+    public function get_user_deltas() {
+        $deltastring = get_option( 'pureclarity_user_deltas', '{}' );
+        if (!empty($deltastring)){
+            $deltas = json_decode($deltastring, true);
+            return $deltas;
+        }
+        return array();
+    }
+
     
 }
