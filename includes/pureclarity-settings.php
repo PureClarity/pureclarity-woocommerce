@@ -3,10 +3,42 @@
 class PureClarity_Settings
 {
     public $scriptUrl = '//pcs.pureclarity.net';
+    private $regions =array(  
+        "1" => "https://api-eu-w-1.pureclarity.net",
+        "2" => "https://api-eu-w-2.pureclarity.net",
+        "3" => "https://api-eu-c-1.pureclarity.net",
+        "4" => "https://api-us-e-1.pureclarity.net",
+        "5" => "https://api-us-e-2.pureclarity.net",
+        "6" => "https://api-us-w-1.pureclarity.net",
+        "7" => "https://api-us-w-2.pureclarity.net",
+        "8" => "https://api-ap-s-1.pureclarity.net",
+        "9" => "https://api-ap-ne-1.pureclarity.net",
+        "10" => "https://api-ap-ne-2.pureclarity.net",
+        "11" => "https://api-ap-se-1.pureclarity.net",
+        "12" => "https://api-ap-se-2.pureclarity.net",
+        "13" => "https://api-ca-c-1.pureclarity.net",
+        "14" => "https://api-sa-e-1.pureclarity.net");
+
+    private $sftpRegions = array( 
+        "1" => "https://ftp-eu-w-1.pureclarity.net",
+        "2" => "https://ftp-eu-w-2.pureclarity.net",
+        "3" => "https://ftp-eu-c-1.pureclarity.net",
+        "4" => "https://ftp-us-e-1.pureclarity.net",
+        "5" => "https://ftp-us-e-2.pureclarity.net",
+        "6" => "https://ftp-us-w-1.pureclarity.net",
+        "7" => "https://ftp-us-w-2.pureclarity.net",
+        "8" => "https://ftp-ap-s-1.pureclarity.net",
+        "9" => "https://ftp-ap-ne-1.pureclarity.net",
+        "10" => "https://ftp-ap-ne-2.pureclarity.net",
+        "11" => "https://ftp-ap-se-1.pureclarity.net",
+        "12" => "https://ftp-ap-se-2.pureclarity.net",
+        "13" => "https://ftp-ca-c-1.pureclarity.net",
+        "14" => "https://ftp-sa-e-1.pureclarity.net");
 
     public function __construct() {
 		add_option( 'pureclarity_accesskey', '' );
         add_option( 'pureclarity_secretkey', '' );
+        add_option( 'pureclarity_region', '1' );
         add_option( 'pureclarity_mode', 'off' );
         add_option( 'pureclarity_search_enabled', 'no' );
         add_option( 'pureclarity_merch_enabled', 'no' );
@@ -37,6 +69,14 @@ class PureClarity_Settings
     
     public function get_secretkey() {
         return (string) get_option( 'pureclarity_secretkey', '' );
+    }
+
+    public function get_regions() {
+        return $this->regions;
+    }
+
+    public function get_region() {
+        return (string) get_option( 'pureclarity_region', '1' );
     }
 
     public function get_pureclarity_mode() {
@@ -101,11 +141,11 @@ class PureClarity_Settings
     }
 
     public function get_feed_baseurl() {
-
+        
         $url = getenv('PURECLARITY_FEED_HOST');
         $port = getenv('PURECLARITY_FEED_PORT');
         if (empty($url)){
-            $url = "https://sftp.pureclarity.net";
+            $url = $this->sftpRegions[$this->get_region()];
         }
         if (!empty($port)){
             $url = $url . ":" . $port;
@@ -163,10 +203,11 @@ class PureClarity_Settings
     }
 
     public function get_delta_url() {
+        
         $url = getenv('PURECLARITY_API_ENDPOINT');
         $port = getenv('PURECLARITY_API_PORT');
         if (empty($url)){
-            $url = "https://api.pureclarity.net";
+            $url = $this->regions[$this->get_region()];
         }
         if (!empty($port)){
             $url = $url . ":" . $port;

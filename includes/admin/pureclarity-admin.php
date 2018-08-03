@@ -175,6 +175,14 @@ class PureClarity_Admin
         );
 
         add_settings_field(
+			'pureclarity_region',
+			'Region',
+			array( $this, 'pureclarity_region_callback' ),
+			$this->settings_slug,
+			$this->settings_section
+        );
+
+        add_settings_field(
 			'pureclarity_mode',
 			'Enable Mode',
 			array( $this, 'pureclarity_mode_callback' ),
@@ -216,6 +224,7 @@ class PureClarity_Admin
 
         register_setting( $this->settings_option_group, 'pureclarity_accesskey', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_secretkey', 'sanitize_callback' );
+        register_setting( $this->settings_option_group, 'pureclarity_region', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_mode', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_search_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_merch_enabled', array( $this, 'sanitize_checkbox' ) );
@@ -345,6 +354,21 @@ class PureClarity_Admin
         <?php
     }
 
+    public function pureclarity_region_callback() {
+
+        $regions = $this->settings->get_regions();
+        $region = $this->settings->get_region();
+
+        ?>
+        <select id="pureclarity_region" name="pureclarity_region">
+            <?php foreach($regions as $key=>$url): ?>
+                <option  value="<?php echo $key ?>" <?php echo $region==$key?"selected='selected'":"" ?>>Region <?php echo $key ?> </option>
+            <?php endforeach; ?>
+        </select>
+        <p class="description" id="home-description">Select the Region Id supplied with your PureClarity credientials</p>
+        <?php
+    }
+
 
     public function pureclarity_mode_callback() {
 
@@ -356,7 +380,7 @@ class PureClarity_Admin
             <option  value="admin" <?php echo $mode=="admin"?"selected='selected'":"" ?>>Admin only</option>
             <option  value="off" <?php echo $mode=="off"?"selected='selected'":"" ?>>Off</option>
         </select>
-        <p class="description" id="home-description">Set PureClarity Enable Mode. When the mode is set to 'Admin only' PureClarity only shows for administrators on the front end.</p>
+        <p class="description" id="home-description">Set PureClarity Enable Mode. When the mode is set to 'Admin only' PureClarity only shows for administrators on the front end</p>
         <?php
     }
     
@@ -431,7 +455,7 @@ class PureClarity_Admin
 
         ?>
 		<input type="checkbox" id="checkbox_bmz_debug"  name="pureclarity_bmz_debug" class="regular-text" <?php echo $checked; ?> />
-		<p class="description" id="home-description">Check to activate debugging for PureClarity BMZs. They will show even if empty.</p>
+		<p class="description" id="home-description">Check to activate debugging for PureClarity BMZs. They will show even if empty</p>
         <?php
 
     }
@@ -446,7 +470,7 @@ class PureClarity_Admin
 
         ?>
 		<input type="checkbox" id="checkbox_bmz_homepage"  name="pureclarity_add_bmz_homepage" class="regular-text" <?php echo $checked; ?> />
-		<p class="description" id="home-description">Auto insert BMZs on Home Page.</p>
+		<p class="description" id="home-description">Auto insert BMZs on Home Page</p>
         <?php
 
     }
@@ -461,7 +485,7 @@ class PureClarity_Admin
 
         ?>
 		<input type="checkbox" id="checkbox_bmz_categorypage"  name="pureclarity_add_bmz_categorypage" class="regular-text" <?php echo $checked; ?> />
-		<p class="description" id="home-description">Auto insert BMZs on Product Listing Page.</p>
+		<p class="description" id="home-description">Auto insert BMZs on Product Listing Page</p>
         <?php
 
     }
@@ -476,7 +500,7 @@ class PureClarity_Admin
 
         ?>
 		<input type="checkbox" id="checkbox_bmz_searchpage"  name="pureclarity_add_bmz_searchpage" class="regular-text" <?php echo $checked; ?> />
-		<p class="description" id="home-description">Auto insert BMZs on Search Results Listing Page.</p>
+		<p class="description" id="home-description">Auto insert BMZs on Search Results Listing Page</p>
         <?php
 
     }
@@ -491,7 +515,7 @@ class PureClarity_Admin
 
         ?>
 		<input type="checkbox" id="checkbox_bmz_productpage"  name="pureclarity_add_bmz_productpage" class="regular-text" <?php echo $checked; ?> />
-		<p class="description" id="home-description">Auto insert BMZs on Product Page.</p>
+		<p class="description" id="home-description">Auto insert BMZs on Product Page</p>
         <?php
 
     }
@@ -506,7 +530,7 @@ class PureClarity_Admin
 
         ?>
 		<input type="checkbox" id="checkbox_bmz_basketpage"  name="pureclarity_add_bmz_basketpage" class="regular-text" <?php echo $checked; ?> />
-		<p class="description" id="home-description">Auto insert BMZs on Cart Page.</p>
+		<p class="description" id="home-description">Auto insert BMZs on Cart Page</p>
         <?php
 
     }
@@ -521,7 +545,7 @@ class PureClarity_Admin
 
         ?>
 		<input type="checkbox" id="checkbox_bmz_checkoutpage"  name="pureclarity_add_bmz_checkoutpage" class="regular-text" <?php echo $checked; ?> />
-		<p class="description" id="home-description">Auto insert BMZs on Order Confirmation Page.</p>
+		<p class="description" id="home-description">Auto insert BMZs on Order Confirmation Page</p>
         <?php
 
     }
