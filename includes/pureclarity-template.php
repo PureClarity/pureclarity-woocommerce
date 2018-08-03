@@ -38,7 +38,6 @@ class PureClarity_Template {
             $prodListBmz2 = $this->bmz->pureclarity_render_bmz( array( "id" => "PL-02", "top" => "10" ));
         }
         
-        error_log("calling template");
         $config = array(
             'enabled' => $enabled,
             "product" => $state->get_product(),
