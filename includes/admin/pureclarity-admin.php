@@ -15,7 +15,7 @@ class PureClarity_Admin
     private $settings;
     private $feed;
 
-    public function __construct( $plugin ) {
+    public function __construct( &$plugin ) {
 
         $this->plugin = $plugin;
         $this->settings = $this->plugin->get_settings();

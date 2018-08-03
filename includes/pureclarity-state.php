@@ -6,10 +6,11 @@ class PureClarity_State {
     public $customer;
     public $islogout = false;
     public $order;
+    public $cart;
     public $currentProduct;
     public $currentCategoryId;
 
-    public function __construct( $plugin ) {
+    public function __construct( &$plugin ) {
         $this->plugin = $plugin;
         if (!session_id()) {
             session_start();
@@ -90,6 +91,49 @@ class PureClarity_State {
         }
         return null;
     }
+
+    public function set_cart(){
+
+        $cart_items = WC()->cart->get_cart();
+
+        $items = array();
+
+        if ( ! empty( $cart_items )  ) {
+
+            foreach ( $cart_items as $cart_item_key => $cart_item ) {
+                $item = array(
+                    "id" => $cart_item['product_id'], 
+                    "qty" => $cart_item['quantity']
+                );
+                $items[] = $item;
+            }
+        }
+        
+        $this->cart = array(
+            "id" => time(),
+            "items" => $items
+        );
+
+        $_SESSION['pureclarity-cart'] = $this->cart;
+        
+        return $this->cart;
+    }
+
+    public function get_cart() {
+        
+        if ( $this->cart != null ) {
+            return $this->cart;
+        }
+        
+        if ( isset($_SESSION['pureclarity-cart']) ){
+            $this->cart = $_SESSION['pureclarity-cart'];
+            return $this->cart;
+        }
+
+        // must be new session
+        return $this->set_cart();
+    }
+
 
     public function get_order() {
         if ( ! empty($this->order) ) {

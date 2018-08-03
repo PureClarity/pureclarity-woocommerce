@@ -5,12 +5,19 @@ class PureClarity_Products_Watcher {
     private $plugin;
     private $settings;
     private $feed;
+    private $state;
 
-    public function __construct( $plugin ) {
+    public function __construct( &$plugin ) {
+
 
         $this->plugin = $plugin;
         $this->settings = $plugin->get_settings();
         $this->feed = $plugin->get_feed();
+        $this->state = $plugin->get_state();
+
+        if ( ! $this->settings->get_pureclarity_enabled()) {
+            return;
+        }
 
         // Ensure we have session
         if (!session_id()) {
@@ -38,6 +45,11 @@ class PureClarity_Products_Watcher {
         // Watch user login and logout
         add_action('wp_login', array( $this, 'user_login'), 10, 2);
         add_action('wp_logout', array( $this, 'user_logout'), 10, 2);
+
+        // Watch cart updates
+        add_action('woocommerce_add_to_cart', array( $this, 'set_cart'), 10, 1);
+        add_action('woocommerce_update_cart_action_cart_updated', array( $this, 'set_cart'), 10, 1);
+        add_action('woocommerce_cart_item_removed', array( $this, 'set_cart'), 10, 1);
 
         // Watch for orders
         if ( is_admin() ) {
@@ -186,6 +198,17 @@ class PureClarity_Products_Watcher {
             );
 
             $_SESSION['pureclarity-order'] = $data;
+        }
+    }
+
+    public function set_cart( $update ) {
+        
+        try {
+
+            $this->state->set_cart();
+
+        } catch ( \Exception $exception ) {
+            error_log("PureClarity: Can't build cart changes tracking event: " . $exception->getMessage() );
         }
     }
 }

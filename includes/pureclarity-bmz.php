@@ -8,7 +8,7 @@ class PureClarity_Bmz {
     private $currentProduct;
     private $currentCategoryId;
 
-    public function __construct( $plugin ) {
+    public function __construct( &$plugin ) {
         $this->plugin = $plugin;
         $this->settings = $plugin->get_settings();
         $this->state = $plugin->get_state();

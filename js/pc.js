@@ -79,6 +79,38 @@ var PureClarity = {
             }
             _pc('order:track');
         }
+
+        if(this.config.tracking.cart) {
+            var cookieId = this.getCookie("pc_cart_id");
+            if (cookieId != this.config.tracking.cart.id){
+                this.setCookie("pc_cart_id", this.config.tracking.cart.id);
+                if (this.config.tracking.cart.items.length == 0){
+                    _pc("set_basket", {cart_empty: true});
+                }
+                else {
+                    _pc("set_basket", this.config.tracking.cart.items);
+                }
+            }
+        }
+    },
+    getCookie: function(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+        }
+        return "";
+    },
+    setCookie: function(cname, cvalue, exdays = 0, exmins = 0) {
+        var expires = "";
+        if (exdays > 0 || exmins > 0) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000) + (exmins * 60 * 1000));
+            expires = "expires=" + d.toUTCString();
+        }
+        document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
     }
 }
 PureClarity.init();

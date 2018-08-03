@@ -7,7 +7,7 @@ class PureClarity_Cron {
     private $setting;
     private $feed;
 
-    public function __construct( $plugin ) {
+    public function __construct( &$plugin ) {
 
         $this->plugin = $plugin;
         $this->settings = $plugin->get_settings();

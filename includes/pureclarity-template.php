@@ -5,11 +5,13 @@ class PureClarity_Template {
     private $plugin;
     private $bmz;
 
-    public function __construct( $plugin ) {
+    public function __construct( &$plugin ) {
 
         $this->plugin = $plugin;        
         $this->bmz = $plugin->get_bmz();
-        add_filter( 'wp_head', array( $this, 'render_pureclarity_json' ) );
+        if ( ! is_ajax() ) {
+            add_filter( 'wp_head', array( $this, 'render_pureclarity_json' ) );
+        }
     }
 
     public function render_pureclarity_json() {
@@ -36,6 +38,7 @@ class PureClarity_Template {
             $prodListBmz2 = $this->bmz->pureclarity_render_bmz( array( "id" => "PL-02", "top" => "10" ));
         }
         
+        error_log("calling template");
         $config = array(
             'enabled' => $enabled,
             "product" => $state->get_product(),
@@ -64,12 +67,14 @@ class PureClarity_Template {
                 "apiUrl" => $settings->get_api_url(),
                 "customer" => $state->get_customer(),
                 "islogout" => $state->is_logout(),
-                "order" => $state->get_order()
+                "order" => $state->get_order(),
+                "cart" => $state->get_cart()
             )
         );
 
         $style="";
-        if ($enabled && ((is_search() && $searchEnabled) || ((is_product_category() || is_shop()) && $prodListEnabled))) {
+        // if ($enabled && ((is_search() && $searchEnabled) || ((is_product_category() || is_shop()) && $prodListEnabled))) {
+        if ($enabled && ((is_search() && $searchEnabled) || ((is_product_category()) && $prodListEnabled))) {
             $style = "<style type='text/css'>" . $searchResultsDOMSelector . " {display:none}</style>";
         }
         
