@@ -56,6 +56,7 @@ class PureClarity_Products_Watcher {
             add_action( 'woocommerce_order_status_completed', array( $this, 'moto_order_placed'), 10, 1 );
         } else {
             add_action( 'woocommerce_order_status_processing', array( $this, 'order_placed'), 10, 1 );
+            add_action( 'woocommerce_order_status_on-hold', array( $this, 'order_placed'), 10, 1 );
         }
 
     }
@@ -159,6 +160,7 @@ class PureClarity_Products_Watcher {
     
         $order = wc_get_order( $order_id );
         $customer = new WC_Customer( $order->get_user_id() );
+        error_log(json_encode($order));
 
         if ( ! empty( $order ) && ! empty( $customer ) ) {
 
