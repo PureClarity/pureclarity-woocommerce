@@ -142,20 +142,13 @@ class PureClarity_Products_Watcher {
 
     public function user_login($user_login, $user) {
         if ( ! empty($user) ){
-            $customer = new WC_Customer( $user->ID );
-            if ($customer->get_id() > 0) {
-                $_SESSION['pureclarity-customer'] = array(
-                    'userid' => $customer->get_id(),
-                    'email' => $customer->get_email(),
-                    'firstname' => $customer->get_first_name(),
-                    'lastname' => $customer->get_last_name()
-                );
-            }
+            $this->state->set_customer($user->ID);
         }
     }
 
     public function user_logout() {
         $_SESSION['pureclarity-logout'] = true;
+        $this->state->clear_customer();
     }
 
     public function moto_order_placed( $order_id ) {

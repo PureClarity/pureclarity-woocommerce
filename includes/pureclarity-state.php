@@ -16,6 +16,35 @@ class PureClarity_State {
             session_start();
         }
     }
+
+
+    public function clear_customer() {
+        $_SESSION['pureclarity-customer'] = null;
+        $this->customer = null;
+    }
+
+    public function set_customer($user_id) {
+        if (!empty ($user_id) ) {
+            $customer = new WC_Customer( $user_id );
+            if ($customer->get_id() > 0) {
+                $data  = array(
+                    'userid' => $customer->get_id(),
+                    'email' => $customer->get_email(),
+                    'firstname' => $customer->get_first_name(),
+                    'lastname' => $customer->get_last_name()
+                );
+                if( current_user_can('administrator') ) {
+                    $data["accid"] = "admin";
+                }
+                $this->customer = array(
+                    "id" => time(),
+                    "data" => $data
+                );
+                $_SESSION['pureclarity-customer'] = $this->customer;
+                return $this->customer;
+            }
+        }
+    }
     
     public function get_customer() {
         
@@ -25,11 +54,14 @@ class PureClarity_State {
 
         if ( isset($_SESSION['pureclarity-customer']) ){
             $this->customer = $_SESSION['pureclarity-customer'];
-            $_SESSION['pureclarity-customer'] = null;
-            return $this->customer;
+            $isadmin = current_user_can('administrator');
+            $adminset = !empty($this->customer["data"]["accid"]);
+            if ($this->customer["data"]["userid"] == get_current_user_id() && $isadmin == $adminset) {
+                return $this->customer;
+            }
         }
-        
-        return null;
+
+        return $this->set_customer(get_current_user_id());
     }
 
     public function is_logout() {

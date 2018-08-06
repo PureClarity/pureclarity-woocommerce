@@ -66,7 +66,11 @@ var PureClarity = {
         }
         
         if (this.config.tracking.customer) {
-            _pc('customer_details', this.config.tracking.customer);
+            var userCookieId = this.getCookie("pc_user_id");
+            if (userCookieId != this.config.tracking.customer.id){
+                this.setCookie("pc_user_id", this.config.tracking.customer.id);
+                _pc('customer_details', this.config.tracking.customer.data);
+            }
         }
         else if (this.config.tracking.islogout) {
             _pc('customer_logout');
@@ -81,8 +85,8 @@ var PureClarity = {
         }
 
         if(this.config.tracking.cart) {
-            var cookieId = this.getCookie("pc_cart_id");
-            if (cookieId != this.config.tracking.cart.id){
+            var cartCookieId = this.getCookie("pc_cart_id");
+            if (cartCookieId != this.config.tracking.cart.id){
                 this.setCookie("pc_cart_id", this.config.tracking.cart.id);
                 if (this.config.tracking.cart.items.length == 0){
                     _pc("set_basket", {cart_empty: true});
