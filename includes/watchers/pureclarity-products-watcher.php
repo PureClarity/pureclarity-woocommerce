@@ -57,6 +57,7 @@ class PureClarity_Products_Watcher {
         } else {
             add_action( 'woocommerce_order_status_processing', array( $this, 'order_placed'), 10, 1 );
             add_action( 'woocommerce_order_status_on-hold', array( $this, 'order_placed'), 10, 1 );
+            add_action( 'woocommerce_order_status_pending', array( $this, 'order_placed'), 10, 1 );
         }
 
     }
