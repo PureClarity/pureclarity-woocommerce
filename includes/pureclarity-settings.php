@@ -20,20 +20,20 @@ class PureClarity_Settings
         "14" => "https://api-sa-e-1.pureclarity.net");
 
     private $sftpRegions = array( 
-        "1" => "https://ftp-eu-w-1.pureclarity.net",
-        "2" => "https://ftp-eu-w-2.pureclarity.net",
-        "3" => "https://ftp-eu-c-1.pureclarity.net",
-        "4" => "https://ftp-us-e-1.pureclarity.net",
-        "5" => "https://ftp-us-e-2.pureclarity.net",
-        "6" => "https://ftp-us-w-1.pureclarity.net",
-        "7" => "https://ftp-us-w-2.pureclarity.net",
-        "8" => "https://ftp-ap-s-1.pureclarity.net",
-        "9" => "https://ftp-ap-ne-1.pureclarity.net",
-        "10" => "https://ftp-ap-ne-2.pureclarity.net",
-        "11" => "https://ftp-ap-se-1.pureclarity.net",
-        "12" => "https://ftp-ap-se-2.pureclarity.net",
-        "13" => "https://ftp-ca-c-1.pureclarity.net",
-        "14" => "https://ftp-sa-e-1.pureclarity.net");
+        "1" => "https://sftp-eu-w-1.pureclarity.net",
+        "2" => "https://sftp-eu-w-2.pureclarity.net",
+        "3" => "https://sftp-eu-c-1.pureclarity.net",
+        "4" => "https://sftp-us-e-1.pureclarity.net",
+        "5" => "https://sftp-us-e-2.pureclarity.net",
+        "6" => "https://sftp-us-w-1.pureclarity.net",
+        "7" => "https://sftp-us-w-2.pureclarity.net",
+        "8" => "https://sftp-ap-s-1.pureclarity.net",
+        "9" => "https://sftp-ap-ne-1.pureclarity.net",
+        "10" => "https://sftp-ap-ne-2.pureclarity.net",
+        "11" => "https://sftp-ap-se-1.pureclarity.net",
+        "12" => "https://sftp-ap-se-2.pureclarity.net",
+        "13" => "https://sftp-ca-c-1.pureclarity.net",
+        "14" => "https://sftp-sa-e-1.pureclarity.net");
 
     public function __construct() {
 		add_option( 'pureclarity_accesskey', '' );
