@@ -120,13 +120,14 @@ class PureClarity_Bmz {
             
             $html = ! empty($content) ? $content : "";
 
-            $class = $this->settings->get_bmz_debug_enabled() ? "pureclarity_bmz pureclarity_debug" : "pureclarity_bmz";
             if ( $this->settings->get_bmz_debug_enabled() && $html == "" ){
                 $html = "PURECLARITY BMZ: " . $arguments['id'];
             }
 
+            $class = $this->settings->get_bmz_debug_enabled() ? "pureclarity_bmz pureclarity_debug" : "pureclarity_bmz";
+            $class .= " pureclarity_bmz_" . $arguments['id'];
             if ( ! empty( $arguments['class'] )) {
-                $class .= $arguments['class'];
+                $class .= ' ' . $arguments['class'];
             }
 
             $style = "";
