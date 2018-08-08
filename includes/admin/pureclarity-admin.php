@@ -222,6 +222,14 @@ class PureClarity_Admin
 			$this->settings_section
         );
 
+        add_settings_field(
+            'pureclarity_shop_enabled',
+            'Enable Shop',
+            array( $this, 'enabled_shop_callback' ),
+            $this->settings_slug,
+            $this->settings_section
+        );
+
         register_setting( $this->settings_option_group, 'pureclarity_accesskey', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_secretkey', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_region', 'sanitize_callback' );
@@ -230,6 +238,7 @@ class PureClarity_Admin
         register_setting( $this->settings_option_group, 'pureclarity_merch_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_prodlist_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_deltas_enabled', array( $this, 'sanitize_checkbox' ) );
+        register_setting( $this->settings_option_group, 'pureclarity_shop_enabled', array($this, 'sanitize_checkbox') );
 
         // Advanced Settings
         add_settings_section(
@@ -262,6 +271,23 @@ class PureClarity_Admin
 			$this->advanced_slug,
 			$this->advanced_section
         );
+
+        add_settings_field(
+            'pureclarity_prodlist_result_selector',
+            'Product List DOM Selector',
+            array ($this, 'prodlist_selector_callback'),
+            $this->advanced_slug,
+            $this->advanced_section
+        );
+
+        add_settings_field(
+            'pureclarity_shop_selector',
+            'Shop DOM Selector',
+            array ($this, 'shop_selector_callback'),
+            $this->advanced_slug,
+            $this->advanced_section
+        );
+
 
         add_settings_field(
 			'pureclarity_add_bmz_homepage',
@@ -313,6 +339,8 @@ class PureClarity_Admin
 
         register_setting( $this->advanced_option_group, 'pureclarity_bmz_debug', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_search_selector', 'sanitize_callback' );
+        register_setting( $this->advanced_option_group, 'pureclarity_shop_selector', 'sanitize_callback' );
+        register_setting( $this->advanced_option_group, 'pureclarity_prodlist_selector', 'sanitize_callback' );
         register_setting( $this->advanced_option_group, 'pureclarity_search_result_selector', 'sanitize_callback' );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_homepage', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_categorypage', array( $this, 'sanitize_checkbox' ) );
@@ -426,6 +454,21 @@ class PureClarity_Admin
         ?>
 		<input type="checkbox" id="checkbox_prodlist"  name="pureclarity_prodlist_enabled" class="regular-text" <?php echo $checked; ?> />
 		<p class="description" id="home-description">Check to activate PureClarity Product Listing</p>
+        <?php
+
+    }
+
+    public function enabled_shop_callback() {
+
+        $enabled = $this->settings->get_shop_enabled_admin();
+        $checked = '';
+        if ( $enabled == true ) {
+            $checked = 'checked';
+        }
+
+        ?>
+		<input type="checkbox" id="checkbox_shop"  name="pureclarity_shop_enabled" class="regular-text" <?php echo $checked; ?> />
+		<p class="description" id="home-description">Check to activate PureClarity Shop</p>
         <?php
 
     }
@@ -558,6 +601,13 @@ class PureClarity_Admin
         <?php
     }
 
+    public function prodlist_selector_callback() {
+        ?>
+		<input type="text" name="pureclarity_prodlist_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_prodlist_result_element() ); ?>" />
+		<p class="description" id="home-description">Enter DOM selector for the main body where product list results will be displayed. (Default is #main)</p>
+        <?php
+    }
+
     public function searchresults_selector_callback() {
         ?>
 		<input type="text" name="pureclarity_search_result_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_search_result_element() ); ?>" />
@@ -565,6 +615,12 @@ class PureClarity_Admin
         <?php
     }
 
+    public function shop_selector_callback() {
+        ?>
+		<input type="text" name="pureclarity_shop_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_shop_selector() ); ?>" />
+		<p class="description" id="home-description">Enter DOM selector for the main body where shop results will be displayed. (Default is #main)</p>
+        <?php
+    }
     
     public function sanitize_checkbox( $value ) {
 		return $value === 'on' ? 'yes' : 'no';

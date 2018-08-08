@@ -352,7 +352,17 @@ class PureClarity_Feed {
     public function get_categories() {
         $json = "";
         $categories = get_terms( 'product_cat', array( "hide_empty" => 0 ) );
-        $first = true;
+
+        //add into data the new root category!
+        $data = array(
+            "Id" => "-1",
+            "DisplayName" => "Shop",
+            "Link" => "/",
+            
+            "ExcludeFromRecommenders" => true
+        );
+        $json .= wp_json_encode($data);
+
         foreach( $categories as $category ) {
 
             $url = get_term_link( $category->term_id, 'product_cat' );
@@ -366,8 +376,12 @@ class PureClarity_Feed {
                 "Link" => $url
             );
 
-            if (!empty($category->parent) && $category->parent > 0)
+            if (!empty($category->parent) && $category->parent > 0){
                 $data["ParentIds"] = [(string) $category->parent];
+            }else{
+                //add ParentIds for new parent!
+                $data["ParentIds"] = ["-1"];
+            }
 
             $thumbnail_id = get_woocommerce_term_meta( $category->term_id, 'thumbnail_id', true ); 
             if (!empty($thumbnail_id)){
@@ -378,14 +392,12 @@ class PureClarity_Feed {
                 }   
             }
             
-            if ($first) {
-                $first = false;
-            }
-            else {
+
                 $json .= ",";
-            }
+            
             $json .= wp_json_encode($data);
         }
+        error_log($json);
         return $json;
     }
 
