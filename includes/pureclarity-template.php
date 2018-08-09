@@ -51,7 +51,6 @@ class PureClarity_Template {
             'autocomplete' => array(
                 "enabled" => $searchEnabled,
                 "searchSelector" => $settings->get_search_selector(),
-                "shopSelector" => $settings->get_shop_selector()
             ),
             'search' => array(
                 'do' => $searchEnabled && is_search(),
@@ -72,7 +71,8 @@ class PureClarity_Template {
                 'do' => $shopEnabled && is_shop() && !is_search(),
                 'domSelector' => $shopDOMSelector,
                 'bmz1' => $prodListBmz1,
-                'bmz2' => $prodListBmz2
+                'bmz2' => $prodListBmz2,
+                "shopSelector" => $settings->get_shop_selector()
             ),
             "tracking" => array(
                 'accessKey' => $settings->get_accesskey(),

@@ -42,11 +42,11 @@ class PureClarity_Settings
         add_option( 'pureclarity_mode', 'off' );
         add_option( 'pureclarity_search_enabled', 'no' );
         add_option( 'pureclarity_merch_enabled', 'no' );
+        add_option( 'pureclarity_shop_enabled', 'no');
         add_option( 'pureclarity_prodlist_enabled', 'no' );
         add_option( 'pureclarity_prodfeed_run', '0' );
         add_option( 'pureclarity_catfeed_run', '0' );
-        add_option( 'pureclarity_brandfeed_run', '0' );
-        add_option( 'pureclarity_shop_enabled', 'no');
+        add_option( 'pureclarity_brandfeed_run', '0' );    
         add_option( 'pureclarity_userfeed_run', '0' );
         add_option( 'pureclarity_orderfeed_run', '0' );
         add_option( 'pureclarity_bmz_debug', 'no' );

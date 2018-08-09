@@ -199,11 +199,11 @@ class PureClarity_Admin
         );
 
         add_settings_field(
-			'pureclarity_merch_enabled',
-			'Enable Merchandizing',
-			array( $this, 'merch_enabled_callback' ),
-			$this->settings_slug,
-			$this->settings_section
+            'pureclarity_shop_enabled',
+            'Enable Shop',
+            array( $this, 'shop_enabled_callback' ),
+            $this->settings_slug,
+            $this->settings_section
         );
 
         add_settings_field(
@@ -215,19 +215,20 @@ class PureClarity_Admin
         );
 
         add_settings_field(
+			'pureclarity_merch_enabled',
+			'Enable Merchandizing',
+			array( $this, 'merch_enabled_callback' ),
+			$this->settings_slug,
+			$this->settings_section
+        );
+
+        
+        add_settings_field(
 			'pureclarity_deltas_enabled',
 			'Enable Delta Sync',
 			array( $this, 'enabled_deltas_callback' ),
 			$this->settings_slug,
 			$this->settings_section
-        );
-
-        add_settings_field(
-            'pureclarity_shop_enabled',
-            'Enable Shop',
-            array( $this, 'enabled_shop_callback' ),
-            $this->settings_slug,
-            $this->settings_section
         );
 
         register_setting( $this->settings_option_group, 'pureclarity_accesskey', 'sanitize_callback' );
@@ -458,7 +459,7 @@ class PureClarity_Admin
 
     }
 
-    public function enabled_shop_callback() {
+    public function shop_enabled_callback() {
 
         $enabled = $this->settings->get_shop_enabled_admin();
         $checked = '';
@@ -468,7 +469,7 @@ class PureClarity_Admin
 
         ?>
 		<input type="checkbox" id="checkbox_shop"  name="pureclarity_shop_enabled" class="regular-text" <?php echo $checked; ?> />
-		<p class="description" id="home-description">Check to activate PureClarity Shop</p>
+		<p class="description" id="home-description">Check to activate PureClarity on the Shop page</p>
         <?php
 
     }
@@ -593,7 +594,6 @@ class PureClarity_Admin
 
     }
 
-
     public function searchselector_callback() {
         ?>
 		<input type="text" name="pureclarity_search_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_search_selector() ); ?>" />
@@ -601,12 +601,6 @@ class PureClarity_Admin
         <?php
     }
 
-    public function prodlist_selector_callback() {
-        ?>
-		<input type="text" name="pureclarity_prodlist_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_prodlist_result_element() ); ?>" />
-		<p class="description" id="home-description">Enter DOM selector for the main body where product list results will be displayed. (Default is #main)</p>
-        <?php
-    }
 
     public function searchresults_selector_callback() {
         ?>
@@ -615,10 +609,18 @@ class PureClarity_Admin
         <?php
     }
 
+
     public function shop_selector_callback() {
         ?>
 		<input type="text" name="pureclarity_shop_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_shop_selector() ); ?>" />
 		<p class="description" id="home-description">Enter DOM selector for the main body where shop results will be displayed. (Default is #main)</p>
+        <?php
+    }
+
+    public function prodlist_selector_callback() {
+        ?>
+		<input type="text" name="pureclarity_prodlist_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_prodlist_result_element() ); ?>" />
+		<p class="description" id="home-description">Enter DOM selector for the main body where product list results will be displayed. (Default is #main)</p>
         <?php
     }
     

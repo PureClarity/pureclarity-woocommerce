@@ -357,9 +357,9 @@ class PureClarity_Feed {
         $data = array(
             "Id" => "-1",
             "DisplayName" => "Shop",
-            "Link" => "/",
-            
-            "ExcludeFromRecommenders" => true
+            "Link" => "/?post_type=product",
+            "ExcludeFromRecommenders" => true,
+            "Description" => "All products on the site"
         );
         $json .= wp_json_encode($data);
 
@@ -376,10 +376,10 @@ class PureClarity_Feed {
                 "Link" => $url
             );
 
+            //If category has no parent (it is a root category) - then add to our new Shop category so that we can search in Shop for all products
             if (!empty($category->parent) && $category->parent > 0){
                 $data["ParentIds"] = [(string) $category->parent];
             }else{
-                //add ParentIds for new parent!
                 $data["ParentIds"] = ["-1"];
             }
 
