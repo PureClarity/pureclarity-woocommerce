@@ -449,8 +449,6 @@ class PureClarity_Feed {
 
     public function get_roles( $userId ) {
         $user_roles = get_user_meta( $userId, 'wp_capabilities' );
-        
-      
         return array_keys($user_roles[0]);
     }
 
