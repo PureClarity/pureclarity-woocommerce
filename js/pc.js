@@ -19,6 +19,24 @@ var PureClarity = {
             }
         }
 
+        if (this.config.shop.do) {
+
+            var pcContainer = document.createElement('div');
+            var wrapper = document.createElement('div');
+            jQuery(pcContainer).addClass('shop');
+            jQuery(wrapper).addClass('pureclarity-wrapper');
+            jQuery(pcContainer).addClass('pureclarity-container').attr("data-pureclarity", "navigation_category:-1");
+            jQuery(this.config.shop.domSelector).wrap(wrapper).hide();
+            jQuery(".pureclarity-wrapper").append(pcContainer);
+            jQuery(wrapper).addClass('site-main');
+            if (this.config.shop.bmz1) {
+                jQuery(".pureclarity-wrapper").prepend(this.config.prodlist.bmz1);
+            }
+            if (this.config.shop.bmz2) {
+                jQuery(".pureclarity-wrapper").append(this.config.prodlist.bmz2);
+            }
+        }
+
         if (this.config.search.do){
             
             var pcContainer = document.createElement('div');

@@ -20,7 +20,10 @@ class PureClarity_Template {
         $searchEnabled = $settings->get_search_enabled();
         $merchEnabled = $settings->get_merch_enabled();
         $prodListEnabled = $settings->get_prod_enabled();
+        $shopEnabled = $settings->get_shop_enabled_admin();
         $searchResultsDOMSelector = $settings->get_search_result_element();
+        $prodlistDOMSelector = $settings->get_prodlist_result_element();
+        $shopDOMSelector = $settings->get_shop_selector();
         $enabled = ($searchEnabled || $merchEnabled ||  $prodListEnabled) && ($settings->get_accesskey() != "") &&  $settings->get_pureclarity_enabled();
         $state = $this->plugin->get_state();
 
@@ -37,6 +40,9 @@ class PureClarity_Template {
             $prodListBmz1 = $this->bmz->pureclarity_render_bmz( array( "id" => "PL-01", "bottom" => "10" ));
             $prodListBmz2 = $this->bmz->pureclarity_render_bmz( array( "id" => "PL-02", "top" => "10" ));
         }
+
+
+
         
         $config = array(
             'enabled' => $enabled,
@@ -44,7 +50,7 @@ class PureClarity_Template {
             "categoryId" => is_shop()?"*":$state->get_category_id(),
             'autocomplete' => array(
                 "enabled" => $searchEnabled,
-                "searchSelector" => $settings->get_search_selector()
+                "searchSelector" => $settings->get_search_selector(),
             ),
             'search' => array(
                 'do' => $searchEnabled && is_search(),
@@ -56,10 +62,17 @@ class PureClarity_Template {
                 'enabled' => $merchEnabled
             ),
             'prodlist' => array(
-                'do' => $prodListEnabled && (is_product_category()), // || is_shop()),
-                "domSelector" => $searchResultsDOMSelector,
+                'do' => $prodListEnabled && is_product_category(),
+                "domSelector" => $prodlistDOMSelector,
                 'bmz1' => $prodListBmz1,
                 'bmz2' => $prodListBmz2
+            ),
+            'shop' => array(
+                'do' => $shopEnabled && is_shop() && !is_search(),
+                'domSelector' => $shopDOMSelector,
+                'bmz1' => $prodListBmz1,
+                'bmz2' => $prodListBmz2,
+                "shopSelector" => $settings->get_shop_selector()
             ),
             "tracking" => array(
                 'accessKey' => $settings->get_accesskey(),
@@ -72,8 +85,12 @@ class PureClarity_Template {
         );
 
         $style="";
-        // if ($enabled && ((is_search() && $searchEnabled) || ((is_product_category() || is_shop()) && $prodListEnabled))) {
-        if ($enabled && ((is_search() && $searchEnabled) || ((is_product_category()) && $prodListEnabled))) {
+         if ($enabled && (
+             (is_search() && $searchEnabled) ||
+             (is_product_category()  && $prodListEnabled) ||
+             (is_shop() && $shopEnabled)
+             )) {
+        //if ($enabled && ((is_search() && $searchEnabled) || ((is_product_category()) && $prodListEnabled))) {
             $style = "<style type='text/css'>" . $searchResultsDOMSelector . " {display:none}</style>";
         }
         

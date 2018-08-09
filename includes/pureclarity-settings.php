@@ -42,16 +42,19 @@ class PureClarity_Settings
         add_option( 'pureclarity_mode', 'off' );
         add_option( 'pureclarity_search_enabled', 'no' );
         add_option( 'pureclarity_merch_enabled', 'no' );
+        add_option( 'pureclarity_shop_enabled', 'no');
         add_option( 'pureclarity_prodlist_enabled', 'no' );
         add_option( 'pureclarity_prodfeed_run', '0' );
         add_option( 'pureclarity_catfeed_run', '0' );
-        add_option( 'pureclarity_brandfeed_run', '0' );
+        add_option( 'pureclarity_brandfeed_run', '0' );    
         add_option( 'pureclarity_userfeed_run', '0' );
         add_option( 'pureclarity_orderfeed_run', '0' );
         add_option( 'pureclarity_bmz_debug', 'no' );
         add_option( 'pureclarity_deltas_enabled', 'no' );
         add_option( 'pureclarity_search_selector', '.search-field' );
         add_option( 'pureclarity_search_result_selector', '#main' );
+        add_option( 'pureclarity_shop_result_selector', '#main' );
+        add_option( 'pureclarity_prodlist_result_selector', '#main' );
         add_option( 'pureclarity_add_bmz_homepage', 'yes' );
         add_option( 'pureclarity_add_bmz_searchpage', 'yes' );
         add_option( 'pureclarity_add_bmz_categorypage', 'yes' );
@@ -132,6 +135,10 @@ class PureClarity_Settings
         return get_option( 'pureclarity_bmz_debug', '' ) == "yes";
     }
 
+    public function get_shop_enabled_admin() {
+        return get_option( 'pureclarity_shop_enabled', '') == "yes";
+    }
+
     public function get_api_url() {
         $url = getenv('PURECLARITY_SCRIPT_URL');
         if (empty($url)){
@@ -158,8 +165,16 @@ class PureClarity_Settings
         return (string) get_option( 'pureclarity_search_selector', '.search-field' );
     }
 
+    public function get_shop_selector() {
+        return (string) get_option( 'pureclarity_shop_selector', '#main' );
+    }
+
     public function get_search_result_element() {
-        return (string) get_option( 'pureclarity_search_result_selector', '.site-main' );
+        return (string) get_option( 'pureclarity_search_result_selector', '#main' );
+    }
+
+    public function get_prodlist_result_element() {
+        return (string) get_option( 'pureclarity_prodlist_selector', '#main' );
     }
 
     public function get_prodfeed_run() {
@@ -215,6 +230,7 @@ class PureClarity_Settings
 
         return $url . "/api/delta";
     }
+
 
     public function add_bmz_homepage() {
         return get_option( 'pureclarity_add_bmz_homepage', '' ) == "yes";
