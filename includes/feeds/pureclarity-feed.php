@@ -447,9 +447,17 @@ class PureClarity_Feed {
         return $items;
     }
 
+    public function get_roles( $userId ) {
+        $user_roles = get_user_meta( $userId, 'wp_capabilities' );
+        
+      
+        return array_keys($user_roles[0]);
+    }
+
     public function parse_user( $userId ) {
         $customer = new WC_Customer( $userId );
-       
+
+
         if ( ! empty($customer) && $customer->get_id() > 0) {
             $data = array(
                 'UserId' => $customer->get_id(),
@@ -477,11 +485,7 @@ class PureClarity_Feed {
         return null;
     }
 
-    public function get_roles( $userId ) {
-        $user_roles = get_user_meta( $userId, 'wp_capabilities' );
-        $roles = array_keys($user_rolls[0]);
-        return  $roles;
-    }
+    
 
     public function get_order_count() {
         $args = array(
