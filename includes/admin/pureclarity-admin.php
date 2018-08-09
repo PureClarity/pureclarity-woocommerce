@@ -199,14 +199,6 @@ class PureClarity_Admin
         );
 
         add_settings_field(
-            'pureclarity_shop_enabled',
-            'Enable Shop',
-            array( $this, 'shop_enabled_callback' ),
-            $this->settings_slug,
-            $this->settings_section
-        );
-
-        add_settings_field(
 			'pureclarity_prodlist_enabled',
 			'Enable Product Listing',
 			array( $this, 'prodlist_enabled_callback' ),
@@ -222,7 +214,14 @@ class PureClarity_Admin
 			$this->settings_section
         );
 
-        
+        add_settings_field(
+            'pureclarity_shop_enabled',
+            'Enable Shop',
+            array( $this, 'shop_enabled_callback' ),
+            $this->settings_slug,
+            $this->settings_section
+        );
+
         add_settings_field(
 			'pureclarity_deltas_enabled',
 			'Enable Delta Sync',
