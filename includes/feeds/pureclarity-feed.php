@@ -447,9 +447,9 @@ class PureClarity_Feed {
         return $items;
     }
 
-    
-
     public function parse_user( $userId ) {
+        $customer = new WC_Customer( $userId );
+       
         if ( ! empty($customer) && $customer->get_id() > 0) {
             $data = array(
                 'UserId' => $customer->get_id(),
@@ -479,7 +479,8 @@ class PureClarity_Feed {
 
     public function get_roles( $userId ) {
         $user_rolls = get_user_meta( $userId, 'wp_capabilities' );
-        return array_keys($user_rolls[0]);
+        $rolls = array_keys($user_rolls[0]);
+        return  $rolls;
     }
 
     public function get_order_count() {
