@@ -33,9 +33,7 @@ class PureClarity_State {
                     'firstname' => $customer->get_first_name(),
                     'lastname' => $customer->get_last_name()
                 );
-                if( current_user_can('administrator') ) {
-                    $data["accid"] = "admin";
-                }
+               
                 $this->customer = array(
                     "id" => time(),
                     "data" => $data

@@ -452,12 +452,18 @@ class PureClarity_Feed {
         $customer = new WC_Customer( $userId );
 
         if ( ! empty($customer) && $customer->get_id() > 0) {
+            
+           // $customer->get_prop( 'roles', $context );
+
+           $user_rolls = get_user_meta( $userId, 'wp_capabilities' );
+   
 
             $data = array(
                 'UserId' => $customer->get_id(),
                 'Email' => $customer->get_email(),
                 'FirstName' => $customer->get_first_name(),
-                'LastName' => $customer->get_last_name()
+                'LastName' => $customer->get_last_name(),
+                'Role' =>array_keys($user_rolls[0])
             );
 
             $billing = $customer->get_billing();
@@ -472,7 +478,7 @@ class PureClarity_Feed {
                     $data['Country'] = $billing['country'];
                 }
             }
-
+            
             return $data;
         }
         return null;
