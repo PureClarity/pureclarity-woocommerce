@@ -447,23 +447,16 @@ class PureClarity_Feed {
         return $items;
     }
 
+    
+
     public function parse_user( $userId ) {
-        
-        $customer = new WC_Customer( $userId );
-
         if ( ! empty($customer) && $customer->get_id() > 0) {
-            
-           // $customer->get_prop( 'roles', $context );
-
-           $user_rolls = get_user_meta( $userId, 'wp_capabilities' );
-   
-
             $data = array(
                 'UserId' => $customer->get_id(),
                 'Email' => $customer->get_email(),
                 'FirstName' => $customer->get_first_name(),
                 'LastName' => $customer->get_last_name(),
-                'Role' =>array_keys($user_rolls[0])
+                'Role' => $this->get_roles($userId)
             );
 
             $billing = $customer->get_billing();
@@ -482,6 +475,11 @@ class PureClarity_Feed {
             return $data;
         }
         return null;
+    }
+
+    public function get_roles( $userId ) {
+        $user_rolls = get_user_meta( $userId, 'wp_capabilities' );
+        return array_keys($user_rolls[0]);
     }
 
     public function get_order_count() {
