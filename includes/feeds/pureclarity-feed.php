@@ -462,7 +462,7 @@ class PureClarity_Feed {
                 'Email' => $customer->get_email(),
                 'FirstName' => $customer->get_first_name(),
                 'LastName' => $customer->get_last_name(),
-                'Role' => $this->get_roles($userId)
+                'Roles' => $this->get_roles($userId)
             );
 
             $billing = $customer->get_billing();
