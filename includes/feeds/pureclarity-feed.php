@@ -478,9 +478,9 @@ class PureClarity_Feed {
     }
 
     public function get_roles( $userId ) {
-        $user_rolls = get_user_meta( $userId, 'wp_capabilities' );
-        $rolls = array_keys($user_rolls[0]);
-        return  $rolls;
+        $user_roles = get_user_meta( $userId, 'wp_capabilities' );
+        $roles = array_keys($user_rolls[0]);
+        return  $roles;
     }
 
     public function get_order_count() {
