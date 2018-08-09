@@ -483,8 +483,6 @@ class PureClarity_Feed {
         return null;
     }
 
-    
-
     public function get_order_count() {
         $args = array(
             'status' => 'completed',
