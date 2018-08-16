@@ -21,9 +21,6 @@ class PureClarity_Plugin
         $this->settings = new PureClarity_Settings();
         
         $this->feed = new PureClarity_Feed( $this );
-		if($this->settings->get_pureclarity_enabled()) {
-            add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
-        }
         add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
         add_action( 'init', array( $this, 'init' ), 15 );
     }
@@ -58,6 +55,9 @@ class PureClarity_Plugin
         if ( is_admin() ) {
 			new PureClarity_Admin( $this );
 		} else {
+            if($this->settings->get_pureclarity_enabled()) {
+                add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
+            }
             $this->state = new PureClarity_State( $this );
             $this->bmz = new PureClarity_Bmz( $this );
             new PureClarity_Template( $this );
