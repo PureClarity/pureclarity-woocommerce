@@ -3,5 +3,8 @@ Description: 	With PureClarity ecommerce personalization is simple! Provide the 
 Plugin URI: 	https://www.pureclarity.com
 Author:		    PureClarity
 
+Version:		1.0.2
+- Support the Shop page
+- Send all user roles in the user feed
 Version:		1.0.1
 - Addition of additional classes for targetted BMZ editing
