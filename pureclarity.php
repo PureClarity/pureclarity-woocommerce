@@ -3,7 +3,7 @@
 * Plugin Name: 	PureClarity for WooCommerce
 * Description: 	With PureClarity ecommerce personalization is simple! Provide the most powerful site search, recommend highly relevant and personalized products and retarget your customers with personalized emails.
 * Plugin URI: 	https://www.pureclarity.com
-* Version:		1.0.2
+* Version:		1.0.3
 * Author:		PureClarity
 * Author URI:	https://www.pureclarity.com
 **/
@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Set version and path constants
-define( 'PURECLARITY_VERSION', '1.0.0' );
+define( 'PURECLARITY_VERSION', '1.0.3' );
 if ( ! defined( 'PURECLARITY_PATH' ) ) {
 	define( 'PURECLARITY_PATH', plugin_dir_path( __FILE__ ) );
 }
