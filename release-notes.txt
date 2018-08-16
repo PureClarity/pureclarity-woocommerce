@@ -3,6 +3,8 @@ Description: 	With PureClarity ecommerce personalization is simple! Provide the 
 Plugin URI: 	https://www.pureclarity.com
 Author:		    PureClarity
 
+Version:		1.0.4
+- Hotfix: Correction for PureClarity disabled state check when loading assets
 Version:		1.0.3
 - Hotfix: Prevent PureClarity disabled state from hiding site content
 - Hotfix: CSS change to prevent plugin CSS from changing site layout
