@@ -21,8 +21,9 @@ class PureClarity_Plugin
         $this->settings = new PureClarity_Settings();
         
         $this->feed = new PureClarity_Feed( $this );
-		
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
+		if($this->settings->get_pureclarity_enabled()) {
+            add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
+        }
         add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
         add_action( 'init', array( $this, 'init' ), 15 );
     }
