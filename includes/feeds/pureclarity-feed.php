@@ -57,7 +57,7 @@ class PureClarity_Feed {
                 $body = $this->get_request_body( $type, '{ "Version": 2, "Users": [' );
             break;
             case "order":
-                $body = $this->get_request_body( $type, "OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,LinePrice" );
+                $body = $this->get_request_body( $type, "OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,UnitPrice" );
             break;
         }
         $this->http_post( $url, $body );
@@ -71,11 +71,7 @@ class PureClarity_Feed {
 
     public function end_feed( $type ) {
         $url = $this->settings->get_feed_baseurl() . "feed-close";
-        $suffix = "";
-        if($type != "order"){
-            $suffix = "]}";
-        }
-        $body = $this->get_request_body( $type, $suffix );
+        $body = $this->get_request_body( $type, "]}" );
         $this->http_post( $url, $body );
     }
 
@@ -407,7 +403,6 @@ class PureClarity_Feed {
             
             $json .= wp_json_encode($data);
         }
-        error_log($json);
         return $json;
     }
 
@@ -507,11 +502,10 @@ class PureClarity_Feed {
     }
 
     public function get_orders( $currentPage, $pageSize ) {
-
         $args = array(
             'limit' => $pageSize,
-            'paged' => $currentPage,
-            'orderby' => 'date',
+            'offset' => $pageSize*($currentPage-1),
+            'orderby' => 'date_created',
             'order' => 'DESC',
             'status' => 'completed',
             'type' => 'shop_order',
@@ -524,7 +518,6 @@ class PureClarity_Feed {
 
         $items = "";
         foreach($orders->get_orders() as $order) {
-            
             foreach ( $order->get_items() as $item_id => $item ) {
                 $product      = $order->get_product_from_item( $item );
                 $product_id   = 0;
@@ -540,7 +533,7 @@ class PureClarity_Feed {
                     $items .= (string) $order->get_date_created("c") . ',';
                     $items .= $product_id . ',';
                     $items .= $item['qty'] . ',';
-                    $items .= wc_format_decimal( $order->get_line_total( $item, false, false ), $dp );
+                    $items .= wc_format_decimal( $order->get_item_total( $item, false, false ), $dp );
                 }
             }            
         }
