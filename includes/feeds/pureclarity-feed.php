@@ -57,7 +57,7 @@ class PureClarity_Feed {
                 $body = $this->get_request_body( $type, '{ "Version": 2, "Users": [' );
             break;
             case "order":
-                $body = $this->get_request_body( $type, "OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,UnityPrice,LinePrice" );
+                $body = $this->get_request_body( $type, "OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,LinePrice" );
             break;
         }
         $this->http_post( $url, $body );
@@ -71,7 +71,11 @@ class PureClarity_Feed {
 
     public function end_feed( $type ) {
         $url = $this->settings->get_feed_baseurl() . "feed-close";
-        $body = $this->get_request_body( $type, "]}" );
+        $suffix = "";
+        if($type != "order"){
+            $suffix = "]}";
+        }
+        $body = $this->get_request_body( $type, $suffix );
         $this->http_post( $url, $body );
     }
 
@@ -536,7 +540,6 @@ class PureClarity_Feed {
                     $items .= (string) $order->get_date_created("c") . ',';
                     $items .= $product_id . ',';
                     $items .= $item['qty'] . ',';
-                    $items .= wc_format_decimal( $order->get_item_total( $item, false, false ), $dp ) . ',';
                     $items .= wc_format_decimal( $order->get_line_total( $item, false, false ), $dp );
                 }
             }            
