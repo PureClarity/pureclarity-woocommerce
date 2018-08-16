@@ -32,7 +32,7 @@ class PureClarity_Admin
 
     public function run_data_feed() {
         try {
-
+            session_write_close();
             if ( ! isset( $_POST['page'] ) ) {
 				throw new RuntimeException( 'Page has not been set.' );
 			}

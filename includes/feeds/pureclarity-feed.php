@@ -5,7 +5,7 @@ class PureClarity_Feed {
     private $plugin;
     private $settings;
     private $productTagsMap;
-    public $pageSize = 20;
+    public $pageSize = 100;
 
     public function __construct( &$plugin ) {
         $this->plugin = $plugin;
@@ -42,7 +42,7 @@ class PureClarity_Feed {
         return 0;
     }
 
-    public function start_feed( $type ) {
+    public function start_feed( $type ) {       
         $url = $this->settings->get_feed_baseurl() . "feed-create";
         $body;
         switch($type) {
@@ -77,14 +77,20 @@ class PureClarity_Feed {
 
     public function http_post( $url, $body, $checkOk = true ) {
         
-        $request = new WP_Http;
-        $response = $request->request( $url, array( 'method' => 'POST', 'body' => $body ) );
+        $request = new WP_Http;       
+        for ($x = 0; $x <= 5; $x++) {
+            $response = $request->request( $url, array( 'method' => 'POST', 'body' => $body ) );
+            if($response["response"] && $response["response"]["code"] != 504){
+                break;
+            }
+            error_log("PureClarity 504 Error, retrying. Error: Couldn't upload data to the PureClarity server: " . wp_json_encode($response));
+        }
         if (!empty($response->errors)){
-            throw new Exception("Couldn't upload data to the PureClarity server: " . wp_json_encode($response->errors));
+            throw new Exception("Couldn't upload data to the PureClarity server, response errors: " . wp_json_encode($response->errors));
         }
         if ($checkOk && $response['body'] != "OK"){
-            throw new Exception("Couldn't upload data to the PureClarity server: " . $response['body']);
-        }
+            throw new Exception("Couldn't upload data to the PureClarity server, response: " . wp_json_encode($response));
+        }        
     }
 
     public function get_request_body( $type, $data ) {
