@@ -141,7 +141,7 @@ class PureClarity_Bmz {
 
             $data = "";
             if ( ! empty($this->currentProduct) ) {
-                $data = "id:".$this->currentProduct['id'];
+                $data = "id:".$this->currentProduct['productid'];
             }
             elseif ( ! empty($this->currentCategoryId) ) {
                 $data = "categoryid:".$this->currentCategoryId;
