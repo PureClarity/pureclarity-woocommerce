@@ -5,6 +5,7 @@ class PureClarity_Feed {
     private $plugin;
     private $settings;
     private $productTagsMap;
+    private $uniqueId;
     public $pageSize = 100;
 
     public function __construct( &$plugin ) {
@@ -97,12 +98,19 @@ class PureClarity_Feed {
         $request = array(
             "accessKey"   => $this->settings->get_accesskey(),
             "secretKey"   => $this->settings->get_secretkey(),
-            "feedName"    => $type
+            "feedName"    => $type . "-" . $this->getUniqueId(),
         );
         if ( ! empty($data) ){
             $request["payLoad"] = $data;
         }
         return $request;
+    }
+
+    private function getUniqueId() {
+        if(is_null($this->uniqueId)){
+            $this->uniqueId = uniqid();
+        }
+        return $this->uniqueId;
     }
 
     public function build_items( $type, $currentPage ) {
