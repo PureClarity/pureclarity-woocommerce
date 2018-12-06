@@ -73,8 +73,8 @@ class PureClarity_Admin
             wp_send_json( $response );
 
         } catch ( \Exception $exception ) {
-            error_log("PureClarity: An Error occured generating " . $type . " feed: " . $exception->getMessage() );
-            wp_send_json( array( "error" => "An Error occured generating the " . $type . " feed. See error logs for more information.") );
+            error_log("PureClarity: An error occurred generating " . $type . " feed: " . $exception->getMessage() );
+            wp_send_json( array( "error" => "An error occurred generating the " . $type . " feed. See error logs for more information.") );
         }
     }
 

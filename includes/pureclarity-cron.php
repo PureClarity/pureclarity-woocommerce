@@ -67,7 +67,7 @@ class PureClarity_Cron {
                 }
             }
         } catch ( \Exception $exception ) {
-            error_log("PureClarity: An Error occured updating product deltas: " . $exception->getMessage() );
+            error_log("PureClarity: An error occurred updating product deltas: " . $exception->getMessage() );
         }
     }
 
@@ -89,7 +89,7 @@ class PureClarity_Cron {
                     $this->feed->send_data( "category", $data );
                     $this->feed->end_feed( "category" );
                 } catch ( \Exception $exception ) {
-                    error_log("PureClarity: An Error occured updating categories: " . $exception->getMessage() );
+                    error_log("PureClarity: An error occurred updating categories: " . $exception->getMessage() );
                 }
             }
 
@@ -142,7 +142,7 @@ class PureClarity_Cron {
                 }
             }
         } catch ( \Exception $exception ) {
-            error_log("PureClarity: An Error occured updating user deltas: " . $exception->getMessage() );
+            error_log("PureClarity: An error occurred updating user deltas: " . $exception->getMessage() );
         }
     }
     
