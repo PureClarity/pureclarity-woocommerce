@@ -42,7 +42,7 @@ class PureClarity_Feed {
         return 0;
     }
 
-    public function start_feed( $type ) {       
+    public function start_feed( $type ) {
         $url = $this->settings->get_feed_baseurl() . "feed-create";
         $body;
         switch($type) {
@@ -90,7 +90,7 @@ class PureClarity_Feed {
         }
         if ($checkOk && $response['body'] != "OK"){
             throw new Exception("Couldn't upload data to the PureClarity server, response: " . wp_json_encode($response));
-        }        
+        }
     }
 
     public function get_request_body( $type, $data ) {
@@ -492,7 +492,7 @@ class PureClarity_Feed {
         $args = array(
             'status' => 'completed',
             'type' => 'shop_order',
-            'date_created' => '>' . date('Y-m-d', strtotime("-6 month")),
+            'date_created' => '>' . date('Y-m-d', strtotime("-12 month")),
             'paginate' => true
         );
         
@@ -509,7 +509,7 @@ class PureClarity_Feed {
             'order' => 'DESC',
             'status' => 'completed',
             'type' => 'shop_order',
-            'date_created' => '>' . date('Y-m-d', strtotime("-6 month"))
+            'date_created' => '>' . date('Y-m-d', strtotime("-12 month"))
         );
 
         $dp = wc_get_price_decimals();
