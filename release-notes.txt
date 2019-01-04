@@ -1,5 +1,5 @@
 Plugin Name: 	PureClarity for WooCommerce
-Description: 	With PureClarity ecommerce personalization is simple! Provide the most powerful site search, recommend highly relevant and personalized products and retarget your customers with personalized emails.
+Description: 	The PureClarity ecommerce personalization plugin for WooCommerce is highly effective and easy to integrate.  Key features include the Advanced AI Recommendation Engine, Personalized Campaigns, Audience Segmentation, Personalization within Search and Email, and an in-depth analytics platform.
 Plugin URI: 	https://www.pureclarity.com
 Author:		    PureClarity
 
