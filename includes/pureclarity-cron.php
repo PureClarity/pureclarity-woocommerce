@@ -13,7 +13,7 @@ class PureClarity_Cron {
         $this->settings = $plugin->get_settings();
         $this->feed = $plugin->get_feed();
 
-        if ($this->settings->get_deltas_enabled()) {
+        if ( $this->settings->is_deltas_enabled() ) {
             $this->process_products();
             $this->process_categories();
             $this->process_users();
@@ -26,7 +26,7 @@ class PureClarity_Cron {
 
         try {
 
-            if ( ! $this->settings->get_prodfeed_run() ) {
+            if ( ! $this->settings->is_product_feed_sent() ) {
                 return;
             }
 
@@ -74,7 +74,7 @@ class PureClarity_Cron {
 
     public function process_categories() {
 
-        if ( ! $this->settings->get_catfeed_run() ) {
+        if ( ! $this->settings->is_category_feed_sent() ) {
             return;
         }
         
@@ -101,7 +101,7 @@ class PureClarity_Cron {
 
         try {
 
-            if ( ! $this->settings->get_userfeed_run() ) {
+            if ( ! $this->settings->is_user_feed_sent() ) {
                 return;
             }
 

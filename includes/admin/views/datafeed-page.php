@@ -17,8 +17,8 @@
 		<p><?php _e('Click the buttons below to manually run data feeds and submit them to PureClarity.', 'pureclarity'); ?></p>
 	</div>
 
-	<div id="product-container" class="<?php echo $this->settings->get_prodfeed_run() ? "updated" : "error" ?>">
-		<p id="product-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->get_prodfeed_run() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("A Product Feed has never been run.", 'pureclarity'); ?></strong></p>
+	<div id="product-container" class="<?php echo $this->settings->is_product_feed_sent() ? "updated" : "error" ?>">
+		<p id="product-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_product_feed_sent() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("A Product Feed has never been run.", 'pureclarity'); ?></strong></p>
 		<p>
 			<?php
 				printf(
@@ -31,8 +31,8 @@
 		<p id="pureclarity-product-message" class="pureclarity-message"><?php echo $runningFeed; ?></p>
 	</div>
 
-	<div id="category-container" class="<?php echo $this->settings->get_catfeed_run() ? "updated" : "error" ?>">
-		<p id="category-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->get_catfeed_run() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("A Category Feed has never been run.", 'pureclarity'); ?></strong></p>
+	<div id="category-container" class="<?php echo $this->settings->is_category_feed_sent() ? "updated" : "error" ?>">
+		<p id="category-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_category_feed_sent() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("A Category Feed has never been run.", 'pureclarity'); ?></strong></p>
 		<p>
 			<?php
 				printf(
@@ -45,8 +45,8 @@
 		<p id="pureclarity-category-message" class="pureclarity-message"><?php echo $runningFeed; ?></p>
 	</div>
 
-	<!-- <div id="brand-container" class="<?php echo $this->settings->get_brandfeed_run() ? "updated" : "error" ?>">
-		<p id="brand-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->get_brandfeed_run() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("A Brand Feed has never been run.", 'pureclarity'); ?></strong></p>
+	<!-- <div id="brand-container" class="<?php echo $this->settings->is_brand_feed_sent() ? "updated" : "error" ?>">
+		<p id="brand-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_brand_feed_sent() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("A Brand Feed has never been run.", 'pureclarity'); ?></strong></p>
 		<p>
 			<?php
 				printf(
@@ -59,8 +59,8 @@
 		<p id="pureclarity-brand-message" class="pureclarity-message"><?php echo $runningFeed; ?></p>
 	</div> -->
 
-	<div id="user-container" class="<?php echo $this->settings->get_userfeed_run() ? "updated" : "error" ?>">
-		<p id="user-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->get_userfeed_run() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("A User Feed has never been run.", 'pureclarity'); ?></strong></p>
+	<div id="user-container" class="<?php echo $this->settings->is_user_feed_sent() ? "updated" : "error" ?>">
+		<p id="user-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_user_feed_sent() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("A User Feed has never been run.", 'pureclarity'); ?></strong></p>
 		<p>
 			<?php
 				printf(
@@ -73,8 +73,8 @@
 		<p id="pureclarity-user-message" class="pureclarity-message"><?php echo $runningFeed; ?></p>
 	</div>
 
-	<div id="order-container" class="<?php echo $this->settings->get_orderfeed_run() ? "updated" : "error" ?>">
-		<p id="order-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->get_orderfeed_run() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("An Order Feed has never been run.", 'pureclarity'); ?></strong></p>
+	<div id="order-container" class="<?php echo $this->settings->is_order_feed_sent() ? "updated" : "error" ?>">
+		<p id="order-heading"><strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_order_feed_sent() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("An Order Feed has never been run.", 'pureclarity'); ?></strong></p>
 		<p>
 			<?php
 				printf(

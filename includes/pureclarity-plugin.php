@@ -54,8 +54,9 @@ class PureClarity_Plugin
     public function init() {
         if ( is_admin() ) {
 			new PureClarity_Admin( $this );
-		} else {
-            if($this->settings->get_pureclarity_enabled()) {
+		} 
+        else {
+            if( $this->settings->is_pureclarity_enabled() ) {
                 add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
             }
             $this->state = new PureClarity_State( $this );

@@ -20,7 +20,7 @@ if ( ! defined( 'PURECLARITY_PATH' ) ) {
 }
 
 // Ensure woocommerce is enabled
-include_once(ABSPATH.'wp-admin/includes/plugin.php');
+include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 if ( ! is_plugin_active('woocommerce/woocommerce.php') ) {
 	add_action( 'admin_notices', function() {
 		echo '<div class="error notice"><p>' . __( 'The PureClarity plugin requires WooCommerce to be enabled.', 'pureclarity' ) . '</p></div>';

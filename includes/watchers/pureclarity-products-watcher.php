@@ -15,7 +15,7 @@ class PureClarity_Products_Watcher {
         $this->feed = $plugin->get_feed();
         $this->state = $plugin->get_state();
 
-        if ( ! $this->settings->get_pureclarity_enabled()) {
+        if ( ! $this->settings->is_pureclarity_enabled()) {
             return;
         }
 
@@ -24,7 +24,7 @@ class PureClarity_Products_Watcher {
             session_start();
         }
 
-        if ($this->settings->get_deltas_enabled()){
+        if ( $this->settings->is_deltas_enabled() ){
             // Watch for product changes
             add_action( 'save_post_product', array( $this, 'save_product' ), 10, 3 );
             add_action( 'added_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
@@ -198,11 +198,8 @@ class PureClarity_Products_Watcher {
     }
 
     public function set_cart( $update ) {
-        
         try {
-
             $this->state->set_cart();
-
         } catch ( \Exception $exception ) {
             error_log("PureClarity: Can't build cart changes tracking event: " . $exception->getMessage() );
         }

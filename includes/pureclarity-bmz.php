@@ -18,46 +18,84 @@ class PureClarity_Bmz {
 
     public function render_bmzs() {
 
-        if (!$this->settings->get_merch_enabled()) return;
+        if ( ! $this->settings->is_merch_enabled() ) return;
         
         $this->currentProduct = $this->state->get_product();
         $this->currentCategoryId = $this->state->get_category_id();
 
         // Homepage and Order Received Page BMZs
-        if (is_front_page() && $this->settings->add_bmz_homepage()) {
-            add_filter( 'the_content', array( $this, 'front_page' ) );
+        if ( is_front_page() && $this->settings->is_bmz_on_home_page() ) {
+            add_filter( 'the_content', array( 
+                    $this, 
+                    'front_page' 
+                ) 
+            );
         }
 
         // Category Page BMZs (Only add if PC is not controlling prod lists, otherwise we'll it through JS)
-        if ( (is_product_category() || is_shop()) && $this->settings->add_bmz_categorypage() && !$this->settings->get_prod_enabled()  ) {
-            add_action( 'woocommerce_before_main_content', array( $this, 'cat_page_1'), 10);
-            add_action( 'woocommerce_after_main_content', array( $this, 'cat_page_2'), 10);
+        if ( (is_product_category() || is_shop()) && $this->settings->is_bmz_on_category_page() && !$this->settings->is_prod_enabled()  ) {
+            add_action( 'woocommerce_before_main_content', array( 
+                    $this, 
+                    'cat_page_1'
+                ), 10 );
+            add_action( 'woocommerce_after_main_content', array( 
+                    $this, 
+                    'cat_page_2'
+                ), 10 );
         }
 
         // Search Results BMZs (Only add if PC is not controlling search, otherwise we'll it through JS)
-        if ( is_search() && $this->settings->add_bmz_searchpage() && !$this->settings->get_search_enabled() ) {
-            add_action( 'woocommerce_before_main_content', array( $this, 'search_page_1'), 10);
-            add_action( 'woocommerce_after_main_content', array( $this, 'search_page_2'), 10);
+        if ( is_search() && $this->settings->is_bmz_on_search_page() && ! $this->settings->is_search_enabled() ) {
+            add_action( 'woocommerce_before_main_content', array( 
+                $this, 
+                'search_page_1'
+            ), 10 );
+            add_action( 'woocommerce_after_main_content', array( 
+                $this, 
+                'search_page_2'
+            ), 10 );
         }
 
         // Product Page BMZs
-        if ( is_product() && $this->settings->add_bmz_productpage()) {
+        if ( is_product() && $this->settings->is_bmz_on_product_page()) {
             remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
-            add_action( 'woocommerce_before_single_product', array( $this, 'product_page_1'), 10);
-            add_action( 'woocommerce_product_meta_end', array( $this, 'product_page_2'), 10);
-            add_action( 'woocommerce_after_single_product_summary', array( $this, 'product_page_3'), 10);
-            add_action( 'woocommerce_after_single_product', array( $this, 'product_page_4'), 10);
+            add_action( 'woocommerce_before_single_product', array( 
+                $this, 
+                'product_page_1'
+            ), 10 );
+            add_action( 'woocommerce_product_meta_end', array( 
+                $this, 
+                'product_page_2'
+            ), 10 );
+            add_action( 'woocommerce_after_single_product_summary', array( 
+                $this, 
+                'product_page_3'
+            ), 10 );
+            add_action( 'woocommerce_after_single_product', array( 
+                $this, 
+                'product_page_4'
+            ), 10);
         }
 
         // Cart Page BMZs
-        if ( is_cart() && $this->settings->add_bmz_basketpage() ) {
-            add_action( 'woocommerce_before_cart', array( $this, 'cart_page_1'), 10);
-            add_action( 'woocommerce_after_cart', array( $this, 'cart_page_2'), 10);
+        if ( is_cart() && $this->settings->is_bmz_on_basket_page() ) {
+            add_action( 'woocommerce_before_cart', array( 
+                $this, 
+                'cart_page_1'
+            ), 10 );
+            add_action( 'woocommerce_after_cart', array( 
+                $this, 
+                'cart_page_2'
+            ), 10 );
         }
         
         // Order Received Page BMZs
-        if (is_order_received_page() && $this->settings->add_bmz_checkoutpage() ) {
-            add_filter( 'the_content', array( $this, 'order_received_page' ) );
+        if ( is_order_received_page() && $this->settings->is_bmz_on_checkout_page() ) {
+            add_filter( 'the_content', array( 
+                    $this, 
+                    'order_received_page' 
+                ) 
+            );
         }
         
     }
@@ -69,62 +107,124 @@ class PureClarity_Bmz {
     public function order_received_page( $content ) {
         return "[pureclarity-bmz id='OC-01' bottom='10']" . $content . "[pureclarity-bmz id='OC-02' top='10']";
     }
-    
 
     public function product_page_1() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'PP-01', 'bottom' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array( 
+                'id' => 'PP-01',
+                'bottom' => '10',
+                'echo' => true
+            )
+        );
     }
 
     public function product_page_2() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'PP-02', 'top' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array( 
+                'id' => 'PP-02',
+                'top' => '10',
+                'echo' => true
+            )
+        );
     }
 
     public function product_page_3() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'PP-03', 'bottom' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array( 
+                'id' => 'PP-03', 
+                'bottom' => '10', 
+                'echo' => true
+            )
+        );
     }
 
     public function product_page_4() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'PP-04', 'top' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array( 
+                'id' => 'PP-04', 
+                'top' => '10', 
+                'echo' => true
+            )
+        );
     }
 
     public function cat_page_1() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'PL-01', 'bottom' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array( 
+                'id' => 'PL-01', 
+                'bottom' => '10', 
+                'echo' => true
+            )
+        );
     }
 
     public function cat_page_2() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'PL-02', 'top' => '10', 'bottom' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array( 
+                'id' => 'PL-02', 
+                'top' => '10', 
+                'bottom' => '10', 
+                'echo' => true
+            )
+        );
     }
 
     public function search_page_1() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'SR-01', 'top' => '10', 'bottom' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array( 
+                'id' => 'SR-01',
+                'top' => '10',
+                'bottom' => '10',
+                'echo' => true
+            )
+        );
     }
 
     public function search_page_2() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'SR-02', 'top' => '10', 'bottom' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array(
+                'id' => 'SR-02',
+                'top' => '10',
+                'bottom' => '10',
+                'echo' => true
+            )
+        );
     }
 
     public function cart_page_1() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'BP-01', 'bottom' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array( 
+                'id' => 'BP-01',
+                'bottom' => '10',
+                'echo' => true
+            )
+        );
     }
 
     public function cart_page_2() {
-        return $this->pureclarity_render_bmz(array( 'id' => 'BP-02', 'top' => '10', 'echo' => true ));
+        return $this->pureclarity_render_bmz( array( 
+                'id' => 'BP-02',
+                'top' => '10',
+                'echo' => true
+            )
+        );
     }
-
-
 
     public function pureclarity_render_bmz( $atts, $content = null) {
 
-        $arguments = shortcode_atts( array( 'id' => null, 'top' => null, 'bottom' => null, 'echo' => false, "class" => null ), $atts );
-        if ( $this->settings->get_merch_enabled() && ! empty( $arguments['id'] )) {
+        $arguments = shortcode_atts( 
+            array( 
+                'id' => null, 
+                'top' => null, 
+                'bottom' => null, 
+                'echo' => false, 
+                "class" => null 
+            ), 
+            $atts 
+        );
+        if ( $this->settings->is_merch_enabled() && ! empty( $arguments['id'] ) ) {
             
             $html = ! empty($content) ? $content : "";
 
-            if ( $this->settings->get_bmz_debug_enabled() && $html == "" ){
+            if ( $this->settings->is_bmz_debug_enabled() && $html == "" ){
                 $html = "PURECLARITY BMZ: " . $arguments['id'];
             }
 
-            $class = $this->settings->get_bmz_debug_enabled() ? "pureclarity_bmz pureclarity_debug" : "pureclarity_bmz";
+            $class = "pureclarity_bmz";
+            if ( $this->settings->is_bmz_debug_enabled() ) {
+                $class .= " pureclarity_debug";
+            }
             $class .= " pureclarity_bmz_" . $arguments['id'];
             if ( ! empty( $arguments['class'] )) {
                 $class .= ' ' . $arguments['class'];
