@@ -40,10 +40,10 @@ class PureClarity_Settings
         add_option( 'pureclarity_secretkey', '' );
         add_option( 'pureclarity_region', '1' );
         add_option( 'pureclarity_mode', 'off' );
-        add_option( 'pureclarity_search_enabled', 'no' );
-        add_option( 'pureclarity_merch_enabled', 'no' );
+        // add_option( 'pureclarity_search_enabled', 'no' );
+        // add_option( 'pureclarity_merch_enabled', 'no' );
         add_option( 'pureclarity_shop_enabled', 'no');
-        add_option( 'pureclarity_prodlist_enabled', 'no' );
+        // add_option( 'pureclarity_prodlist_enabled', 'no' );
         add_option( 'pureclarity_prodfeed_run', '0' );
         add_option( 'pureclarity_catfeed_run', '0' );
         add_option( 'pureclarity_brandfeed_run', '0' );    
@@ -99,15 +99,18 @@ class PureClarity_Settings
     }
 
     public function get_search_enabled_admin() {
-        return get_option( 'pureclarity_search_enabled', '' ) == "yes";
+        return false;
+        // return get_option( 'pureclarity_search_enabled', '' ) == "yes";
     }
 
     public function get_merch_enabled_admin() {
-        return get_option( 'pureclarity_merch_enabled', '' ) == "yes";
+        return true;
+        // return get_option( 'pureclarity_merch_enabled', '' ) == "yes";
     }
 
     public function get_prod_enabled_admin() {
-        return get_option( 'pureclarity_prodlist_enabled', '' ) == "yes";
+        return false;
+        // return get_option( 'pureclarity_prodlist_enabled', '' ) == "yes";
     }
 
     public function get_deltas_enabled_admin() {
@@ -116,15 +119,18 @@ class PureClarity_Settings
     
 
     public function get_search_enabled() {
-        return get_option( 'pureclarity_search_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
+        return false;
+        // return get_option( 'pureclarity_search_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
     }
 
     public function get_merch_enabled() {
-        return get_option( 'pureclarity_merch_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
+        return true;
+        // return get_option( 'pureclarity_merch_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
     }
 
     public function get_prod_enabled() {
-        return get_option( 'pureclarity_prodlist_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
+        return false;
+        // return get_option( 'pureclarity_prodlist_enabled', '' ) == "yes" && $this->get_pureclarity_enabled();
     }
 
     public function get_deltas_enabled() {

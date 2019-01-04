@@ -191,29 +191,29 @@ class PureClarity_Admin
 			$this->settings_section
         );
 
-        add_settings_field(
-			'pureclarity_search_enabled',
-			'Enable Search',
-			array( $this, 'search_enabled_callback' ),
-			$this->settings_slug,
-			$this->settings_section
-        );
+   //      add_settings_field(
+			// 'pureclarity_search_enabled',
+			// 'Enable Search',
+			// array( $this, 'search_enabled_callback' ),
+			// $this->settings_slug,
+			// $this->settings_section
+   //      );
 
-        add_settings_field(
-			'pureclarity_prodlist_enabled',
-			'Enable Product Listing',
-			array( $this, 'prodlist_enabled_callback' ),
-			$this->settings_slug,
-			$this->settings_section
-        );
+   //      add_settings_field(
+			// 'pureclarity_prodlist_enabled',
+			// 'Enable Product Listing',
+			// array( $this, 'prodlist_enabled_callback' ),
+			// $this->settings_slug,
+			// $this->settings_section
+   //      );
 
-        add_settings_field(
-			'pureclarity_merch_enabled',
-			'Enable Merchandizing',
-			array( $this, 'merch_enabled_callback' ),
-			$this->settings_slug,
-			$this->settings_section
-        );
+   //      add_settings_field(
+			// 'pureclarity_merch_enabled',
+			// 'Enable Merchandizing',
+			// array( $this, 'merch_enabled_callback' ),
+			// $this->settings_slug,
+			// $this->settings_section
+   //      );
 
         add_settings_field(
             'pureclarity_shop_enabled',
@@ -235,9 +235,9 @@ class PureClarity_Admin
         register_setting( $this->settings_option_group, 'pureclarity_secretkey', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_region', 'sanitize_callback' );
         register_setting( $this->settings_option_group, 'pureclarity_mode', 'sanitize_callback' );
-        register_setting( $this->settings_option_group, 'pureclarity_search_enabled', array( $this, 'sanitize_checkbox' ) );
-        register_setting( $this->settings_option_group, 'pureclarity_merch_enabled', array( $this, 'sanitize_checkbox' ) );
-        register_setting( $this->settings_option_group, 'pureclarity_prodlist_enabled', array( $this, 'sanitize_checkbox' ) );
+        // register_setting( $this->settings_option_group, 'pureclarity_search_enabled', array( $this, 'sanitize_checkbox' ) );
+        // register_setting( $this->settings_option_group, 'pureclarity_merch_enabled', array( $this, 'sanitize_checkbox' ) );
+        // register_setting( $this->settings_option_group, 'pureclarity_prodlist_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_deltas_enabled', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->settings_option_group, 'pureclarity_shop_enabled', array($this, 'sanitize_checkbox') );
 
@@ -257,29 +257,29 @@ class PureClarity_Admin
 			$this->advanced_section
         );
 
-        add_settings_field(
-			'pureclarity_search_selector',
-			'Autocomplete Input DOM Selector',
-			array( $this, 'searchselector_callback' ),
-			$this->advanced_slug,
-			$this->advanced_section
-        );
+   //      add_settings_field(
+			// 'pureclarity_search_selector',
+			// 'Autocomplete Input DOM Selector',
+			// array( $this, 'searchselector_callback' ),
+			// $this->advanced_slug,
+			// $this->advanced_section
+   //      );
 
-        add_settings_field(
-			'pureclarity_search_result_selector',
-			'Search Results DOM Selector',
-			array( $this, 'searchresults_selector_callback' ),
-			$this->advanced_slug,
-			$this->advanced_section
-        );
+   //      add_settings_field(
+			// 'pureclarity_search_result_selector',
+			// 'Search Results DOM Selector',
+			// array( $this, 'searchresults_selector_callback' ),
+			// $this->advanced_slug,
+			// $this->advanced_section
+   //      );
 
-        add_settings_field(
-            'pureclarity_prodlist_result_selector',
-            'Product List DOM Selector',
-            array ($this, 'prodlist_selector_callback'),
-            $this->advanced_slug,
-            $this->advanced_section
-        );
+        // add_settings_field(
+        //     'pureclarity_prodlist_result_selector',
+        //     'Product List DOM Selector',
+        //     array ($this, 'prodlist_selector_callback'),
+        //     $this->advanced_slug,
+        //     $this->advanced_section
+        // );
 
         add_settings_field(
             'pureclarity_shop_selector',
@@ -339,10 +339,10 @@ class PureClarity_Admin
         );
 
         register_setting( $this->advanced_option_group, 'pureclarity_bmz_debug', array( $this, 'sanitize_checkbox' ) );
-        register_setting( $this->advanced_option_group, 'pureclarity_search_selector', 'sanitize_callback' );
+        // register_setting( $this->advanced_option_group, 'pureclarity_search_selector', 'sanitize_callback' );
         register_setting( $this->advanced_option_group, 'pureclarity_shop_selector', 'sanitize_callback' );
         register_setting( $this->advanced_option_group, 'pureclarity_prodlist_selector', 'sanitize_callback' );
-        register_setting( $this->advanced_option_group, 'pureclarity_search_result_selector', 'sanitize_callback' );
+        // register_setting( $this->advanced_option_group, 'pureclarity_search_result_selector', 'sanitize_callback' );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_homepage', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_categorypage', array( $this, 'sanitize_checkbox' ) );
         register_setting( $this->advanced_option_group, 'pureclarity_add_bmz_searchpage', array( $this, 'sanitize_checkbox' ) );
