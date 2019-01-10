@@ -2,17 +2,17 @@
     
 class PureClarity_State {
     
+    private $cart;
+    private $currentCategoryId;
+    private $currentProduct;
+    private $customer;
+    private $islogout = false;
+    private $order;
     private $plugin;
-    public $customer;
-    public $islogout = false;
-    public $order;
-    public $cart;
-    public $currentProduct;
-    public $currentCategoryId;
 
     public function __construct( &$plugin ) {
         $this->plugin = $plugin;
-        if (!session_id()) {
+        if ( ! session_id() ) {
             session_start();
         }
     }
@@ -23,10 +23,10 @@ class PureClarity_State {
         $this->customer = null;
     }
 
-    public function set_customer($user_id) {
-        if (!empty ($user_id) ) {
+    public function set_customer( $user_id ) {
+        if ( ! empty( $user_id ) ) {
             $customer = new WC_Customer( $user_id );
-            if ($customer->get_id() > 0) {
+            if ( $customer->get_id() > 0 ) {
                 $data  = array(
                     'userid' => $customer->get_id(),
                     'email' => $customer->get_email(),
@@ -50,23 +50,23 @@ class PureClarity_State {
             return $this->customer;
         }
 
-        if ( isset($_SESSION['pureclarity-customer']) ){
+        if ( isset( $_SESSION['pureclarity-customer'] ) ) {
             $this->customer = $_SESSION['pureclarity-customer'];
             $isadmin = current_user_can('administrator');
-            $adminset = !empty($this->customer["data"]["accid"]);
-            if ($this->customer["data"]["userid"] == get_current_user_id() && $isadmin == $adminset) {
+            $adminset = ! empty($this->customer["data"]["accid"]);
+            if ( $this->customer["data"]["userid"] == get_current_user_id() && $isadmin == $adminset ) {
                 return $this->customer;
             }
         }
 
-        return $this->set_customer(get_current_user_id());
+        return $this->set_customer( get_current_user_id() );
     }
 
     public function is_logout() {
         if ( $this->islogout) {
             return true;
         }
-        if ( isset($_SESSION['pureclarity-logout']) ){
+        if ( isset( $_SESSION['pureclarity-logout'] ) ){
             $this->islogout = $_SESSION['pureclarity-logout'];
             $_SESSION['pureclarity-logout'] = null;
             return $this->islogout;
@@ -75,12 +75,12 @@ class PureClarity_State {
     }
 
     public function get_product() {
-        if (! empty($this->currentProduct)){
+        if ( ! empty( $this->currentProduct ) ) {
             return $this->currentProduct;
         }
 
         $product = $this->get_wc_product();
-        if (!empty($product)){
+        if ( ! empty( $product ) ) {
             $data = array(
                 'id' => (string) $product->get_id(),
                 'sku' => $product->get_sku()
@@ -93,15 +93,15 @@ class PureClarity_State {
     }
 
     public function get_wc_product() {
-        if (is_product()){
+        if ( is_product() ) {
             global $product;
-            if (!empty($product)){
-                if ( ! is_object( $product)) {
+            if ( ! empty( $product ) ) {
+                if ( ! is_object( $product ) ) {
                     $product = wc_get_product( get_the_ID() );
-                    if ( empty($product) )
+                    if ( empty( $product ) )
                         return null;
                 }
-                if ($product->get_sku()){
+                if ( $product->get_sku() ) {
                     return $product;
                 }
             }
@@ -110,11 +110,10 @@ class PureClarity_State {
     }
 
     public function get_category_id() {
-        if (! empty($this->currentCategoryId)){
+        if ( ! empty( $this->currentCategoryId ) ) {
             return $this->currentCategoryId;
         }
-        $categoryId = null;
-        if (is_product_category()) {
+        if ( is_product_category() ) {
             $category = get_queried_object();
             $this->currentCategoryId = $category->term_id;
             return $this->currentCategoryId;
@@ -155,7 +154,7 @@ class PureClarity_State {
             return $this->cart;
         }
         
-        if ( isset($_SESSION['pureclarity-cart']) ){
+        if ( isset( $_SESSION['pureclarity-cart'] ) ) {
             $this->cart = $_SESSION['pureclarity-cart'];
             return $this->cart;
         }
@@ -166,10 +165,10 @@ class PureClarity_State {
 
 
     public function get_order() {
-        if ( ! empty($this->order) ) {
+        if ( ! empty( $this->order ) ) {
             return $this->order;
         }
-        if ( isset($_SESSION['pureclarity-order']) ){
+        if ( isset( $_SESSION['pureclarity-order'] ) ) {
             $this->order = $_SESSION['pureclarity-order'];
             $_SESSION['pureclarity-order'] = null;
             return $this->order;

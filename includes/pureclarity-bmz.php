@@ -1,18 +1,18 @@
 <?php
 
 class PureClarity_Bmz {
-
+    
+    private $currentCategoryId;
+    private $currentProduct;
     private $plugin;
     private $settings;
     private $state;
-    private $currentProduct;
-    private $currentCategoryId;
 
     public function __construct( &$plugin ) {
         $this->plugin = $plugin;
         $this->settings = $plugin->get_settings();
         $this->state = $plugin->get_state();
-        add_shortcode( 'pureclarity-bmz', array( $this, 'pureclarity_render_bmz') );
+        add_shortcode( 'pureclarity-bmz', array( $this, 'pureclarity_render_bmz' ) );
         add_action( 'template_redirect', array( $this, 'render_bmzs' ), 10, 1 );
     }
 
@@ -33,7 +33,11 @@ class PureClarity_Bmz {
         }
 
         // Category Page BMZs (Only add if PC is not controlling prod lists, otherwise we'll it through JS)
-        if ( (is_product_category() || is_shop()) && $this->settings->is_bmz_on_category_page() && !$this->settings->is_prod_enabled()  ) {
+        if ( 
+                ( is_product_category() || is_shop() ) 
+                && $this->settings->is_bmz_on_category_page() 
+                && ! $this->settings->is_prod_enabled()  
+        ) {
             add_action( 'woocommerce_before_main_content', array( 
                     $this, 
                     'cat_page_1'
@@ -45,7 +49,11 @@ class PureClarity_Bmz {
         }
 
         // Search Results BMZs (Only add if PC is not controlling search, otherwise we'll it through JS)
-        if ( is_search() && $this->settings->is_bmz_on_search_page() && ! $this->settings->is_search_enabled() ) {
+        if ( 
+            is_search() 
+            && $this->settings->is_bmz_on_search_page() 
+            && ! $this->settings->is_search_enabled() 
+        ) {
             add_action( 'woocommerce_before_main_content', array( 
                 $this, 
                 'search_page_1'
@@ -57,7 +65,7 @@ class PureClarity_Bmz {
         }
 
         // Product Page BMZs
-        if ( is_product() && $this->settings->is_bmz_on_product_page()) {
+        if ( is_product() && $this->settings->is_bmz_on_product_page() ) {
             remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
             add_action( 'woocommerce_before_single_product', array( 
                 $this, 
@@ -215,7 +223,7 @@ class PureClarity_Bmz {
         );
         if ( $this->settings->is_merch_enabled() && ! empty( $arguments['id'] ) ) {
             
-            $html = ! empty($content) ? $content : "";
+            $html = ( ! empty($content) ? $content : "" );
 
             if ( $this->settings->is_bmz_debug_enabled() && $html == "" ){
                 $html = "PURECLARITY BMZ: " . $arguments['id'];
@@ -226,25 +234,25 @@ class PureClarity_Bmz {
                 $class .= " pureclarity_debug";
             }
             $class .= " pureclarity_bmz_" . $arguments['id'];
-            if ( ! empty( $arguments['class'] )) {
+            if ( ! empty( $arguments['class'] ) ) {
                 $class .= ' ' . $arguments['class'];
             }
 
             $style = "";
-            if ( ! empty( $arguments['top'] )) {
+            if ( ! empty( $arguments['top'] ) ) {
                 $style .= "margin-top:" . $arguments['top'] . 'px;';
             }
 
-            if ( ! empty( $arguments['bottom'] )) {
+            if ( ! empty( $arguments['bottom'] ) ) {
                 $style .= "margin-bottom:" . $arguments['bottom'] . 'px;';
             }
 
             $data = "";
-            if ( ! empty($this->currentProduct) ) {
-                $data = "id:".$this->currentProduct['productid'];
+            if ( ! empty( $this->currentProduct ) ) {
+                $data = "id:" . $this->currentProduct['productid'];
             }
-            elseif ( ! empty($this->currentCategoryId) ) {
-                $data = "categoryid:".$this->currentCategoryId;
+            elseif ( ! empty( $this->currentCategoryId ) ) {
+                $data = "categoryid:" . $this->currentCategoryId;
             }
 
             $bmz = "<div class='" . $class . "' style='" . $style . "' data-pureclarity='bmz:" . $arguments['id'] . ";" . $data . "'>" . $html . "</div><div class='pureclarity_bmz_clearfix'></div>";

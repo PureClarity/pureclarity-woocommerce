@@ -53,7 +53,13 @@ class PureClarity_Admin
 			}
 
             $type = $_POST[ 'type' ];
-            $acceptableTypes = array( "product", "category", "brand", "user", "order" );
+            $acceptableTypes = array( 
+                "product", 
+                "category", 
+                "brand", 
+                "user", 
+                "order" 
+            );
             if ( ! in_array( $type, $acceptableTypes ) ) {
 				throw new RuntimeException( 'Unknown type.' );
             }
@@ -83,7 +89,8 @@ class PureClarity_Admin
 
             wp_send_json( $response );
 
-        } catch ( \Exception $exception ) {
+        }
+        catch ( \Exception $exception ) {
             error_log("PureClarity: An error occurred generating the {$type} feed: " . $exception->getMessage() );
             wp_send_json( array( "error" => "An error occurred generating the {$type} feed. See error logs for more information.") );
         }
@@ -145,14 +152,12 @@ class PureClarity_Admin
     }
 
     public function add_settings() {
-
         $this->add_general_settings();
         $this->add_advanced_settings();
         $this->add_data_feed_settings();
-
     }
 
-    private function add_fields( $fields, $slug, $sectionId, $groupName ) {
+    private function add_fields( $fields, $slug, $sectionId, $groupName = null ) {
         foreach( $fields as $field ) {
             $optionName = $field[ 0 ];
             $label = $field[ 1 ];
@@ -165,219 +170,51 @@ class PureClarity_Admin
                 $slug,
                 $sectionId
             );
-            register_setting( $groupName, $optionName, ( $isCheckbox ? 'sanitize_checkbox' : 'sanitize_callback' ) );
+            if( $groupName ){
+                register_setting( $groupName, $optionName, ( $isCheckbox ? 'sanitize_checkbox' : 'sanitize_callback' ) );
+            }
         }
     }
 
-    private function get_general_fields() {
-        $accessKeyField = array(
-            'pureclarity_accesskey',
-            'Access Key',
-            'accesskey_callback',
-            false, // is it a checkbox?
-        );
-        $secretKeyField = array(
-            'pureclarity_secretkey',
-            'Secret Key',
-            'secretkey_callback',
-            false,
-        );
-        $regionField = array(
-            'pureclarity_region',
-            'Region',
-            'pureclarity_region_callback',
-            false,
-        );
-        $modeField = array(
-            'pureclarity_mode',
-            'Enable Mode',
-            'pureclarity_mode_callback',
-            false,
-        );
-        $searchEnabledField = array(
-            'pureclarity_search_enabled',
-            'Enable Search',
-            'search_enabled_callback',
-            true,
-        );
-        $productListEnabledField = array(
-            'pureclarity_prodlist_enabled',
-            'Enable Product Listing',
-            'prodlist_enabled_callback',
-            true,
-        );
-        $merchEnabledField = array(
-            'pureclarity_merch_enabled',
-            'Enable Merchandizing',
-            'merch_enabled_callback',
-            true,
-        );
-        $shopEnabledField = array(
-            'pureclarity_shop_enabled',
-            'Enable Shop',
-            'shop_enabled_callback',
-            true,
-        );
-        $deltasEnabledField = array(
-            'pureclarity_deltas_enabled',
-            'Enable Delta Sync',
-            'enabled_deltas_callback',
-            true,
-        );
-        return array(
-                $accessKeyField,
-                $secretKeyField,
-                $regionField,
-                $modeField,
-                // $searchEnabledField,
-                // $productListEnabledField,
-                // $merchEnabledField,
-                $shopEnabledField,
-                $deltasEnabledField,
-            );
-    }
-
     private function add_general_settings() {
-        
         add_settings_section(
             self::SETTINGS_SECTION_ID,
             __("General Settings", 'pureclarity'),
             array( $this, 'print_settings_section_text' ),
             self::SETTINGS_SLUG
         );
-        
         $this->add_fields(
             $this->get_general_fields(),
             self::SETTINGS_SLUG,
             self::SETTINGS_SECTION_ID,
             self::SETTINGS_OPTION_GROUP_NAME
         );
-
     }
 
     private function add_advanced_settings() {
-        // @todo structure as per add_general_settings()
         add_settings_section(
             self::ADVANCED_SECTION_ID,
             null,
             array( $this, 'print_advanced_section_text' ),
             self::ADVANCED_MENU_SLUG
         );
-
-        add_settings_field(
-            'pureclarity_bmz_debug',
-            __('Enable BMZ Debugging', 'pureclarity'),
-            array( $this, 'pureclarity_bmz_debug_callback' ),
+        $this->add_fields(
+            $this->get_advanced_fields(),
             self::ADVANCED_MENU_SLUG,
-            self::ADVANCED_SECTION_ID
+            self::ADVANCED_SECTION_ID,
+            self::ADVANCED_OPTION_GROUP_NAME
         );
-
-   //      add_settings_field(
-            // 'pureclarity_search_selector',
-            // 'Autocomplete Input DOM Selector',
-            // array( $this, 'searchselector_callback' ),
-            // self::ADVANCED_MENU_SLUG,
-            // self::ADVANCED_SECTION_ID
-   //      );
-
-   //      add_settings_field(
-            // 'pureclarity_search_result_selector',
-            // 'Search Results DOM Selector',
-            // array( $this, 'searchresults_selector_callback' ),
-            // self::ADVANCED_MENU_SLUG,
-            // self::ADVANCED_SECTION_ID
-   //      );
-
-        // add_settings_field(
-        //     'pureclarity_prodlist_result_selector',
-        //     'Product List DOM Selector',
-        //     array ($this, 'prodlist_selector_callback'),
-        //     self::ADVANCED_MENU_SLUG,
-        //     self::ADVANCED_SECTION_ID
-        // );
-
-        add_settings_field(
-            'pureclarity_shop_selector',
-            __('Shop DOM Selector', 'pureclarity'),
-            array ($this, 'shop_selector_callback'),
-            self::ADVANCED_MENU_SLUG,
-            self::ADVANCED_SECTION_ID
-        );
-
-        add_settings_field(
-            'pureclarity_add_bmz_homepage',
-            __('Show Home Page BMZs', 'pureclarity'),
-            array( $this, 'pureclarity_add_bmz_homepage_callback' ),
-            self::ADVANCED_MENU_SLUG,
-            self::ADVANCED_SECTION_ID
-        );
-
-        add_settings_field(
-            'pureclarity_add_bmz_categorypage',
-            __('Show Product Listing BMZs', 'pureclarity'),
-            array( $this, 'pureclarity_add_bmz_categorypage_callback' ),
-            self::ADVANCED_MENU_SLUG,
-            self::ADVANCED_SECTION_ID
-        );
-
-        add_settings_field(
-            'pureclarity_add_bmz_searchpage',
-            __('Show Search Results BMZs', 'pureclarity'),
-            array( $this, 'pureclarity_add_bmz_searchpage_callback' ),
-            self::ADVANCED_MENU_SLUG,
-            self::ADVANCED_SECTION_ID
-        );
-
-        add_settings_field(
-            'pureclarity_add_bmz_productpage',
-            __('Show Product Page BMZs', 'pureclarity'),
-            array( $this, 'pureclarity_add_bmz_productpage_callback' ),
-            self::ADVANCED_MENU_SLUG,
-            self::ADVANCED_SECTION_ID
-        );
-
-        add_settings_field(
-            'pureclarity_add_bmz_basketpage',
-            __('Show Cart Page BMZs', 'pureclarity'),
-            array( $this, 'pureclarity_add_bmz_basketpage_callback' ),
-            self::ADVANCED_MENU_SLUG,
-            self::ADVANCED_SECTION_ID
-        );
-
-        add_settings_field(
-            'pureclarity_add_bmz_checkoutpage',
-            __('Show Order Confirmation BMZs', 'pureclarity'),
-            array( $this, 'pureclarity_add_bmz_checkoutpage_callback' ),
-            self::ADVANCED_MENU_SLUG,
-            self::ADVANCED_SECTION_ID
-        );
-
-        register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_bmz_debug', array( $this, 'sanitize_checkbox' ) );
-        // register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_search_selector', 'sanitize_callback' );
-        register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_shop_selector', 'sanitize_callback' );
-        register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_prodlist_selector', 'sanitize_callback' );
-        // register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_search_result_selector', 'sanitize_callback' );
-        register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_add_bmz_homepage', array( $this, 'sanitize_checkbox' ) );
-        register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_add_bmz_categorypage', array( $this, 'sanitize_checkbox' ) );
-        register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_add_bmz_searchpage', array( $this, 'sanitize_checkbox' ) );
-        register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_add_bmz_productpage', array( $this, 'sanitize_checkbox' ) );
-        register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_add_bmz_basketpage', array( $this, 'sanitize_checkbox' ) );
-        register_setting( self::ADVANCED_OPTION_GROUP_NAME, 'pureclarity_add_bmz_checkoutpage', array( $this, 'sanitize_checkbox' ) );
     }
 
     private function add_data_feed_settings() {
-        // @todo structure as per add_general_settings()
         add_settings_section(
             self::DATAFEED_SECTION_ID,
             null,
             null,
             self::DATAFEED_MENU_SLUG
         );
-
-        add_settings_field(
-            'pureclarity_product_feed',
-            __('Run Product Feed', 'pureclarity'),
-            array( $this, 'product_feed_callback' ),
+        $this->add_fields(
+            $this->get_data_feed_fields(),
             self::DATAFEED_MENU_SLUG,
             self::DATAFEED_SECTION_ID
         );
@@ -387,7 +224,7 @@ class PureClarity_Admin
 
         ?>
 
-		<input type="text" name="pureclarity_accesskey" class="regular-text" value="<?php echo esc_attr( $this->settings->get_accesskey() ); ?>" />
+		<input type="text" name="pureclarity_accesskey" class="regular-text" value="<?php echo esc_attr( $this->settings->get_access_key() ); ?>" />
 		<p class="description" id="home-description"><?php _e('Enter your Access Key', 'pureclarity'); ?></p>
 
         <?php
@@ -398,7 +235,7 @@ class PureClarity_Admin
 
         ?>
 
-		<input type="text" name="pureclarity_secretkey" class="regular-text" value="<?php echo esc_attr( $this->settings->get_secretkey() ); ?>" />
+		<input type="text" name="pureclarity_secretkey" class="regular-text" value="<?php echo esc_attr( $this->settings->get_secret_key() ); ?>" />
 		<p class="description" id="home-description"><?php _e('Enter your Secret Key', 'pureclarity'); ?></p>
 
         <?php
@@ -673,7 +510,10 @@ class PureClarity_Admin
 				</div>';
         }
         
-        $whitelist_admin_pages = array( 'toplevel_page_pureclarity-settings', 'pureclarity_page_pureclarity-advanced' );
+        $whitelist_admin_pages = array( 
+            'toplevel_page_pureclarity-settings', 
+            'pureclarity_page_pureclarity-advanced' 
+        );
         $admin_page = get_current_screen();
 
         if( in_array( $admin_page->base, $whitelist_admin_pages ) 
@@ -691,4 +531,167 @@ class PureClarity_Admin
         endif;
 	}
 
+
+
+    private function get_general_fields() {
+        $accessKeyField = array(
+            'pureclarity_accesskey',
+            'Access Key',
+            'accesskey_callback',
+            false, // not a checkbox
+        );
+        $secretKeyField = array(
+            'pureclarity_secretkey',
+            'Secret Key',
+            'secretkey_callback',
+            false,
+        );
+        $regionField = array(
+            'pureclarity_region',
+            'Region',
+            'pureclarity_region_callback',
+            false,
+        );
+        $modeSelect = array(
+            'pureclarity_mode',
+            'Enable Mode',
+            'pureclarity_mode_callback',
+            false,
+        );
+        $searchEnabledCheckbox = array(
+            'pureclarity_search_enabled',
+            'Enable Search',
+            'search_enabled_callback',
+            true, // a checkbox
+        );
+        $productListEnabledCheckbox = array(
+            'pureclarity_prodlist_enabled',
+            'Enable Product Listing',
+            'prodlist_enabled_callback',
+            true,
+        );
+        $merchEnabledCheckbox = array(
+            'pureclarity_merch_enabled',
+            'Enable Merchandizing',
+            'merch_enabled_callback',
+            true,
+        );
+        $shopEnabledCheckbox = array(
+            'pureclarity_shop_enabled',
+            'Enable Shop',
+            'shop_enabled_callback',
+            true,
+        );
+        $deltasEnabledCheckbox = array(
+            'pureclarity_deltas_enabled',
+            'Enable Delta Sync',
+            'enabled_deltas_callback',
+            true,
+        );
+        return array(
+                $accessKeyField,
+                $secretKeyField,
+                $regionField,
+                $modeSelect,
+                // $searchEnabledCheckbox,
+                // $productListEnabledCheckbox,
+                // $merchEnabledCheckbox,
+                $shopEnabledCheckbox,
+                $deltasEnabledCheckbox,
+            );
+    }
+
+    private function get_advanced_fields() {
+        $bmzDebugCheckbox = array(
+            'pureclarity_bmz_debug',
+            'Enable BMZ Debugging',
+            'pureclarity_bmz_debug_callback',
+            true, // checkbox
+        );
+        $searchSelector = array(
+            'pureclarity_search_selector',
+            'Autocomplete Input DOM Selector',
+            'searchselector_callback',
+            false,
+        );
+        $searchResultSelector = array(
+            'pureclarity_search_result_selector',
+            'Search Results DOM Selector',
+            'searchresults_selector_callback',
+            false,
+        );
+        $productListResultSelector = array(
+            'pureclarity_prodlist_result_selector',
+            'Product List DOM Selector',
+            'prodlist_selector_callback',
+            false,
+        );
+        $shopSelector = array(
+            'pureclarity_shop_selector',
+            'Shop DOM Selector',
+            'shop_selector_callback',
+            false,
+        );
+        $addBmzHomepageCheckbox = array(
+            'pureclarity_add_bmz_homepage',
+            'Show Home Page BMZs',
+            'pureclarity_add_bmz_homepage_callback',
+            true,
+        );
+        $addBmzCategoryPageCheckbox = array(
+            'pureclarity_add_bmz_categorypage',
+            'Show Product Listing BMZs',
+            'pureclarity_add_bmz_categorypage_callback',
+            true,
+        );
+        $addBmzSearchPageCheckbox = array(
+            'pureclarity_add_bmz_searchpage',
+            'Show Search Results BMZs',
+            'pureclarity_add_bmz_searchpage_callback',
+            true,
+        );
+        $addBmzProductPageCheckbox = array(
+            'pureclarity_add_bmz_productpage',
+            'Show Product Page BMZs',
+            'pureclarity_add_bmz_productpage_callback',
+            true,
+        );
+        $addBmzBasketPageCheckbox = array(
+            'pureclarity_add_bmz_basketpage',
+            'Show Cart Page BMZs',
+            'pureclarity_add_bmz_basketpage_callback',
+            true,
+        );
+        $addBmzCheckoutPageCheckbox = array(
+            'pureclarity_add_bmz_checkoutpage',
+            'Show Order Confirmation BMZs',
+            'pureclarity_add_bmz_checkoutpage_callback',
+            true,
+        );
+        return array(
+                $bmzDebugCheckbox,
+                // $searchSelector,
+                // $searchResultSelector,
+                // $productListResultSelector,
+                $shopSelector,
+                $addBmzHomepageCheckbox,
+                $addBmzCategoryPageCheckbox,
+                $addBmzSearchPageCheckbox,
+                $addBmzProductPageCheckbox,
+                $addBmzBasketPageCheckbox,
+                $addBmzCheckoutPageCheckbox,
+            );
+    }
+
+    private function get_data_feed_fields() {
+        $productFeedButton = array(
+            'pureclarity_product_feed',
+            'Run Product Feed',
+            'product_feed_callback',
+            false,
+        );
+        return array(
+                $productFeedButton,
+            );
+    }
 }

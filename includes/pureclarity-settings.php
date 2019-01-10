@@ -68,11 +68,11 @@ class PureClarity_Settings
         add_option( 'pureclarity_user_deltas', '{}' );
     }
     
-    public function get_accesskey() {
+    public function get_access_key() {
         return (string) get_option( 'pureclarity_accesskey', '' );
     }
     
-    public function get_secretkey() {
+    public function get_secret_key() {
         return (string) get_option( 'pureclarity_secretkey', '' );
     }
 
@@ -147,7 +147,7 @@ class PureClarity_Settings
     public function get_api_url() {
         $url = getenv( 'PURECLARITY_SCRIPT_URL' );
         if ( empty( $url ) ){
-            $url = $this->scriptUrl . '/' . $this->get_accesskey() . '/cs.js';
+            $url = $this->scriptUrl . '/' . $this->get_access_key() . '/cs.js';
         }
         return $url;
     }
@@ -260,16 +260,15 @@ class PureClarity_Settings
         return ( get_option( 'pureclarity_add_bmz_checkoutpage', '' ) == "yes" );
     }
     
-    public function add_prod_delta_delete( $id ) {
+    public function add_product_delta_delete( $id ) {
         $this->add_prod_delta( $id, -1 );
     }
 
-    public function add_prod_delta( $id, $size ) {
+    public function add_product_delta( $id, $size ) {
         $deltas = $this->get_prod_deltas();
         if ( empty( $deltas ) ) {
             $deltas = array();
         }
-        $json = json_encode( $deltas, true );
         $deltas[ $id ] = $size;
         update_option( 'pureclarity_product_deltas', json_encode( $deltas, true ) );
     }
@@ -319,7 +318,6 @@ class PureClarity_Settings
         if ( empty( $deltas ) ) {
             $deltas = array();
         }
-        $json = json_encode( $deltas, true );
         $deltas[ $id ] = $size;
         update_option( 'pureclarity_user_deltas', json_encode( $deltas, true ) );
     }

@@ -3,26 +3,27 @@
 class PureClarity_Feed {
 
     private $plugin;
-    private $settings;
     private $productTagsMap;
+    private $settings;
     private $uniqueId;
-    public $pageSize = 100;
+    
+    const PAGE_SIZE = 100;
+    const GATEWAY_TIMEOUT = 504;
 
     public function __construct( &$plugin ) {
         $this->plugin = $plugin;
         $this->settings = $plugin->get_settings();
 
-        if( !class_exists( 'WP_Http' ) )
-            include_once( ABSPATH . WPINC. '/class-http.php' );
+        if( ! class_exists( 'WP_Http' ) )
+            include_once( ABSPATH . WPINC . '/class-http.php' );
     }
 
     public function get_total_pages( $type ) {
         $items = $this->get_total_items( $type );
-        return (int) ceil( $items / $this->pageSize );
+        return (int) ceil( $items / self::PAGE_SIZE );
     }
 
     public function get_total_items( $type ) {
-
         switch($type){
             case "product":
                 $query = new WP_Query(
@@ -45,21 +46,21 @@ class PureClarity_Feed {
 
     public function start_feed( $type ) {
         $url = $this->settings->get_feed_baseurl() . "feed-create";
-        $body;
+        $body = null;
         switch($type) {
             case "product":
                 $this->loadProductTagsMap();
                 $body = $this->get_request_body( $type, '{ "Version": 2, "Products": [' );
-            break;
+                break;
             case "category":
                 $body = $this->get_request_body( $type, '{ "Version": 2, "Categories": [' );
-            break;
+                break;
             case "user":
                 $body = $this->get_request_body( $type, '{ "Version": 2, "Users": [' );
-            break;
+                break;
             case "order":
                 $body = $this->get_request_body( $type, "OrderId,UserId,Email,DateTimeStamp,ProdCode,Quantity,UnitPrice" );
-            break;
+                break;
         }
         $this->http_post( $url, $body );
     }
@@ -77,27 +78,30 @@ class PureClarity_Feed {
     }
 
     public function http_post( $url, $body, $checkOk = true ) {
-        
         $request = new WP_Http;       
-        for ($x = 0; $x <= 5; $x++) {
-            $response = $request->request( $url, array( 'method' => 'POST', 'body' => $body ) );
-            if($response["response"] && $response["response"]["code"] != 504){
+        for ( $x = 0; $x <= 5; $x++ ) {
+            $response = $request->request( $url, array( 
+                    'method' => 'POST', 
+                    'body' => $body 
+                ) 
+            );
+            if( $response["response"] && $response["response"]["code"] != self::GATEWAY_TIMEOUT ) {
                 break;
             }
-            error_log("PureClarity 504 Error, retrying. Error: Couldn't upload data to the PureClarity server: " . wp_json_encode($response));
+            error_log( "PureClarity 504 (Gateway Timeout) Error, retrying. Error: Couldn't upload data to the PureClarity server: " . wp_json_encode( $response ) );
         }
-        if (!empty($response->errors)){
-            throw new Exception("Couldn't upload data to the PureClarity server, response errors: " . wp_json_encode($response->errors));
+        if (!empty($response->errors)) {
+            throw new Exception( "Couldn't upload data to the PureClarity server, response errors: " . wp_json_encode( $response->errors ) );
         }
-        if ($checkOk && $response['body'] != "OK"){
-            throw new Exception("Couldn't upload data to the PureClarity server, response: " . wp_json_encode($response));
+        if ( $checkOk && $response['body'] != "OK" ) {
+            throw new Exception( "Couldn't upload data to the PureClarity server, response: " . wp_json_encode( $response ) );
         }
     }
 
     public function get_request_body( $type, $data ) {
         $request = array(
-            "accessKey"   => $this->settings->get_accesskey(),
-            "secretKey"   => $this->settings->get_secretkey(),
+            "accessKey"   => $this->settings->get_access_key(),
+            "secretKey"   => $this->settings->get_secret_key(),
             "feedName"    => $type . "-" . $this->getUniqueId(),
         );
         if ( ! empty($data) ){
@@ -107,7 +111,7 @@ class PureClarity_Feed {
     }
 
     private function getUniqueId() {
-        if(is_null($this->uniqueId)){
+        if( is_null( $this->uniqueId ) ){
             $this->uniqueId = uniqid();
         }
         return $this->uniqueId;
@@ -117,17 +121,17 @@ class PureClarity_Feed {
         $items = array();
         switch($type) {
             case "product":
-                $items = $this->get_products( $currentPage, $this->pageSize );
-            break;
+                $items = $this->get_products( $currentPage, self::PAGE_SIZE );
+                break;
             case "category":
                 $items = $this->get_categories();
-            break;
+                break;
             case "user":
-                $items = $this->get_users( $currentPage, $this->pageSize );
-            break;
+                $items = $this->get_users( $currentPage, self::PAGE_SIZE );
+                break;
             case "order":
-                $items = $this->get_orders( $currentPage, $this->pageSize );
-            break;
+                $items = $this->get_orders( $currentPage, self::PAGE_SIZE );
+                break;
         }
         return $items;
     }
@@ -146,22 +150,23 @@ class PureClarity_Feed {
         );
 
         $first = false;
-        if ($currentPage == 1 || $pageSize == 1)
+        if ( $currentPage == 1 || $pageSize == 1 ) {
             $first = true;
+        }
 
         $items = "";
-        while ( $query->have_posts() ) {
-            $query->the_post(); 
+        while ( $query->have_posts() ) { 
+            $query->the_post();
             global $product;
-            $item = $this->parse_product($product);
-            if (!empty($item)) {
-                if ($first) {
+            $item = $this->parse_product( $product );
+            if ( ! empty( $item ) ) {
+                if ( $first ) {
                     $first = false;
                 }
                 else {
                     $items .= ",";
                 }
-                $items .= wp_json_encode($item);
+                $items .= wp_json_encode( $item );
             }
         }
 
@@ -169,25 +174,26 @@ class PureClarity_Feed {
     }
 
     public function parse_product( $product, $log_error = true ) {
-        
-        if ( $product->get_catalog_visibility() == "hidden"){
-            if ($log_error) {
-                error_log("PureClarity: Product " . $product->get_id() . " excluded from the feed. Reason: Catalog visibility = hidden.");
+        if ( $product->get_catalog_visibility() == "hidden" ) {
+            if ( $log_error ) {
+                error_log( "PureClarity: Product " . $product->get_id() . " excluded from the feed. Reason: Catalog visibility = hidden." );
             }
             return null;
         }
 
-        $productUrl = get_permalink( $product->get_id() );
-        $productUrl = str_replace(array("https:", "http:"), "", $productUrl);
+        $productUrl = $this->removeUrlProtocol( 
+            get_permalink( $product->get_id() ) 
+        );
 
         $imageUrl = "";
-        if (!empty($product->get_image_id())){
-            $imageUrl = wp_get_attachment_url( $product->get_image_id() );
-            $imageUrl = str_replace(array("https:", "http:"), "", $imageUrl);
+        if ( ! empty( $product->get_image_id() ) ) {
+            $imageUrl = $this->removeUrlProtocol(
+                wp_get_attachment_url( $product->get_image_id() )
+            );
         }
 
         $categoryIds = array();
-        foreach($product->get_category_ids() as $categoryId){
+        foreach( $product->get_category_ids() as $categoryId ) {
             $categoryIds[] = (string) $categoryId;
         }
 
@@ -203,37 +209,38 @@ class PureClarity_Feed {
             "ProductType" => $product->get_type()
         );
 
-        if ($product->get_type() == 'external' && !empty( $product->get_button_text() )) {
+        if ( $product->get_type() == 'external' && ! empty( $product->get_button_text() ) ) {
             $json["ButtonText"] = $product->get_button_text();
         }
 
         $allImageUrls = array();
         foreach( $product->get_gallery_image_ids() as $attachmentId ) {
-            $additionalImageUrl = wp_get_attachment_url( $attachmentId );
-            $allImageUrls[] = str_replace(array("https:", "http:"), "", $additionalImageUrl);
+            $allImageUrls[] = $this->removeUrlProtocol(
+                wp_get_attachment_url( $attachmentId )
+            );
         }
-        if (sizeof($allImageUrls) >0) {
+        if ( sizeof( $allImageUrls ) > 0 ) {
             $json["AllImages"] = $allImageUrls;
         }
 
-        if (!empty($product->get_stock_quantity())){
+        if ( ! empty( $product->get_stock_quantity() ) ) {
             $json["StockQty"] = $product->get_stock_quantity();
         }
 
-        if ($product->get_catalog_visibility() == "catalog") {
+        if ( $product->get_catalog_visibility() == "catalog" ) {
             $json['ExcludeFromSearch'] = true;
         }
 
-        if ($product->get_catalog_visibility() == "search") {
+        if ( $product->get_catalog_visibility() == "search" ) {
             $json['ExcludeFromProductListing'] = true;
         }
 
-        if (!empty($product->get_date_on_sale_from())){
-            $json['SalePriceStartDate'] = (string) $product->get_date_on_sale_from("c");
+        if ( ! empty( $product->get_date_on_sale_from() ) ) {
+            $json['SalePriceStartDate'] = (string) $product->get_date_on_sale_from( "c" );
         }
 
-        if (!empty($product->get_date_on_sale_to())){
-            $json['SalePriceEndDate'] = (string) $product->get_date_on_sale_to("c");
+        if ( ! empty( $product->get_date_on_sale_to() ) ) {
+            $json['SalePriceEndDate'] = (string) $product->get_date_on_sale_to( "c" );
         }
 
         $this->set_search_tags( $json, $product );
@@ -244,19 +251,21 @@ class PureClarity_Feed {
 
         // Check is valid
         $error = array();
-        if (!array_key_exists('Prices', $json) || (is_array($json['Prices']) && sizeof($json['Prices']) == 0)) {
-            $error[] = 'Prices';
+        if ( ! array_key_exists( 'Prices', $json ) 
+                || ( is_array( $json['Prices'] ) && sizeof( $json['Prices'] ) == 0 ) 
+            ) {
+                $error[] = 'Prices';
         }
-        if (!array_key_exists('Sku', $json) || empty($json['Sku'])) {
+        if ( ! array_key_exists( 'Sku', $json ) || empty( $json['Sku'] ) ) {
             $error[] = 'Sku';
         }
-        if (!array_key_exists('Title', $json) || empty($json['Title'])) {
+        if ( ! array_key_exists( 'Title', $json ) || empty( $json['Title'] ) ) {
             $error[] = 'Title';
         }
         
-        if (sizeof($error) > 0) {
-            if ($log_error) {
-                error_log("PureClarity: Product " . $product->get_id() . " excluded from the feed. Reason: Missing required fields = " . implode(", ",  $error));
+        if ( count( $error ) > 0 ) {
+            if ( $log_error ) {
+                error_log( "PureClarity: Product " . $product->get_id() . " excluded from the feed. Reason: Missing required fields = " . implode( ", ",  $error ) );
             }
             return null;
         }
@@ -265,95 +274,94 @@ class PureClarity_Feed {
     }
 
     private function add_to_array( $key, &$json, $value ) {
-        if ( ! empty($value) ) {
-            if (!array_key_exists($key, $json)) {
+        if ( ! empty( $value ) ) {
+            if ( ! array_key_exists( $key, $json ) ) {
                 $json[$key] = array();
             }
-            if (!in_array($value, $json[$key])) {
+            if ( ! in_array( $value, $json[$key] ) ) {
                 $json[$key][] = $value;
             }
         }
     }
 
-
     private function add_variant_info( &$json, &$product ) {
         
-        if ($product->get_type() != 'variable') return;
+        if ( $product->get_type() != 'variable' ) return;
         
-        foreach($product->get_available_variations() as $variant) {
+        foreach( $product->get_available_variations() as $variant ) {
             
-            $this->add_to_array("AssociatedSkus", $json, $variant['sku']);
+            $this->add_to_array( "AssociatedSkus", $json, $variant['sku'] );
 
             $price = $variant['display_price'] . ' ' . get_woocommerce_currency();
             $regularPrice = $variant['display_regular_price'] . ' ' . get_woocommerce_currency();
 
-            if ($price != $regularPrice) {
+            if ( $price != $regularPrice ) {
                 $this->add_to_array( "Prices", $json, $regularPrice );
                 $this->add_to_array( "SalePrices", $json, $price );
-            } else {
+            } 
+            else {
                 $this->add_to_array( "Prices", $json, $price );
             }
 
-            foreach($product->get_attributes() as $key => $attribute ) {
-                $this->add_to_array($key, $json, $variant['attributes']['attribute_' . $key]);
+            foreach( $product->get_attributes() as $key => $attribute ) {
+                $attribute = $variant['attributes']['attribute_' . $key];
+                $this->add_to_array( $key, $json, $attribute );
             }
         }
     }
-
     
     private function add_child_products( &$json, &$product ) {
 
-        if ($product->get_type() != 'grouped') return;
+        if ( $product->get_type() != 'grouped' ) return;
 
-        foreach($product->get_children() as $childId) {
-            $childProduct = wc_get_product($childId);
-            if ( ! empty($childProduct) ) {
-
-                if ( $childProduct->get_catalog_visibility() != "hidden" && $childProduct->get_status() == 'publish') {
-
-                    $this->add_to_array("AssociatedIds", $json, $childProduct->get_id());
-                    $this->add_to_array("AssociatedSkus", $json, $childProduct->get_sku());
-                    $this->add_to_array("AssociatedTitles", $json, $childProduct->get_title());
-                    $this->set_search_tags( $json, $childProduct );
-                    $this->set_product_price( $json, $childProduct );
-                    $this->add_variant_info( $json, $childProduct );
-                    $this->add_child_products( $json, $childProduct );
-
-                }
+        foreach( $product->get_children() as $childId ) {
+            $childProduct = wc_get_product( $childId );
+            if ( ! empty($childProduct) && $this->productIsVisible( $childProduct ) ) {
+                $this->add_to_array( "AssociatedIds", $json, $childProduct->get_id() );
+                $this->add_to_array( "AssociatedSkus", $json, $childProduct->get_sku() );
+                $this->add_to_array( "AssociatedTitles", $json, $childProduct->get_title() );
+                $this->set_search_tags( $json, $childProduct );
+                $this->set_product_price( $json, $childProduct );
+                $this->add_variant_info( $json, $childProduct );
+                $this->add_child_products( $json, $childProduct );
             }
         }
     }
 
+    private function productIsVisible( $product ) {
+        return $product->get_catalog_visibility() != "hidden" && $product->get_status() == 'publish';
+    }
+
     private function set_search_tags( &$json, &$product ) {
-        
-        foreach( $product->get_tag_ids() as $tagId) {
-            if (array_key_exists($tagId, $this->productTagsMap)){
-                $this->add_to_array( "SearchTags", $json, $this->productTagsMap[$tagId]);
+        foreach( $product->get_tag_ids() as $tagId ) {
+            if ( array_key_exists( $tagId, $this->productTagsMap ) ) {
+                $this->add_to_array( "SearchTags", $json, $this->productTagsMap[$tagId] );
             }
         }
     }
 
     private function set_product_price( &$json, &$product ) {
-        
-        if ($product->get_regular_price()) {
+        if ( $product->get_regular_price() ) {
             $price = $product->get_regular_price() . ' ' . get_woocommerce_currency();
-            $this->add_to_array("Prices", $json, $price);
+            $this->add_to_array( "Prices", $json, $price );
         }
 
-        if ($product->get_price() && $product->get_price() != $product->get_regular_price()) {
+        if ( $this->productIsOnSale( $product ) ) {
             $salesPrice = $product->get_price() . ' ' . get_woocommerce_currency();
-            $this->add_to_array("SalePrices", $json, $salesPrice);
+            $this->add_to_array( "SalePrices", $json, $salesPrice );
         }
+    }
+
+    private function productIsOnSale( $product ) {
+        return ( $product->get_price() && $product->get_price() != $product->get_regular_price() );
     }
 
     private function set_basic_attributes( &$json, &$product ) {
-        $this->add_to_array('Weight', $json, $product->get_weight());
-        $this->add_to_array('Length', $json, $product->get_length());
-        $this->add_to_array('Width', $json, $product->get_width());
-        $this->add_to_array('Height', $json, $product->get_height());
+        $this->add_to_array( 'Weight', $json, $product->get_weight() );
+        $this->add_to_array( 'Length', $json, $product->get_length() );
+        $this->add_to_array( 'Width', $json, $product->get_width() );
+        $this->add_to_array( 'Height', $json, $product->get_height() );
     }
-
-
 
     public function loadProductTagsMap() {
         $this->productTagsMap = [];
@@ -365,7 +373,10 @@ class PureClarity_Feed {
 
     public function get_categories() {
         $json = "";
-        $categories = get_terms( 'product_cat', array( "hide_empty" => 0 ) );
+        $categories = get_terms( 'product_cat', array( 
+                "hide_empty" => 0 
+            ) 
+        );
 
         //add into data the new root category!
         $data = array(
@@ -375,14 +386,12 @@ class PureClarity_Feed {
             "ExcludeFromRecommenders" => true,
             "Description" => "All products on the site"
         );
-        $json .= wp_json_encode($data);
+        $json .= wp_json_encode( $data );
 
         foreach( $categories as $category ) {
-
-            $url = get_term_link( $category->term_id, 'product_cat' );
-            if (!empty($url)) {
-                $url = str_replace(array("https:", "http:"), "", $url);
-            }
+            $url = $this->removeUrlProtocol(
+                get_term_link( $category->term_id, 'product_cat' )
+            );
 
             $data = array(
                 "Id" => (string) $category->term_id,
@@ -390,26 +399,17 @@ class PureClarity_Feed {
                 "Link" => $url
             );
 
-            //If category has no parent (it is a root category) - then add to our new Shop category so that we can search in Shop for all products
-            if (!empty($category->parent) && $category->parent > 0){
-                $data["ParentIds"] = [(string) $category->parent];
-            }else{
-                $data["ParentIds"] = ["-1"];
-            }
+            //If category is a root category (has no parent), add to new Shop category so that we can search in Shop for all products
+            $data["ParentIds"] = [ ( ! empty( $category->parent ) && $category->parent > 0 ) ? (string) $category->parent : "-1" ];
 
             $thumbnail_id = get_woocommerce_term_meta( $category->term_id, 'thumbnail_id', true ); 
-            if (!empty($thumbnail_id)){
+            if ( ! empty( $thumbnail_id ) ) {
                 $imageUrl = wp_get_attachment_url( $thumbnail_id );
-                if (!empty($imageUrl)){
-                    $imageUrl = str_replace(array("https:", "http:"), "", $imageUrl);
-                    $data['Image'] = $imageUrl;
+                if ( ! empty( $imageUrl ) ) {
+                    $data['Image'] = $this->removeUrlProtocol( $imageUrl );
                 }   
             }
-            
-
-                $json .= ",";
-            
-            $json .= wp_json_encode($data);
+            $json .= "," . wp_json_encode( $data );
         }
         return $json;
     }
@@ -426,35 +426,30 @@ class PureClarity_Feed {
 
     public function get_users( $currentPage, $pageSize ) {
 
-        $offset = $pageSize * ( $currentPage - 1 );
         $args = array(
 			'order'   => 'ASC',
             'orderby' => 'ID',
-			'offset'  => $offset,
+			'offset'  => $pageSize * ( $currentPage - 1 ),
 			'number'  => $pageSize,
         );
         
         $users = new WP_User_Query( $args );
-
-        $first = false;
-        if ($currentPage == 1 || $pageSize == 1)
-            $first = true;
-
+        $first = ( $currentPage == 1 || $pageSize == 1 );
         $items = "";
-        foreach($users->get_results() as $user) {
+        foreach( $users->get_results() as $user ) {
 
             $data = $this->parse_user( $user->ID );
 
             if ( ! empty ($data) ) {
 
-                if ($first) {
+                if ( $first ) {
                     $first = false;
                 }
                 else {
                     $items .= ",";
                 }
 
-                $items .= wp_json_encode($data);
+                $items .= wp_json_encode( $data );
             }
         }
         return $items;
@@ -462,31 +457,30 @@ class PureClarity_Feed {
 
     public function get_roles( $userId ) {
         $user_roles = get_user_meta( $userId, 'wp_capabilities' );
-        return array_keys($user_roles[0]);
+        return array_keys( $user_roles[0] );
     }
 
     public function parse_user( $userId ) {
         $customer = new WC_Customer( $userId );
 
-
-        if ( ! empty($customer) && $customer->get_id() > 0) {
+        if ( ! empty( $customer ) && $customer->get_id() > 0 ) {
             $data = array(
                 'UserId' => $customer->get_id(),
                 'Email' => $customer->get_email(),
                 'FirstName' => $customer->get_first_name(),
                 'LastName' => $customer->get_last_name(),
-                'Roles' => $this->get_roles($userId)
+                'Roles' => $this->get_roles( $userId )
             );
 
             $billing = $customer->get_billing();
-            if (!empty($billing)) {
-                if (!empty($billing['city'])) {
+            if ( ! empty($billing) ) {
+                if ( ! empty( $billing['city'] ) ) {
                     $data['City'] = $billing['city'];
                 }
-                if (!empty($billing['state'])) {
+                if ( ! empty( $billing['state'] ) ) {
                     $data['State'] = $billing['state'];
                 }
-                if (!empty($billing['country'])) {
+                if ( ! empty( $billing['country'] ) ) {
                     $data['Country'] = $billing['country'];
                 }
             }
@@ -500,7 +494,7 @@ class PureClarity_Feed {
         $args = array(
             'status' => 'completed',
             'type' => 'shop_order',
-            'date_created' => '>' . date('Y-m-d', strtotime("-12 month")),
+            'date_created' => '>' . date( 'Y-m-d', strtotime( "-12 month" ) ),
             'paginate' => true
         );
         
@@ -512,36 +506,30 @@ class PureClarity_Feed {
     public function get_orders( $currentPage, $pageSize ) {
         $args = array(
             'limit' => $pageSize,
-            'offset' => $pageSize*($currentPage-1),
+            'offset' => $pageSize * ( $currentPage - 1 ),
             'orderby' => 'date_created',
             'order' => 'DESC',
             'status' => 'completed',
             'type' => 'shop_order',
-            'date_created' => '>' . date('Y-m-d', strtotime("-12 month"))
+            'date_created' => '>' . date( 'Y-m-d', strtotime( "-12 month" ) )
         );
 
-        $dp = wc_get_price_decimals();
-        
         $orders = new WC_Order_Query( $args );
 
         $items = "";
-        foreach($orders->get_orders() as $order) {
+        foreach( $orders->get_orders() as $order ) {
             foreach ( $order->get_items() as $item_id => $item ) {
-                $product      = $order->get_product_from_item( $item );
-                $product_id   = 0;
-                $variation_id = 0;
-                $product_sku  = null;
+                $product = $order->get_product_from_item( $item );
                 if ( is_object( $product ) ) {
                     $items .= PHP_EOL;
-                    $product_id   = $item->get_product_id();
-                    $variation_id = $item->get_variation_id();
-                    $product_sku  = $product->get_sku();
                     $items .= $order->get_id() . ',';
                     $items .= $order->get_customer_id() . ',,';
                     $items .= (string) $order->get_date_created("c") . ',';
-                    $items .= $product_id . ',';
+                    $items .= $item->get_product_id() . ',';
                     $items .= $item['qty'] . ',';
-                    $items .= wc_format_decimal( $order->get_item_total( $item, false, false ), $dp );
+                    $items .= wc_format_decimal( 
+                        $order->get_item_total( $item, false, false )
+                    );
                 }
             }            
         }
@@ -549,34 +537,43 @@ class PureClarity_Feed {
         return $items;
     }
 
-    public function send_product_delta( $products, $deletes) {
+    public function send_product_delta( $products, $productsToDelete ) {
 
         $request = array(
-            'AppKey'            => $this->settings->get_accesskey(),
-            'Secret'            => $this->settings->get_secretkey(),
+            'AppKey'            => $this->settings->get_access_key(),
+            'Secret'            => $this->settings->get_secret_key(),
             'Products'          => $products,
-            'DeleteProducts'    => $deletes,
+            'DeleteProducts'    => $productsToDelete,
             'Format'            => 'pureclarity_json'
         );
 
-        $url = $this->settings->get_delta_url();
-        $this->http_post( $url, $request, false);
+        $this->http_post( $this->settings->get_delta_url(), $request, false );
 
     }
 
-    public function send_user_delta( $users, $deletes) {
+    public function send_user_delta( $users, $deletes ) {
 
         $request = array(
-            'AppKey'            => $this->settings->get_accesskey(),
-            'Secret'            => $this->settings->get_secretkey(),
+            'AppKey'            => $this->settings->get_access_key(),
+            'Secret'            => $this->settings->get_secret_key(),
             'Users'             => $users,
             'DeleteUsers'       => $deletes,
             'Format'            => 'pureclarity_json'
         );
 
-        $url = $this->settings->get_delta_url();
-        $this->http_post( $url, $request, false);
+        $this->http_post( $this->settings->get_delta_url(), $request, false );
 
+    }
+
+    public function removeUrlProtocol( $url ) {
+        return empty( $url ) ? $url : str_replace(
+                array(
+                        "https:", 
+                        "http:"
+                    ), 
+                "", 
+                $url
+            );
     }
 
 }

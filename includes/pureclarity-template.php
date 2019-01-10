@@ -69,7 +69,7 @@ class PureClarity_Template {
                     "shopSelector" => $pureclarity_settings->get_shop_selector()
                 ),
             "tracking" => array(
-                    'accessKey' => $pureclarity_settings->get_accesskey(),
+                    'accessKey' => $pureclarity_settings->get_access_key(),
                     "apiUrl" => $pureclarity_settings->get_api_url(),
                     "customer" => $pureclarity_session->get_customer(),
                     "islogout" => $pureclarity_session->is_logout(),
@@ -85,7 +85,7 @@ class PureClarity_Template {
                 || $this->get_pureclarity_plugin_settings()->is_merch_enabled() 
                 || $this->get_pureclarity_plugin_settings()->is_prod_enabled() 
             ) 
-            && ( $this->get_pureclarity_plugin_settings()->get_accesskey() != "" ) 
+            && ( $this->get_pureclarity_plugin_settings()->get_access_key() != "" ) 
             && $this->get_pureclarity_plugin_settings()->is_pureclarity_enabled();
     }
 
