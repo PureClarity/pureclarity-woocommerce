@@ -334,7 +334,7 @@ class PureClarity_Admin
         ?>
 
 		<input type="checkbox" id="checkbox_bmz_homepage"  name="pureclarity_add_bmz_homepage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_home_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e('Auto insert BMZs on Home Page', 'pureclarity'); ?></p>
+		<p class="description" id="home-description"><?php _e('Auto-insert BMZs on Home page', 'pureclarity'); ?></p>
 
         <?php
 
@@ -345,7 +345,7 @@ class PureClarity_Admin
         ?>
 
 		<input type="checkbox" id="checkbox_bmz_categorypage"  name="pureclarity_add_bmz_categorypage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_category_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e('Auto insert BMZs on Product Listing Page', 'pureclarity'); ?></p>
+		<p class="description" id="home-description"><?php _e('Auto-insert BMZs on Product Listing page', 'pureclarity'); ?></p>
 
         <?php
 
@@ -356,7 +356,7 @@ class PureClarity_Admin
         ?>
 
 		<input type="checkbox" id="checkbox_bmz_searchpage"  name="pureclarity_add_bmz_searchpage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_search_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e('Auto insert BMZs on Search Results Listing Page', 'pureclarity'); ?></p>
+		<p class="description" id="home-description"><?php _e('Auto-insert BMZs on Search Results page', 'pureclarity'); ?></p>
 
         <?php
 
@@ -367,7 +367,7 @@ class PureClarity_Admin
         ?>
 
 		<input type="checkbox" id="checkbox_bmz_productpage"  name="pureclarity_add_bmz_productpage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_product_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e('Auto insert BMZs on Product Page', 'pureclarity'); ?></p>
+		<p class="description" id="home-description"><?php _e('Auto-insert BMZs on Product page', 'pureclarity'); ?></p>
 
         <?php
 
@@ -378,7 +378,7 @@ class PureClarity_Admin
         ?>
 
 		<input type="checkbox" id="checkbox_bmz_basketpage"  name="pureclarity_add_bmz_basketpage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_basket_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e('Auto insert BMZs on Cart Page', 'pureclarity'); ?></p>
+		<p class="description" id="home-description"><?php _e('Auto-insert BMZs on Cart page', 'pureclarity'); ?></p>
 
         <?php
 
@@ -389,7 +389,7 @@ class PureClarity_Admin
         ?>
 
 		<input type="checkbox" id="checkbox_bmz_checkoutpage"  name="pureclarity_add_bmz_checkoutpage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_checkout_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e('Auto insert BMZs on Order Confirmation Page', 'pureclarity'); ?></p>
+		<p class="description" id="home-description"><?php _e('Auto-insert BMZs on Order Confirmation page', 'pureclarity'); ?></p>
 
         <?php
 
@@ -558,15 +558,9 @@ class PureClarity_Admin
             'merch_enabled_callback',
             true,
         );
-        $shopEnabledCheckbox = array(
-            'pureclarity_shop_enabled',
-            'Enable Shop',
-            'shop_enabled_callback',
-            true,
-        );
         $deltasEnabledCheckbox = array(
             'pureclarity_deltas_enabled',
-            'Enable Delta Sync',
+            'Enable Data Sync',
             'enabled_deltas_callback',
             true,
         );
@@ -578,7 +572,6 @@ class PureClarity_Admin
                 // $searchEnabledCheckbox,
                 // $productListEnabledCheckbox,
                 // $merchEnabledCheckbox,
-                $shopEnabledCheckbox,
                 $deltasEnabledCheckbox,
             );
     }
@@ -607,6 +600,12 @@ class PureClarity_Admin
             'Product List DOM Selector',
             'prodlist_selector_callback',
             false,
+        );
+        $shopEnabledCheckbox = array(
+            'pureclarity_shop_enabled',
+            'Enable Shop',
+            'shop_enabled_callback',
+            true,
         );
         $shopSelector = array(
             'pureclarity_shop_selector',
@@ -655,7 +654,8 @@ class PureClarity_Admin
                 // $searchSelector,
                 // $searchResultSelector,
                 // $productListResultSelector,
-                $shopSelector,
+                // $shopEnabledCheckbox,
+                // $shopSelector,
                 $addBmzHomepageCheckbox,
                 $addBmzCategoryPageCheckbox,
                 $addBmzSearchPageCheckbox,
