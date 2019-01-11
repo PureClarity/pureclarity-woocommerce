@@ -105,7 +105,7 @@ class PureClarity_Template {
         $index = (int) substr( $bmz_id, 4, 5 );
         if( $index > 2 
             || ( $acronym == "SR" && ! $this->get_pureclarity_plugin_settings()->is_bmz_on_search_page() ) 
-            || ( $acronym == "PL" && ! $this->get_pureclarity_plugin_settings()->add_bmz_categorypage() )
+            || ( $acronym == "PL" && ! $this->get_pureclarity_plugin_settings()->is_bmz_on_category_page() )
         ){
             return null;
         }

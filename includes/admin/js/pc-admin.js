@@ -44,7 +44,7 @@
 					return;
 				}
 				progress = Math.round( (currentPage / response.totalPagesCount) * 100 );
-				updateMessage( type, "Processing Feed... " + progress + "% done" );
+				updateMessage( type, "Processing " + type.charAt(0).toUpperCase() + type.slice(1) + " Feed... " + progress + "% done" );
 
 				if (response.finished !== true) {
 					setTimeout( function() {
@@ -52,9 +52,9 @@
 					}, 10 );
 					
 				} else {
-					updateMessage(type, 'Data Feed generation complete.');
+					updateMessage(type, type.charAt(0).toUpperCase() + type.slice(1) + ' feed successfully submitted.');
 					$('#' + type + '-container').removeClass("error").addClass("updated");
-					$('#' + type + '-heading').html("<strong>Note: A feed has been successfully submitted!</strong>");
+					$('#' + type + '-heading').html("<strong>Note: " + type.charAt(0).toUpperCase() + type.slice(1) + " feed has been successfully submitted!</strong>");
 					resetFeedProcess( type );
 				}
 			}

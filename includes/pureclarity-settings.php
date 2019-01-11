@@ -265,7 +265,7 @@ class PureClarity_Settings
     }
 
     public function add_product_delta( $id, $size ) {
-        $deltas = $this->get_prod_deltas();
+        $deltas = $this->get_product_deltas();
         if ( empty( $deltas ) ) {
             $deltas = array();
         }
@@ -274,14 +274,14 @@ class PureClarity_Settings
     }
 
     public function remove_prod_delta( $id ) {
-        $deltas = $this->get_prod_deltas();
+        $deltas = $this->get_product_deltas();
         if ( ! empty( $deltas ) && array_key_exists( $id, $deltas ) ) {
             unset( $deltas[ $id ] );
             update_option( 'pureclarity_product_deltas', json_encode( $deltas, true ) );
         }
     }
 
-    public function get_prod_deltas() {
+    public function get_product_deltas() {
         $deltastring = get_option( 'pureclarity_product_deltas', '{}' );
         if ( ! empty( $deltastring ) ) {
             return json_decode( $deltastring, true );

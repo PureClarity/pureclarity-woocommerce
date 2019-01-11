@@ -9,8 +9,8 @@ class PureClarity_Products_Watcher {
 
     public function __construct( &$plugin ) {
         $this->plugin = $plugin;
-        $this->settings = $plugin->get_settings();
         $this->feed = $plugin->get_feed();
+        $this->settings = $plugin->get_settings();
         $this->state = $plugin->get_state();
 
         if ( ! $this->settings->is_pureclarity_enabled() ) {
@@ -26,7 +26,6 @@ class PureClarity_Products_Watcher {
             $this->register_category_listeners();
             $this->register_user_listeners();
         }
-
         $this->register_user_session_listeners();
         $this->register_cart_listeners();
         $this->register_order_listeners();
@@ -118,7 +117,6 @@ class PureClarity_Products_Watcher {
     }
 
     public function save_product_via_deltas( $id, $post, $update  ) {
-
         if ($post->post_type == "product"){
 
             if ( ! current_user_can( 'edit_product', $id ) )

@@ -27,7 +27,7 @@ class PureClarity_Cron {
                 return;
             }
 
-            $productDeltas = $this->settings->get_prod_deltas();
+            $productDeltas = $this->settings->get_product_deltas();
             if ( count( $productDeltas ) > 0 ) {
 
                 $products = array();
@@ -65,7 +65,8 @@ class PureClarity_Cron {
                     $this->feed->send_product_delta( $products, $deletes );
                 }
             }
-        } catch ( \Exception $exception ) {
+        } 
+        catch ( \Exception $exception ) {
             error_log("PureClarity: An error occurred updating product deltas: " . $exception->getMessage() );
         }
     }
