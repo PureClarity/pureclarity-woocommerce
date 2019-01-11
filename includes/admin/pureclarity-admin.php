@@ -6,7 +6,6 @@ class PureClarity_Admin
     const ADVANCED_SECTION_ID = 'pureclarity_section_advanced';
     const ADVANCED_MENU_SLUG = 'pureclarity-advanced';
 
-    const DATAFEED_SECTION_ID = 'pureclarity_section_datafeed';
     const DATAFEED_MENU_SLUG = 'pureclarity-datafeed';
 
     const SETTINGS_OPTION_GROUP_NAME = 'pureclarity_settings';
@@ -152,8 +151,8 @@ class PureClarity_Admin
 
     public function add_settings() {
         $this->add_general_settings();
+        // for data feed settings, see pureclarity/includes/admin/views/settings-page.php
         $this->add_advanced_settings();
-        $this->add_data_feed_settings();
     }
 
     private function add_fields( $fields, $slug, $sectionId, $groupName = null ) {
@@ -202,20 +201,6 @@ class PureClarity_Admin
             self::ADVANCED_MENU_SLUG,
             self::ADVANCED_SECTION_ID,
             self::ADVANCED_OPTION_GROUP_NAME
-        );
-    }
-
-    private function add_data_feed_settings() {
-        add_settings_section(
-            self::DATAFEED_SECTION_ID,
-            null,
-            null,
-            self::DATAFEED_MENU_SLUG
-        );
-        $this->add_fields(
-            $this->get_data_feed_fields(),
-            self::DATAFEED_MENU_SLUG,
-            self::DATAFEED_SECTION_ID
         );
     }
 
@@ -677,18 +662,6 @@ class PureClarity_Admin
                 $addBmzProductPageCheckbox,
                 $addBmzBasketPageCheckbox,
                 $addBmzCheckoutPageCheckbox,
-            );
-    }
-
-    private function get_data_feed_fields() {
-        $productFeedButton = array(
-            'pureclarity_product_feed',
-            'Run Product Feed',
-            'product_feed_callback',
-            false,
-        );
-        return array(
-                $productFeedButton,
             );
     }
 }
