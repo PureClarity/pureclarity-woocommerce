@@ -48,11 +48,10 @@ class PureClarity_Admin
 				throw new RuntimeException( 'Page has not been set.' );
 			}
 
+            $type = $_POST[ 'type' ];
             if ( ! isset( $type ) ) {
 				throw new RuntimeException( 'Type has not been set.' );
 			}
-
-            $type = $_POST[ 'type' ];
             $acceptableTypes = array( 
                 "product", 
                 "category", 
@@ -530,8 +529,6 @@ class PureClarity_Admin
         
         endif;
 	}
-
-
 
     private function get_general_fields() {
         $accessKeyField = array(

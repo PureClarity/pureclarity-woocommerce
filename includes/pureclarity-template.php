@@ -27,7 +27,7 @@ class PureClarity_Template {
                 || ( is_shop() && $this->get_pureclarity_plugin_settings()->is_shop_enabled_admin() )
             )
         ) {
-            $style = "<style type='text/css'>" . $settings->get_search_result_element() . " {display:none}</style>";
+            $style = "<style type='text/css'>" . $this->get_pureclarity_plugin_settings()->get_search_result_element() . " {display:none}</style>";
         }
         
         $script = '<script type="text/javascript">window.pureclarityConfig = ' . wp_json_encode( $this->getConfig() ) . ';</script>';

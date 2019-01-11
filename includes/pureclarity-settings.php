@@ -57,12 +57,12 @@ class PureClarity_Settings
         add_option( 'pureclarity_search_result_selector', '#main' );
         add_option( 'pureclarity_shop_result_selector', '#main' );
         add_option( 'pureclarity_prodlist_result_selector', '#main' );
-        add_option( 'pureclarity_add_bmz_homepage', 'yes' );
-        add_option( 'pureclarity_add_bmz_searchpage', 'yes' );
-        add_option( 'pureclarity_add_bmz_categorypage', 'yes' );
-        add_option( 'pureclarity_add_bmz_productpage', 'yes' );
-        add_option( 'pureclarity_add_bmz_basketpage', 'yes' );
-        add_option( 'pureclarity_add_bmz_checkoutpage', 'yes' );
+        add_option( 'pureclarity_add_bmz_homepage', 'on' );
+        add_option( 'pureclarity_add_bmz_searchpage', 'on' );
+        add_option( 'pureclarity_add_bmz_categorypage', 'on' );
+        add_option( 'pureclarity_add_bmz_productpage', 'on' );
+        add_option( 'pureclarity_add_bmz_basketpage', 'on' );
+        add_option( 'pureclarity_add_bmz_checkoutpage', 'on' );
         add_option( 'pureclarity_product_deltas', '{}' );
         add_option( 'pureclarity_category_feed_required', '' );
         add_option( 'pureclarity_user_deltas', '{}' );
@@ -100,21 +100,21 @@ class PureClarity_Settings
 
     public function is_search_enabled_admin() {
         return false;
-        // return ( get_option( 'pureclarity_search_enabled', '' ) == "yes" );
+        // return ( get_option( 'pureclarity_search_enabled', '' ) == "on" );
     }
 
     public function is_merch_enabled_admin() {
         return true;
-        // return ( get_option( 'pureclarity_merch_enabled', '' ) == "yes" );
+        // return ( get_option( 'pureclarity_merch_enabled', '' ) == "on" );
     }
 
     public function is_prod_enabled_admin() {
         return false;
-        // return ( get_option( 'pureclarity_prodlist_enabled', '' ) == "yes" );
+        // return ( get_option( 'pureclarity_prodlist_enabled', '' ) == "on" );
     }
 
     public function is_deltas_enabled_admin() {
-        return ( get_option( 'pureclarity_deltas_enabled', '' ) == "yes" );
+        return ( get_option( 'pureclarity_deltas_enabled', '' ) == "on" );
     }
 
     public function is_search_enabled() {
@@ -137,11 +137,11 @@ class PureClarity_Settings
     }
 
     public function is_bmz_debug_enabled() {
-        return ( get_option( 'pureclarity_bmz_debug', '' ) == "yes" );
+        return ( get_option( 'pureclarity_bmz_debug', '' ) == "on" );
     }
 
     public function is_shop_enabled_admin() {
-        return ( get_option( 'pureclarity_shop_enabled', '') == "yes" );
+        return ( get_option( 'pureclarity_shop_enabled', '') == "on" );
     }
 
     public function get_api_url() {
@@ -237,27 +237,27 @@ class PureClarity_Settings
     }
 
     public function is_bmz_on_home_page() {
-        return ( get_option( 'pureclarity_add_bmz_homepage', '' ) == "yes" );
+        return ( get_option( 'pureclarity_add_bmz_homepage', '' ) == "on" );
     }
 
     public function is_bmz_on_category_page() {
-        return ( get_option( 'pureclarity_add_bmz_categorypage', '' ) == "yes" );
+        return ( get_option( 'pureclarity_add_bmz_categorypage', '' ) == "on" );
     }
 
     public function is_bmz_on_search_page() {
-        return ( get_option( 'pureclarity_add_bmz_searchpage', '' ) == "yes" );
+        return ( get_option( 'pureclarity_add_bmz_searchpage', '' ) == "on" );
     }
 
     public function is_bmz_on_product_page() {
-        return ( get_option( 'pureclarity_add_bmz_productpage', '' ) == "yes" );
+        return ( get_option( 'pureclarity_add_bmz_productpage', '' ) == "on" );
     }
 
     public function is_bmz_on_basket_page() {
-        return ( get_option( 'pureclarity_add_bmz_basketpage', '' ) == "yes" );
+        return ( get_option( 'pureclarity_add_bmz_basketpage', '' ) == "on" );
     }
 
     public function is_bmz_on_checkout_page() {
-        return ( get_option( 'pureclarity_add_bmz_checkoutpage', '' ) == "yes" );
+        return ( get_option( 'pureclarity_add_bmz_checkoutpage', '' ) == "on" );
     }
     
     public function add_product_delta_delete( $id ) {
