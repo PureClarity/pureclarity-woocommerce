@@ -40,7 +40,7 @@ class PureClarity_Cron {
 
                     if ( $totalpacket >= 250000 || $count > 100 ) break;
 
-                    $this->settings->remove_prod_delta( $id );
+                    $this->settings->remove_product_delta( $id );
                     if ( $size > -1 ) {
                         $meta_value = get_post_meta( $id, 'pc_delta' );
                         if ( ! empty( $meta_value ) 
