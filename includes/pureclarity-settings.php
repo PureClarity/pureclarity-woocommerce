@@ -261,7 +261,7 @@ class PureClarity_Settings
     }
     
     public function add_product_delta_delete( $id ) {
-        $this->add_prod_delta( $id, -1 );
+        $this->add_product_delta( $id, -1 );
     }
 
     public function add_product_delta( $id, $size ) {
@@ -273,7 +273,7 @@ class PureClarity_Settings
         update_option( 'pureclarity_product_deltas', json_encode( $deltas, true ) );
     }
 
-    public function remove_prod_delta( $id ) {
+    public function remove_product_delta( $id ) {
         $deltas = $this->get_product_deltas();
         if ( ! empty( $deltas ) && array_key_exists( $id, $deltas ) ) {
             unset( $deltas[ $id ] );
