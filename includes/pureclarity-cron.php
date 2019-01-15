@@ -31,7 +31,7 @@ class PureClarity_Cron {
             if ( count( $productDeltas ) > 0 ) {
 
                 $products = array();
-                $deletes = array();
+                $productsToDelete = array();
 
                 $totalpacket = 0;
                 $count = 0;
@@ -55,14 +55,14 @@ class PureClarity_Cron {
                         }
                     } else {
                         $totalpacket += strlen( $id );
-                        $deletes[] = (string) $id;
+                        $productsToDelete[] = (string) $id;
                     }
 
                     $count += 1;
                 }
 
-                if ( count( $products ) > 0 || count( $deletes ) > 0 ) {
-                    $this->feed->send_product_delta( $products, $deletes );
+                if ( count( $products ) > 0 || count( $productsToDelete ) > 0 ) {
+                    $this->feed->send_product_delta( $products, $productsToDelete );
                 }
             }
         } 

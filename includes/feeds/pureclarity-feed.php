@@ -90,7 +90,7 @@ class PureClarity_Feed {
             }
             error_log( "PureClarity 504 (Gateway Timeout) Error, retrying. Error: Couldn't upload data to the PureClarity server: " . wp_json_encode( $response ) );
         }
-        if (!empty($response->errors)) {
+        if ( ! empty( $response->errors ) ) {
             throw new Exception( "Couldn't upload data to the PureClarity server, response errors: " . wp_json_encode( $response->errors ) );
         }
         if ( $checkOk && $response['body'] != "OK" ) {
@@ -538,7 +538,6 @@ class PureClarity_Feed {
     }
 
     public function send_product_delta( $products, $productsToDelete ) {
-
         $request = array(
             'AppKey'            => $this->settings->get_access_key(),
             'Secret'            => $this->settings->get_secret_key(),
