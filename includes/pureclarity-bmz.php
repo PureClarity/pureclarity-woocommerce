@@ -221,7 +221,11 @@ class PureClarity_Bmz {
             ), 
             $atts 
         );
-        if ( $this->settings->is_merch_enabled() && ! empty( $arguments['id'] ) ) {
+        if ( 
+            $this->settings->is_pureclarity_enabled() 
+                && $this->settings->is_merch_enabled() 
+                && ! empty( $arguments['id'] ) 
+            ) {
             
             $html = ( ! empty($content) ? $content : "" );
 
