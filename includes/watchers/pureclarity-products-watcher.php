@@ -129,7 +129,7 @@ class PureClarity_Products_Watcher {
                     
                     // Add as delta
                     $this->feed->loadProductTagsMap();
-                    $data = $this->feed->parse_product( $product );
+                    $data = $this->feed->get_product_data( $product );
                     if ( ! empty( $data ) ) {
                         $json = json_encode( $data );
                         $this->settings->add_product_delta( $id, strlen( $json ) );

@@ -154,26 +154,26 @@ class PureClarity_Feed {
             $first = true;
         }
 
-        $items = "";
+        $products = "";
         while ( $query->have_posts() ) { 
             $query->the_post();
             global $product;
-            $item = $this->parse_product( $product );
-            if ( ! empty( $item ) ) {
+            $product_data = $this->get_product_data( $product );
+            if ( ! empty( $product_data ) ) {
                 if ( $first ) {
                     $first = false;
                 }
                 else {
-                    $items .= ",";
+                    $products .= ",";
                 }
-                $items .= wp_json_encode( $item );
+                $products .= wp_json_encode( $product_data );
             }
         }
 
-        return $items;
+        return $products;
     }
 
-    public function parse_product( $product, $log_error = true ) {
+    public function get_product_data( $product, $log_error = true ) {
         if ( $product->get_catalog_visibility() == "hidden" ) {
             if ( $log_error ) {
                 error_log( "PureClarity: Product " . $product->get_id() . " excluded from the feed. Reason: Catalog visibility = hidden." );
@@ -197,7 +197,7 @@ class PureClarity_Feed {
             $categoryIds[] = (string) $categoryId;
         }
 
-        $json = array(
+        $product_data = array(
             "Id" => (string) $product->get_id(),
             "Sku"   => $product->get_sku(),
             "Title" => $product->get_title(),
@@ -210,7 +210,7 @@ class PureClarity_Feed {
         );
 
         if ( $product->get_type() == 'external' && ! empty( $product->get_button_text() ) ) {
-            $json["ButtonText"] = $product->get_button_text();
+            $product_data["ButtonText"] = $product->get_button_text();
         }
 
         $allImageUrls = array();
@@ -220,46 +220,46 @@ class PureClarity_Feed {
             );
         }
         if ( sizeof( $allImageUrls ) > 0 ) {
-            $json["AllImages"] = $allImageUrls;
+            $product_data["AllImages"] = $allImageUrls;
         }
 
         if ( ! empty( $product->get_stock_quantity() ) ) {
-            $json["StockQty"] = $product->get_stock_quantity();
+            $product_data["StockQty"] = $product->get_stock_quantity();
         }
 
         if ( $product->get_catalog_visibility() == "catalog" ) {
-            $json['ExcludeFromSearch'] = true;
+            $product_data['ExcludeFromSearch'] = true;
         }
 
         if ( $product->get_catalog_visibility() == "search" ) {
-            $json['ExcludeFromProductListing'] = true;
+            $product_data['ExcludeFromProductListing'] = true;
         }
 
         if ( ! empty( $product->get_date_on_sale_from() ) ) {
-            $json['SalePriceStartDate'] = (string) $product->get_date_on_sale_from( "c" );
+            $product_data['SalePriceStartDate'] = (string) $product->get_date_on_sale_from( "c" );
         }
 
         if ( ! empty( $product->get_date_on_sale_to() ) ) {
-            $json['SalePriceEndDate'] = (string) $product->get_date_on_sale_to( "c" );
+            $product_data['SalePriceEndDate'] = (string) $product->get_date_on_sale_to( "c" );
         }
 
-        $this->set_search_tags( $json, $product );
-        $this->set_basic_attributes( $json, $product );
-        $this->set_product_price( $json, $product );
-        $this->add_variant_info( $json, $product );
-        $this->add_child_products( $json, $product);
+        $this->set_search_tags( $product_data, $product );
+        $this->set_basic_attributes( $product_data, $product );
+        $this->set_product_price( $product_data, $product );
+        $this->add_variant_info( $product_data, $product );
+        $this->add_child_products( $product_data, $product);
 
         // Check is valid
         $error = array();
-        if ( ! array_key_exists( 'Prices', $json ) 
-                || ( is_array( $json['Prices'] ) && sizeof( $json['Prices'] ) == 0 ) 
+        if ( ! array_key_exists( 'Prices', $product_data ) 
+                || ( is_array( $product_data['Prices'] ) && sizeof( $product_data['Prices'] ) == 0 ) 
             ) {
                 $error[] = 'Prices';
         }
-        if ( ! array_key_exists( 'Sku', $json ) || empty( $json['Sku'] ) ) {
+        if ( ! array_key_exists( 'Sku', $product_data ) || empty( $product_data['Sku'] ) ) {
             $error[] = 'Sku';
         }
-        if ( ! array_key_exists( 'Title', $json ) || empty( $json['Title'] ) ) {
+        if ( ! array_key_exists( 'Title', $product_data ) || empty( $product_data['Title'] ) ) {
             $error[] = 'Title';
         }
         
@@ -270,7 +270,7 @@ class PureClarity_Feed {
             return null;
         }
         
-        return $json;
+        return $product_data;
     }
 
     private function add_to_array( $key, &$json, $value ) {
@@ -346,14 +346,18 @@ class PureClarity_Feed {
             $this->add_to_array( "Prices", $json, $price );
         }
 
-        if ( $this->productIsOnSale( $product ) ) {
-            $salesPrice = $product->get_price() . ' ' . get_woocommerce_currency();
+        if ( $product->is_on_sale() || $this->product_has_future_sale( $product ) ) {
+            $salesPrice = $product->get_sale_price() . ' ' . get_woocommerce_currency();
             $this->add_to_array( "SalePrices", $json, $salesPrice );
         }
     }
 
-    private function productIsOnSale( $product ) {
-        return ( $product->get_price() && $product->get_price() != $product->get_regular_price() );
+    private function product_has_future_sale( $product ) {
+        $saleDate = $product->get_date_on_sale_from();
+        if( ! empty( $saleDate ) ) {
+            return ( $product->get_date_on_sale_from( $context )->getTimestamp() > current_time( 'timestamp', true ) );
+        }
+        return false;
     }
 
     private function set_basic_attributes( &$json, &$product ) {
