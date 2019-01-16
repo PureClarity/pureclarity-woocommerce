@@ -478,19 +478,31 @@ class PureClarity_Feed {
                 'Roles' => $this->get_roles( $userId )
             );
 
-            $billing = $customer->get_billing();
-            if ( ! empty($billing) ) {
-                if ( ! empty( $billing['city'] ) ) {
-                    $data['City'] = $billing['city'];
-                }
-                if ( ! empty( $billing['state'] ) ) {
-                    $data['State'] = $billing['state'];
-                }
-                if ( ! empty( $billing['country'] ) ) {
-                    $data['Country'] = $billing['country'];
+            if( method_exists( $customer, 'get_billing' ) ) { // doesn't in earlier WC versions
+                $billing = $customer->get_billing();
+                if ( ! empty($billing) ) {
+                    if ( ! empty( $billing['city'] ) ) {
+                        $data['City'] = $billing['city'];
+                    }
+                    if ( ! empty( $billing['state'] ) ) {
+                        $data['State'] = $billing['state'];
+                    }
+                    if ( ! empty( $billing['country'] ) ) {
+                        $data['Country'] = $billing['country'];
+                    }
                 }
             }
-            
+            else{
+                if( method_exists( $customer, 'get_billing_city' ) ) {
+                    $data['City'] = $customer->get_billing_city();
+                }
+                if( method_exists( $customer, 'get_billing_state' ) ) {
+                    $data['State'] = $customer->get_billing_state();
+                }
+                if( method_exists( $customer, 'get_billing_country' ) ) {
+                    $data['Country'] = $customer->get_billing_country();
+                }
+            }
             return $data;
         }
         return null;
