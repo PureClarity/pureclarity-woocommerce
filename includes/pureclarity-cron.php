@@ -1,6 +1,5 @@
 <?php 
 
-
 class PureClarity_Cron {
 
     private $plugin;
@@ -71,7 +70,6 @@ class PureClarity_Cron {
         }
     }
 
-
     public function process_categories() {
 
         if ( ! $this->settings->is_category_feed_sent() ) {
@@ -95,7 +93,6 @@ class PureClarity_Cron {
 
         }
     }
-
 
     public function process_users() {
 

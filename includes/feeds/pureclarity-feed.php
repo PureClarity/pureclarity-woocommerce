@@ -347,8 +347,10 @@ class PureClarity_Feed {
         }
 
         if ( $product->is_on_sale() || $this->product_has_future_sale( $product ) ) {
-            $salesPrice = $product->get_sale_price() . ' ' . get_woocommerce_currency();
-            $this->add_to_array( "SalePrices", $json, $salesPrice );
+            if( ! empty( $product->get_sale_price() ) ) {
+                $salesPrice = $product->get_sale_price() . ' ' . get_woocommerce_currency();
+                $this->add_to_array( "SalePrices", $json, $salesPrice );
+            }
         }
     }
 
