@@ -1,4 +1,4 @@
-=== PureClarity for WooCommerce ===
+=== PureClarity - eCommerce Personalization for WooCommerce ===
 Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, marketing automation, personalization, personalisation, ecommerce personalization, ecommerce personalisation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
@@ -96,5 +96,5 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com).
 
 == Changelog ==
 
-= 1.0 =
-* Initial release
+= 1.0.5 =
+* Initial release to Wordpress plugin directory.

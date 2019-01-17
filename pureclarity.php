@@ -1,11 +1,12 @@
 <?php
 /**
 * Plugin Name: 	PureClarity for WooCommerce
-* Description: 	The PureClarity ecommerce personalization plugin for WooCommerce is highly effective and easy to integrate.  Key features include the Advanced AI Recommendation Engine, Personalized Campaigns, Audience Segmentation, Personalization within Search and Email, and an in-depth analytics platform.
+* Description: 	Increase revenues by 26% in your WooCommerce store with AI-based real-time personalization. Integrates with PureClarity's multi-award winning ecommerce personalization software.
 * Plugin URI: 	https://www.pureclarity.com
-* Version:		1.0.4
+* Version:		1.0.5
 * Author:		PureClarity
 * Author URI:	https://www.pureclarity.com
+* Text Domain:  pureclarity
 **/
 
 // Abort if called directly
@@ -14,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Set version and path constants
-define( 'PURECLARITY_VERSION', '1.0.4' );
+define( 'PURECLARITY_VERSION', '1.0.5' );
 if ( ! defined( 'PURECLARITY_PATH' ) ) {
 	define( 'PURECLARITY_PATH', plugin_dir_path( __FILE__ ) );
 }
