@@ -73,7 +73,7 @@ class PureClarity_Feed {
 
     public function end_feed( $type ) {
         $url = $this->settings->get_feed_baseurl() . "feed-close";
-        $body = $this->get_request_body( $type, "]}" );
+        $body = $this->get_request_body( $type, ( $type == "order" ? "" : "]}" ) );
         $this->http_post( $url, $body );
     }
 
@@ -541,7 +541,13 @@ class PureClarity_Feed {
                 if ( is_object( $product ) ) {
                     $items .= PHP_EOL;
                     $items .= $order->get_id() . ',';
-                    $items .= $order->get_customer_id() . ',,';
+                    $customerId = $order->get_customer_id();
+                    $items .= $customerId . ',';
+                    $customerData = get_userdata($customerId);
+                    if( $customerData ){
+                        $items .= $customerData->user_email;
+                    }
+                    $items .= ',';
                     $items .= (string) $order->get_date_created("c") . ',';
                     $items .= $item->get_product_id() . ',';
                     $items .= $item['qty'] . ',';
