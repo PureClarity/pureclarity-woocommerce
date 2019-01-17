@@ -5,7 +5,7 @@
 * Plugin URI: 	https://www.pureclarity.com
 * Version:		1.0.5
 * Author:		PureClarity
-* Author URI:	https://www.pureclarity.com
+* Author URI:	https://www.pureclarity.com/about-us/
 * Text Domain:  pureclarity
 **/
 
