@@ -447,10 +447,10 @@ class PureClarity_Admin
 
     public function print_settings_section_text() {
         echo "<p>" . __('To get started with PureClarity, you will need a PureClarity account and to then enter your access credentials below.', 'pureclarity') . "</p>";
-        $url = "https://www.pureclarity.com/free-trial/?source=woocommerce&medium=listing&campaign=freetrial";
+        $url = "https://www.pureclarity.com/free-trial/?source=woocommerce&medium=plugin&campaign=freetrial";
         $link = sprintf( 
             wp_kses(    // sanitize result 
-                __( "If you don't yet have an account, <a href='%s' target='_blank'>register for your free trial today</a>.", 'pureclarity' ), 
+                __( "If you don't yet have an account, you can get started for free - <a href='%s' target='_blank'>register for your free trial today</a>.", 'pureclarity' ), 
                 array(      // permitted html
                     'a' => array( 
                         'href' => array(),
