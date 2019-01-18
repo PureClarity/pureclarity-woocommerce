@@ -1,9 +1,9 @@
 === PureClarity - eCommerce Personalization for WooCommerce ===
 Contributors: pureclaritytechnologies
-Tags: woocommerce, ecommerce, cross-sell, marketing automation, personalization, personalisation, ecommerce personalization, ecommerce personalisation, online merchandising software, advanced recommender technology
+Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
 Tested up to: 5.0.3
-Stable tag: 1.0
+Stable tag: 2.0.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -96,5 +96,5 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com).
 
 == Changelog ==
 
-= 1.0.5 =
+= 2.0.1 =
 * Initial release to Wordpress plugin directory.
