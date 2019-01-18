@@ -1,3 +1,22 @@
-.pureclarity_bmz { display:none; }
-.pureclarity_bmz_clearfix {clear:both;}
-.pureclarity_debug { border: 1px dashed #4a4a4a; padding:10px; text-align: center; background-color:#DCF1F6; }
+.pureclarity_bmz { 
+	display:none; 
+}
+.pureclarity_bmz_clearfix {
+	clear:both;
+}
+.pureclarity_debug { 
+	border: 1px dashed #4a4a4a; 
+	padding:10px; 
+	text-align: center; 
+	background-color:#DCF1F6; 
+}
+.toplevel_page_pureclarity-settings .form-table td p,
+.pureclarity_page_pureclarity-datafeed .form-table td p,
+.pureclarity_page_pureclarity-advanced .form-table td p {
+	font-size: 13px;
+}
+.pureclarity-buttons {
+	width: 130px;
+	margin-top: 5px !important;
+	margin-bottom: 10px !important;
+}

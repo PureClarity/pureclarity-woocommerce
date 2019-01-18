@@ -1,47 +1,120 @@
+<?php
+	$runningFeed = __("Running Feed") . "...";
+	$clickButton = __("Click button to run the %s data feed and submit it to PureClarity", 'pureclarity');
+?>
 <style>
-	.pureclarity-message {display:none; color:#0085ba; font-weight:bold; }
+	.pureclarity-message { 
+		display: none;
+		color: #0085ba;
+		font-weight: bold;
+	}
 </style>
 
 <div class="wrap">
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
 	<div class="notice">
-		<p>Click the buttons below to manually create data feeds and submit them to PureClarity.</p>
+		<p><?php _e('Click the buttons below to manually run data feeds and submit them to PureClarity.', 'pureclarity'); ?></p>
 	</div>
 
-	<div id="product-container" class="<?php echo $this->settings->get_prodfeed_run() ? "updated" : "error" ?>">
-		<p id="product-heading"><strong><?php echo $this->settings->get_prodfeed_run() ? "Note: A feed has been successfully submitted!" : "Note: A Product Feed has never been run." ?></strong></p>
-		<p>Click this button to run the PRODUCT data feed and submit it to PureClarity</strong></p>
-		<p><input type="button" class="button button-primary pureclarity-buttons pureclarity-product-datafeed" value="Run Product Feed"/></p>
-		<p id="pureclarity-product-message" class="pureclarity-message">Running Feed...</p>
+	<div id="product-container" class="<?php echo $this->settings->is_product_feed_sent() ? "updated" : "error" ?>">
+		<p id="product-heading">
+			<strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_product_feed_sent() ? _e("Product feed has been previously submitted.", 'pureclarity') : _e("Product feed has never been run.", 'pureclarity'); ?></strong>
+		</p>
+		<p>
+			<?php
+				printf(
+				    $clickButton,
+				    "PRODUCT"
+				);
+			?>
+		</p>
+		<p>
+			<input type="button" class="button button-primary pureclarity-buttons pureclarity-product-datafeed" value="<?php _e("Run Product Feed", 'pureclarity'); ?>"/>
+		</p>
+		<p id="pureclarity-product-message" class="pureclarity-message">
+			<?php echo $runningFeed; ?>
+		</p>
 	</div>
 
-	<div id="category-container" class="<?php echo $this->settings->get_catfeed_run() ? "updated" : "error" ?>">
-		<p id="category-heading"><strong><?php echo $this->settings->get_catfeed_run() ? "Note: A feed has been successfully submitted!" : "Note: A Category Feed has never been run." ?></strong></p>
-		<p>Click this button to run the CATEGORY data feed and submit it to PureClarity</strong></p>
-		<p><input type="button" class="button button-primary pureclarity-buttons pureclarity-category-datafeed" value="Run Category Feed"/></p>
-		<p id="pureclarity-category-message" class="pureclarity-message">Running Feed...</p>
+	<div id="category-container" class="<?php echo $this->settings->is_category_feed_sent() ? "updated" : "error" ?>">
+		<p id="category-heading">
+			<strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_category_feed_sent() ? _e("Category feed has been previously submitted.", 'pureclarity') : _e("Category feed has never been run.", 'pureclarity'); ?></strong>
+		</p>
+		<p>
+			<?php
+				printf(
+				    $clickButton,
+				    "CATEGORY"
+				);
+			?>
+		</p>
+		<p>
+			<input type="button" class="button button-primary pureclarity-buttons pureclarity-category-datafeed" value="<?php _e("Run Category Feed", 'pureclarity'); ?>"/>
+		</p>
+		<p id="pureclarity-category-message" class="pureclarity-message">
+			<?php echo $runningFeed; ?>
+		</p>
 	</div>
 
-	<!-- <div id="brand-container" class="<?php echo $this->settings->get_brandfeed_run() ? "updated" : "error" ?>">
-		<p id="brand-heading"><strong><?php echo $this->settings->get_brandfeed_run() ? "Note: A feed has been successfully submitted!" : "Note: A Brand Feed has never been run." ?></strong></p>
-		<p>Click this button to run the BRAND data feed and submit it to PureClarity</strong></p>
-		<p><input type="button" class="button button-primary pureclarity-buttons pureclarity-brand-datafeed" value="Run Brand Feed"/></p>
-		<p id="pureclarity-brand-message" class="pureclarity-message">Running Feed...</p>
+	<!-- <div id="brand-container" class="<?php echo $this->settings->is_brand_feed_sent() ? "updated" : "error" ?>">
+		<p id="brand-heading">
+			<strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_brand_feed_sent() ? _e("Brand feed has been previously submitted.", 'pureclarity') : _e("Brand feed has never been run.", 'pureclarity'); ?></strong>
+		</p>
+		<p>
+			<?php
+				printf(
+				    $clickButton,
+				    "BRAND"
+				);
+			?>
+		</p>
+		<p>
+			<input type="button" class="button button-primary pureclarity-buttons pureclarity-brand-datafeed" value="<?php _e("Run Brand Feed", 'pureclarity'); ?>"/>
+		</p>
+		<p id="pureclarity-brand-message" class="pureclarity-message">
+			<?php echo $runningFeed; ?>
+		</p>
 	</div> -->
 
-	<div id="user-container" class="<?php echo $this->settings->get_userfeed_run() ? "updated" : "error" ?>">
-		<p id="user-heading"><strong><?php echo $this->settings->get_userfeed_run() ? "Note: A feed has been successfully submitted!" : "Note: A User Feed has never been run." ?></strong></p>
-		<p>Click this button to run the USER data feed and submit it to PureClarity</strong></p>
-		<p><input type="button" class="button button-primary pureclarity-buttons pureclarity-user-datafeed" value="Run User Feed"/></p>
-		<p id="pureclarity-user-message" class="pureclarity-message">Running Feed...</p>
+	<div id="user-container" class="<?php echo $this->settings->is_user_feed_sent() ? "updated" : "error" ?>">
+		<p id="user-heading">
+			<strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_user_feed_sent() ? _e("User feed has been previously submitted.", 'pureclarity') : _e("User feed has never been run.", 'pureclarity'); ?></strong>
+		</p>
+		<p>
+			<?php
+				printf(
+				    $clickButton,
+				    "USER"
+				);
+			?>
+		</p>
+		<p>
+			<input type="button" class="button button-primary pureclarity-buttons pureclarity-user-datafeed" value="<?php _e("Run User Feed", 'pureclarity'); ?>"/>
+		</p>
+		<p id="pureclarity-user-message" class="pureclarity-message">
+			<?php echo $runningFeed; ?>
+		</p>
 	</div>
 
-	<div id="order-container" class="<?php echo $this->settings->get_orderfeed_run() ? "updated" : "error" ?>">
-		<p id="order-heading"><strong><?php echo $this->settings->get_orderfeed_run() ? "Note: A feed has been successfully submitted!" : "Note: An Order Feed has never been run." ?></strong></p>
-		<p>Click this button to run the ORDER data feed and submit it to PureClarity</strong></p>
-		<p><input type="button" class="button button-primary pureclarity-buttons pureclarity-order-datafeed" value="Run Order Feed"/></p>
-		<p id="pureclarity-order-message" class="pureclarity-message">Running Feed...</p>
+	<div id="order-container" class="<?php echo $this->settings->is_order_feed_sent() ? "updated" : "error" ?>">
+		<p id="order-heading">
+			<strong><?php _e('Note', 'pureclarity'); ?>: <?php echo $this->settings->is_order_feed_sent() ? _e("A feed has been successfully submitted!", 'pureclarity') : _e("Order feed has never been run.", 'pureclarity'); ?></strong>
+		</p>
+		<p>
+			<?php
+				printf(
+				    $clickButton,
+				    "ORDER"
+				);
+			?>
+		</p>
+		<p>
+			<input type="button" class="button button-primary pureclarity-buttons pureclarity-order-datafeed" value="<?php _e("Run Order Feed", 'pureclarity'); ?>"/>
+		</p>
+		<p id="pureclarity-order-message" class="pureclarity-message">
+			<?php echo $runningFeed; ?>
+		</p>
 	</div>
 	
 </div>

@@ -2,19 +2,11 @@
 
 class PureClarity_Plugin 
 {
-    static $pureclarity;
-    private $settings;
     private $bmz;
     private $feed;
+    static $pureclarity;
+    private $settings;
     private $state;
-
-    public static function getInstance() {
-        if ( self::$pureclarity === null ) {
-            self::$pureclarity = new PureClarity_Plugin();
-        }
-        return self::$pureclarity;
-    }
-
 
     public function __construct() {
 
@@ -23,6 +15,13 @@ class PureClarity_Plugin
         $this->feed = new PureClarity_Feed( $this );
         add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
         add_action( 'init', array( $this, 'init' ), 15 );
+    }
+
+    public static function getInstance() {
+        if ( self::$pureclarity === null ) {
+            self::$pureclarity = new PureClarity_Plugin();
+        }
+        return self::$pureclarity;
     }
 
     public function get_settings() {
@@ -41,8 +40,6 @@ class PureClarity_Plugin
         return $this->bmz;
     }
 
-    
-
     public function register_assets() {
         wp_register_style( 'pureclarity-css', plugin_dir_url( __FILE__ ) . '../css/pc.css', array(), PURECLARITY_VERSION, 'screen' );
         wp_enqueue_style( 'pureclarity-css' );
@@ -54,8 +51,9 @@ class PureClarity_Plugin
     public function init() {
         if ( is_admin() ) {
 			new PureClarity_Admin( $this );
-		} else {
-            if($this->settings->get_pureclarity_enabled()) {
+		} 
+        else {
+            if( $this->settings->is_pureclarity_enabled() ) {
                 add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
             }
             $this->state = new PureClarity_State( $this );
@@ -65,6 +63,5 @@ class PureClarity_Plugin
         new PureClarity_Products_Watcher( $this );
         new PureClarity_Cron( $this );
     }
-
 
 }

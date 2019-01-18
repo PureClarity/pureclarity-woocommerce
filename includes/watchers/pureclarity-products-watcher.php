@@ -2,90 +2,108 @@
 
 class PureClarity_Products_Watcher {
 
+    private $feed;
     private $plugin;
     private $settings;
-    private $feed;
     private $state;
 
     public function __construct( &$plugin ) {
-
-
         $this->plugin = $plugin;
-        $this->settings = $plugin->get_settings();
         $this->feed = $plugin->get_feed();
+        $this->settings = $plugin->get_settings();
         $this->state = $plugin->get_state();
 
-        if ( ! $this->settings->get_pureclarity_enabled()) {
+        if ( ! $this->settings->is_pureclarity_enabled() ) {
             return;
         }
 
-        // Ensure we have session
-        if (!session_id()) {
+        if ( ! session_id() ) {
             session_start();
         }
 
-        if ($this->settings->get_deltas_enabled()){
-            // Watch for product changes
-            add_action( 'save_post_product', array( $this, 'save_product' ), 10, 3 );
-            add_action( 'added_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
-            add_action( 'updated_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
-            add_action( 'before_delete_post', array( $this, 'delete_item' ) );
-
-            // Watch for category changes
-            add_action( 'create_term', array( $this, 'save_term' ), 10, 3 );
-            add_action( 'edit_term', array( $this, 'save_term' ), 10, 3 );
-            add_action( 'delete_term', array( $this, 'save_term' ), 10, 3 );
-
-            // Watch for User updates
-            add_action( 'profile_update', array( $this, 'save_user' ) );
-            add_action( 'user_register', array( $this, 'save_user' ) );
-            add_action( 'delete_user', array( $this, 'delete_user' ) );
+        if ( $this->settings->is_deltas_enabled() ){
+            $this->register_product_listeners();
+            $this->register_category_listeners();
+            $this->register_user_listeners();
         }
+        $this->register_user_session_listeners();
+        $this->register_cart_listeners();
+        $this->register_order_listeners();
 
-        // Watch user login and logout
-        add_action('wp_login', array( $this, 'user_login'), 10, 2);
-        add_action('wp_logout', array( $this, 'user_logout'), 10, 2);
+    }
 
-        // Watch cart updates
-        add_action('woocommerce_add_to_cart', array( $this, 'set_cart'), 10, 1);
-        add_action('woocommerce_update_cart_action_cart_updated', array( $this, 'set_cart'), 10, 1);
-        add_action('woocommerce_cart_item_removed', array( $this, 'set_cart'), 10, 1);
+    /**
+     * Registers callback functions when product changes occur.
+     */
+    private function register_product_listeners() {
+        add_action( 'save_post_product', array( $this, 'save_product_via_deltas' ), 10, 3 );
+        add_action( 'added_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
+        add_action( 'updated_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
+        add_action( 'before_delete_post', array( $this, 'delete_item' ) );
+    }
 
-        // Watch for orders
+    /**
+     * Registers callback functions when category changes occur.
+     */
+    private function register_category_listeners() {
+        add_action( 'create_term', array( $this, 'add_category_feed_to_deltas' ), 10, 3 );
+        add_action( 'edit_term', array( $this, 'add_category_feed_to_deltas' ), 10, 3 );
+        add_action( 'delete_term', array( $this, 'add_category_feed_to_deltas' ), 10, 3 );
+    }
+
+    /**
+     * Registers callback functions when changes are made to user records.
+     */
+    private function register_user_listeners() {
+        add_action( 'profile_update', array( $this, 'save_user_via_deltas' ) );
+        add_action( 'user_register', array( $this, 'save_user_via_deltas' ) );
+        add_action( 'delete_user', array( $this, 'delete_user_via_deltas' ) );
+    }
+
+    /**
+     * Registers callback functions when users log in or out.
+     */
+    private function register_user_session_listeners() {
+        add_action( 'wp_login', array( $this, 'user_login' ), 10, 2 );
+        add_action( 'wp_logout', array( $this, 'user_logout' ), 10, 2 );
+    }
+
+   /**
+     * Registers callback functions when cart changes occur.
+     */
+    private function register_cart_listeners() {
+        add_action( 'woocommerce_add_to_cart', array( $this, 'set_cart' ), 10, 1 );
+        add_action( 'woocommerce_update_cart_action_cart_updated', array( $this, 'set_cart' ), 10, 1 );
+        add_action( 'woocommerce_cart_item_removed', array( $this, 'set_cart' ), 10, 1 );
+    }
+
+    private function register_order_listeners() {
         if ( is_admin() ) {
             add_action( 'woocommerce_order_status_completed', array( $this, 'moto_order_placed'), 10, 1 );
-        } else {
+        } 
+        else {
             add_action( 'woocommerce_order_status_processing', array( $this, 'order_placed'), 10, 1 );
             add_action( 'woocommerce_order_status_on-hold', array( $this, 'order_placed'), 10, 1 );
             add_action( 'woocommerce_order_status_pending', array( $this, 'order_placed'), 10, 1 );
         }
-
     }
 
-    public function save_term( $term_id, $tt_id, $taxonomy ) {
-        if ($taxonomy == 'product_cat') {
-            $term = get_term($term_id);
-            if ( ! empty($term) ) {
-                // Add category as delta
-                $this->settings->set_category_feed_required();
-            }
-            else {
-                // Delete as delta
-                $this->settings->set_category_feed_required();
-            }
+    public function add_category_feed_to_deltas( $term_id, $tt_id, $taxonomy ) {
+        if ( $taxonomy == 'product_cat' ) {
+            $this->settings->set_category_feed_required();
         }
     }
 
-    public function save_user( $user_id ) {
+    public function save_user_via_deltas( $user_id ) {
         $data = $this->feed->parse_user( $user_id );
         if ( ! empty($data) ) {
-            $json = json_encode($data);
+            $json = json_encode( $data );
             $this->settings->add_user_delta( $user_id, strlen($json) );
-            update_user_meta($user_id, 'pc_delta', $json);
+            update_user_meta( $user_id, 'pc_delta', $json );
         }
     }
 
-    public function delete_user( $user_id ) {
+    public function delete_user_via_deltas( $user_id ) {
         $this->settings->add_user_delta_delete( $user_id );
     }
 
@@ -93,13 +111,12 @@ class PureClarity_Products_Watcher {
         if ( $meta_key != '_edit_lock' && $meta_key != 'pc_delta' ) {
             $post = get_post( $post_id );
             if ( ! empty($post) ) {
-                $this->save_product( $post_id, $post, true );
+                $this->save_product_via_deltas( $post_id, $post, true );
             }
         }
     }
 
-    public function save_product( $id, $post, $update  ) {
-
+    public function save_product_via_deltas( $id, $post, $update  ) {
         if ($post->post_type == "product"){
 
             if ( ! current_user_can( 'edit_product', $id ) )
@@ -112,23 +129,23 @@ class PureClarity_Products_Watcher {
                     
                     // Add as delta
                     $this->feed->loadProductTagsMap();
-                    $data = $this->feed->parse_product( $product );
-                    if ( ! empty($data) ) {
-                        $json = json_encode($data);
-                        $this->settings->add_prod_delta($id, strlen($json));
-                        update_post_meta($id, 'pc_delta', $json);
+                    $data = $this->feed->get_product_data( $product );
+                    if ( ! empty( $data ) ) {
+                        $json = json_encode( $data );
+                        $this->settings->add_product_delta( $id, strlen( $json ) );
+                        update_post_meta( $id, 'pc_delta', $json );
                     }
                     else {
                         // Delete as delta
                         delete_post_meta($id, 'pc_delta');
-                        $this->settings->add_prod_delta_delete($id);
+                        $this->settings->add_product_delta_delete( $id );
                     }
                 }
             }
             elseif ($post->post_status != "importing") {
                 // Delete as delta
-                delete_post_meta($id, 'pc_delta');
-                $this->settings->add_prod_delta_delete($id);
+                delete_post_meta( $id, 'pc_delta' );
+                $this->settings->add_product_delta_delete( $id );
             }
         }
         
@@ -136,15 +153,15 @@ class PureClarity_Products_Watcher {
 
     public function delete_item( $id ) {
         $post = get_post( $id );
-        if ($post->post_type == "product" && $post->post_status != "trash"){
-            delete_post_meta($id, 'pc_delta');
-            $this->settings->add_prod_delta_delete($id, true);
+        if ( $post->post_type == "product" && $post->post_status != "trash" ){
+            delete_post_meta( $id, 'pc_delta' );
+            $this->settings->add_product_delta_delete( $id, true );
         }
     }
 
-    public function user_login($user_login, $user) {
-        if ( ! empty($user) ){
-            $this->state->set_customer($user->ID);
+    public function user_login( $user_login, $user ) {
+        if ( ! empty( $user ) ){
+            $this->state->set_customer( $user->ID );
         }
     }
 
@@ -161,11 +178,9 @@ class PureClarity_Products_Watcher {
     
         $order = wc_get_order( $order_id );
         $customer = new WC_Customer( $order->get_user_id() );
-        error_log(json_encode($order));
+        error_log( json_encode( $order ) );
 
         if ( ! empty( $order ) && ! empty( $customer ) ) {
-
-            $dp = wc_get_price_decimals();
 
             $transaction = array(
                 "orderid" => $order->get_id(),
@@ -182,8 +197,8 @@ class PureClarity_Products_Watcher {
                     $orderItems[] = array(
                         "orderid" => $order->get_id(),
                         "id" => $item->get_product_id(),
-                        "qty" => $item['qty'],
-                        "unitprice" => wc_format_decimal( $order->get_item_total( $item, false, false ), $dp )
+                        "qty" => $item[ 'qty' ],
+                        "unitprice" => wc_format_decimal( $order->get_item_total( $item, false, false ) )
                     );
                 }
             }
@@ -198,13 +213,10 @@ class PureClarity_Products_Watcher {
     }
 
     public function set_cart( $update ) {
-        
         try {
-
             $this->state->set_cart();
-
         } catch ( \Exception $exception ) {
-            error_log("PureClarity: Can't build cart changes tracking event: " . $exception->getMessage() );
+            error_log( "PureClarity: Can't build cart changes tracking event: " . $exception->getMessage() );
         }
     }
 }
