@@ -569,9 +569,9 @@ class PureClarity_Admin
                 $secretKeyField,
                 $regionField,
                 $modeSelect,
-                // $searchEnabledCheckbox,
-                // $productListEnabledCheckbox,
-                // $merchEnabledCheckbox,
+                $searchEnabledCheckbox,
+                $productListEnabledCheckbox,
+                $merchEnabledCheckbox,
                 $deltasEnabledCheckbox,
             );
     }
@@ -651,11 +651,11 @@ class PureClarity_Admin
         );
         return array(
                 $bmzDebugCheckbox,
-                // $searchSelector,
-                // $searchResultSelector,
-                // $productListResultSelector,
-                // $shopEnabledCheckbox,
-                // $shopSelector,
+                $searchSelector,
+                $searchResultSelector,
+                $productListResultSelector,
+                $shopEnabledCheckbox,
+                $shopSelector,
                 $addBmzHomepageCheckbox,
                 $addBmzCategoryPageCheckbox,
                 $addBmzSearchPageCheckbox,

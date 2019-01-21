@@ -42,10 +42,10 @@ class PureClarity_Settings
         add_option( 'pureclarity_secretkey', '' );
         add_option( 'pureclarity_region', '1' );
         add_option( 'pureclarity_mode', 'off' );
-        // add_option( 'pureclarity_search_enabled', 'no' );
-        // add_option( 'pureclarity_merch_enabled', 'no' );
+        add_option( 'pureclarity_search_enabled', 'no' );
+        add_option( 'pureclarity_merch_enabled', 'no' );
         add_option( 'pureclarity_shop_enabled', 'no');
-        // add_option( 'pureclarity_prodlist_enabled', 'no' );
+        add_option( 'pureclarity_prodlist_enabled', 'no' );
         add_option( 'pureclarity_prodfeed_run', '0' );
         add_option( 'pureclarity_catfeed_run', '0' );
         add_option( 'pureclarity_brandfeed_run', '0' );    
@@ -99,18 +99,18 @@ class PureClarity_Settings
     }
 
     public function is_search_enabled_admin() {
-        return false;
-        // return ( get_option( 'pureclarity_search_enabled', '' ) == "on" );
+        // return false;
+        return ( get_option( 'pureclarity_search_enabled', '' ) == "on" );
     }
 
     public function is_merch_enabled_admin() {
-        return true;
-        // return ( get_option( 'pureclarity_merch_enabled', '' ) == "on" );
+        // return true;
+        return ( get_option( 'pureclarity_merch_enabled', '' ) == "on" );
     }
 
     public function is_prod_enabled_admin() {
-        return false;
-        // return ( get_option( 'pureclarity_prodlist_enabled', '' ) == "on" );
+        // return false;
+        return ( get_option( 'pureclarity_prodlist_enabled', '' ) == "on" );
     }
 
     public function is_deltas_enabled_admin() {
@@ -118,18 +118,18 @@ class PureClarity_Settings
     }
 
     public function is_search_enabled() {
-        return false;
-        // return $this->is_search_enabled_admin() && $this->is_pureclarity_enabled();
+        // return false;
+        return $this->is_search_enabled_admin() && $this->is_pureclarity_enabled();
     }
 
     public function is_merch_enabled() {
-        return true;
-        // return $this->is_merch_enabled_admin() && $this->is_pureclarity_enabled();
+        // return true;
+        return $this->is_merch_enabled_admin() && $this->is_pureclarity_enabled();
     }
 
     public function is_prod_enabled() {
-        return false;
-        // return $this->is_prod_enabled_admin() && $this->is_pureclarity_enabled();
+        // return false;
+        return $this->is_prod_enabled_admin() && $this->is_pureclarity_enabled();
     }
 
     public function is_deltas_enabled() {
