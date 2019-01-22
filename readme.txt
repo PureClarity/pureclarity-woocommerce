@@ -12,7 +12,7 @@ Increase revenues in your WooCommerce store - integrate with PureClarity’s awa
 == Description ==
 = Increase WooCommerce revenues by 26% using AI-based real-time personalization =
 
-Integrate your WooCommerce store with **[PureClarity](https://www.pureclarity.com)**, the leading AI-based ecommerce personalization platform proven to increase online revenue by over 26%\* with personalized real-time AI recommenders, personalized marketing campaigns, and personalization within email and search.
+Integrate your WooCommerce store with **[PureClarity](https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity)**, the leading AI-based ecommerce personalization platform proven to increase online revenue by over 26%\* with personalized real-time AI recommenders, personalized marketing campaigns, and personalization within email and search.
 
 Present a highly personalized experience for visitors and customers - increase your sales conversions, build customer loyalty and maximize revenues. 
 
@@ -45,7 +45,7 @@ See screenshots below for a visually guide on how PureClarity increases your sal
 = Additional Benefits =
 
 * Free to get started - [get a free trial](https://www.pureclarity.com/free-trial/?source=woocommerce&medium=listing&campaign=freetrial) (or [request a free demo](https://www.pureclarity.com/request-a-demo/?source=woocommerce&medium=listing&campaign=demo))
-* Extremely competitive [pricing structure](https://www.pureclarity.com/pricing/?source=woocommerce&medium=listing&campaign=freetrial) based on website impressions for maximum ROI
+* Extremely competitive [pricing structure](https://www.pureclarity.com/pricing/?utm_source=woocommerce&utm_medium=listing&utm_campaign=pricing) based on website impressions for maximum ROI
 * No set up fees
 * No long-term contract
 * Dedicated onboarding and support teams
@@ -71,11 +71,11 @@ For details about how to get started with PureClarity on WooCommerce, check out 
 
 PureClarity was founded for one purpose – to maximize sales for businesses who trade online. We found one mistake that almost every ecommerce business was committing – treating all customers as one.  
 
-The fact is that every customer is different and likes to shop in a different way. That has driven us to build a [multi-award winning](https://www.pureclarity.com/about-us/), highly innovative platform that observes shoppers’ behavior online, creates personalized relevant experiences, and helps B2B & B2C ecommerce businesses increase their revenue. 
+The fact is that every customer is different and likes to shop in a different way. That has driven us to build a [multi-award winning](https://www.pureclarity.com/about-us/?utm_source=woocommerce&utm_medium=listing&utm_campaign=aboutpc), highly innovative platform that observes shoppers’ behavior online, creates personalized relevant experiences, and helps B2B & B2C ecommerce businesses increase their revenue. 
 
 Our personalization software serves customers operating ecommerce stores running on WooCommerce, as well as other platforms such as Magento and Shopify, and bespoke integrations.
 
-Learn more at [www.pureclarity.com](https://www.pureclarity.com).
+Learn more at [www.pureclarity.com](https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity).
 
 == Screenshots ==
 

@@ -5,7 +5,7 @@
 * Plugin URI: 	https://www.pureclarity.com
 * Version:		2.0.1
 * Author:		PureClarity
-* Author URI:	https://www.pureclarity.com/about-us/
+* Author URI:	https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity
 * Text Domain:  pureclarity
 **/
 
