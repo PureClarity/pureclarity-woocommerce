@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Set version and path constants
-define( 'PURECLARITY_VERSION', '2.0.1' );
+define( 'PURECLARITY_VERSION', '2.0.2' );
 if ( ! defined( 'PURECLARITY_PATH' ) ) {
 	define( 'PURECLARITY_PATH', plugin_dir_path( __FILE__ ) );
 }
