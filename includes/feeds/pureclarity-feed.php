@@ -110,11 +110,15 @@ class PureClarity_Feed {
         return $request;
     }
 
-    private function getUniqueId() {
+    public function getUniqueId() {
         if( is_null( $this->uniqueId ) ){
             $this->uniqueId = uniqid();
         }
         return $this->uniqueId;
+    }
+    
+    public function setUniqueId($uniqueId) {
+        $this->uniqueId = $uniqueId;
     }
 
     public function build_items( $type, $currentPage ) {
