@@ -61,14 +61,19 @@ class PureClarity_Admin
             if ( ! in_array( $type, $acceptableTypes ) ) {
 				throw new RuntimeException( 'Unknown type.' );
             }
-
-            $currentPage = (int) $_POST['page'];
-            if ( $currentPage == 1 ) {
-                $this->feed->start_feed( $type );
+            
+            if ( isset( $_POST['feedname'] ) ) {
+                $this->feed->setUniqueId($_POST['feedname']);
             }
 
+            $currentPage = (int) $_POST['page'];
             $totalPagesCount = $this->feed->get_total_pages( $type );
-            if ( $currentPage <= $totalPagesCount || $totalPagesCount === 0 ) {
+            
+            if ( $currentPage == 1 && $totalPagesCount > 0) {
+                $this->feed->start_feed( $type );
+            }
+            
+            if ( $currentPage <= $totalPagesCount) {
                 $data = $this->feed->build_items( $type, $currentPage );
                 $this->feed->send_data( $type, $data );
             }
@@ -83,6 +88,7 @@ class PureClarity_Admin
             $response = array(
                 'totalPagesCount' => $totalPagesCount,
                 'finished'        => $isFinished,
+                'feedname'        => $this->feed->getUniqueId()
             );
 
             wp_send_json( $response );
