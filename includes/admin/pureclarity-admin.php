@@ -63,12 +63,13 @@ class PureClarity_Admin
             }
 
             $currentPage = (int) $_POST['page'];
-            if ( $currentPage == 1 ) {
+            $totalPagesCount = $this->feed->get_total_pages( $type );
+            
+            if ( $currentPage == 1 && $totalPagesCount > 0) {
                 $this->feed->start_feed( $type );
             }
-
-            $totalPagesCount = $this->feed->get_total_pages( $type );
-            if ( $currentPage <= $totalPagesCount || $totalPagesCount === 0 ) {
+            
+            if ( $currentPage <= $totalPagesCount) {
                 $data = $this->feed->build_items( $type, $currentPage );
                 $this->feed->send_data( $type, $data );
             }
