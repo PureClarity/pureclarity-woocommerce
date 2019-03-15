@@ -61,6 +61,10 @@ class PureClarity_Admin
             if ( ! in_array( $type, $acceptableTypes ) ) {
 				throw new RuntimeException( 'Unknown type.' );
             }
+            
+            if ( isset( $_POST['feedname'] ) ) {
+                $this->feed->setUniqueId($_POST['feedname']);
+            }
 
             $currentPage = (int) $_POST['page'];
             $totalPagesCount = $this->feed->get_total_pages( $type );
@@ -84,6 +88,7 @@ class PureClarity_Admin
             $response = array(
                 'totalPagesCount' => $totalPagesCount,
                 'finished'        => $isFinished,
+                'feedname'        => $this->feed->getUniqueId()
             );
 
             wp_send_json( $response );

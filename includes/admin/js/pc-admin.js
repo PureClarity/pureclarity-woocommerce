@@ -8,7 +8,7 @@
 	$(document).on("click", ".pureclarity-order-datafeed", function() { runFeed("order"); } );
 
 
-    function runFeed(type, currentPage) {
+    function runFeed(type, currentPage, feedName) {
 
         if (!currentPage) {
 			$('.pureclarity-buttons ').prop("disabled", true);
@@ -20,9 +20,10 @@
         var data = {
 			'action': 'pureclarity_run_datafeed',
             'page': currentPage,
-            'type': type
-        };
-
+            'type': type,
+            'feedname': feedName
+		};
+		
 		$.post(ajaxurl, data, 
 			function(response) {
 				
@@ -48,7 +49,7 @@
 
 				if (response.finished !== true) {
 					setTimeout( function() {
-						runFeed( type, ++currentPage );
+						runFeed( type, ++currentPage, response.feedname);
 					}, 10 );
 					
 				} else {
