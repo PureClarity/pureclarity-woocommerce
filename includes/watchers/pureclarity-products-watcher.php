@@ -36,10 +36,16 @@ class PureClarity_Products_Watcher {
      * Registers callback functions when product changes occur.
      */
     private function register_product_listeners() {
-        add_action( 'save_post_product', array( $this, 'save_product_via_deltas' ), 10, 3 );
-        add_action( 'added_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
-        add_action( 'updated_post_meta',  array( $this, 'save_meta_item' ),  10, 4 );
-        add_action( 'before_delete_post', array( $this, 'delete_item' ) );
+        
+        // new / updated or un-trashed products
+        add_action( 'woocommerce_new_product', array( $this, 'save_product_via_deltas' ), 10, 3 );
+        add_action( 'woocommerce_update_product', array( $this, 'save_product_via_deltas' ), 10, 3 );
+        add_action( 'untrashed_post', array( $this, 'save_product_via_deltas' ) );
+        
+        // trashed r deleted products
+        add_action( 'trashed_post', array( $this, 'delete_item' ) );
+        add_action( 'woocommerce_delete_product', array( $this, 'delete_item' ) , 10, 3 );
+        add_action( 'woocommerce_trash_product', array( $this, 'delete_item' ) );
     }
 
     /**
@@ -107,53 +113,39 @@ class PureClarity_Products_Watcher {
         $this->settings->add_user_delta_delete( $user_id );
     }
 
-    public function save_meta_item( $meta_id, $post_id, $meta_key, $meta_value ) {
-        if ( $meta_key != '_edit_lock' && $meta_key != 'pc_delta' ) {
-            $post = get_post( $post_id );
-            if ( ! empty($post) ) {
-                $this->save_product_via_deltas( $post_id, $post, true );
-            }
-        }
-    }
-
-    public function save_product_via_deltas( $id, $post, $update  ) {
-        if ($post->post_type == "product"){
-
-            if ( ! current_user_can( 'edit_product', $id ) )
-                return $id;
-            
-            if ($post->post_status == "publish") {
-            
-                $product = wc_get_product($id);    
-                if ( ! empty($product) ){
-                    
-                    // Add as delta
-                    $this->feed->loadProductTagsMap();
-                    $data = $this->feed->get_product_data( $product );
-                    if ( ! empty( $data ) ) {
-                        $json = json_encode( $data );
-                        $this->settings->add_product_delta( $id, strlen( $json ) );
-                        update_post_meta( $id, 'pc_delta', $json );
-                    }
-                    else {
-                        // Delete as delta
-                        delete_post_meta($id, 'pc_delta');
-                        $this->settings->add_product_delta_delete( $id );
-                    }
-                }
-            }
-            elseif ($post->post_status != "importing") {
-                // Delete as delta
-                delete_post_meta( $id, 'pc_delta' );
-                $this->settings->add_product_delta_delete( $id );
-            }
+    public function save_product_via_deltas( $id  ) {
+        
+        if ( ! current_user_can( 'edit_product', $id ) ) {
+            return $id;
         }
         
+        $product = wc_get_product($id);  
+        $post = get_post( $id );
+        
+        if ( $post->post_status == "publish" ){
+            // Add as delta
+            $this->feed->loadProductTagsMap();
+            $data = $this->feed->get_product_data( $product );
+            
+            if ( ! empty( $data ) ) {
+                $json = json_encode( $data );
+                $this->settings->add_product_delta( $id, strlen( $json ) );
+                update_post_meta( $id, 'pc_delta', $json );
+            } else {
+                // Delete as delta
+                delete_post_meta($id, 'pc_delta');
+                $this->settings->add_product_delta_delete( $id );
+            }
+        } elseif ($post->post_status != "importing") {
+            // Delete as delta
+            delete_post_meta( $id, 'pc_delta' );
+            $this->settings->add_product_delta_delete( $id );
+        }
     }
 
     public function delete_item( $id ) {
         $post = get_post( $id );
-        if ( $post->post_type == "product" && $post->post_status != "trash" ){
+        if ( $post->post_type == "product" && $post->post_status === 'trash' ){
             delete_post_meta( $id, 'pc_delta' );
             $this->settings->add_product_delta_delete( $id, true );
         }
