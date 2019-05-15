@@ -85,6 +85,15 @@ class PureClarity_Feed {
                     'body' => $body 
                 ) 
             );
+            
+            if ($response instanceof WP_Error) {
+                $errorMessage = '';
+                foreach($response->get_error_codes() as $code) {
+                    $errorMessage .= $code . ' - ' . $response->get_error_message($code) . '|';
+                }
+                throw new Exception( "Couldn't upload data to the PureClarity server, response errors: " . $errorMessage );
+            }
+            
             if( $response["response"] && $response["response"]["code"] != self::GATEWAY_TIMEOUT ) {
                 break;
             }
