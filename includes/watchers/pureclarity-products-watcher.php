@@ -42,7 +42,7 @@ class PureClarity_Products_Watcher {
         add_action( 'woocommerce_update_product', array( $this, 'save_product_via_deltas' ), 10, 3 );
         add_action( 'untrashed_post', array( $this, 'save_product_via_deltas' ) );
         
-        // trashed r deleted products
+        // trashed or deleted products
         add_action( 'trashed_post', array( $this, 'delete_item' ) );
         add_action( 'woocommerce_delete_product', array( $this, 'delete_item' ) , 10, 3 );
         add_action( 'woocommerce_trash_product', array( $this, 'delete_item' ) );
