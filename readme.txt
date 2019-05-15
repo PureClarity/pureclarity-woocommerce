@@ -3,7 +3,7 @@ Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
 Tested up to: 5.0.3
-Stable tag: 2.0.1
+Stable tag: 2.0.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -98,3 +98,9 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/?utm_source=mark
 
 = 2.0.1 =
 * Initial release to Wordpress plugin directory.
+
+= 2.0.2 =
+* Improvements to data feed admin ui
+
+= 2.0.3 =
+* Improvements to product delta triggering
