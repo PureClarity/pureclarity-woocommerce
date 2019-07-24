@@ -95,23 +95,14 @@ var PureClarity = {
         }
 
         if(this.config.tracking.order) {
-            _pc('order:addTrans', this.config.tracking.order.transaction);
-            for (var i=0; i<this.config.tracking.order.items.length; i++) {
-                _pc('order:addItem', this.config.tracking.order.items[i]);
-            }
-            _pc('order:track');
+            _pc('order', this.config.tracking.order);
         }
 
         if(this.config.tracking.cart) {
             var cartCookieId = this.getCookie("pc_cart_id");
             if (cartCookieId != this.config.tracking.cart.id){
                 this.setCookie("pc_cart_id", this.config.tracking.cart.id);
-                if (this.config.tracking.cart.items.length == 0){
-                    _pc("set_basket", {cart_empty: true});
-                }
-                else {
-                    _pc("set_basket", this.config.tracking.cart.items);
-                }
+                _pc("set_basket", this.config.tracking.cart.items);
             }
         }
     },
