@@ -95,11 +95,7 @@ var PureClarity = {
         }
 
         if(this.config.tracking.order) {
-            _pc('order:addTrans', this.config.tracking.order.transaction);
-            for (var i=0; i<this.config.tracking.order.items.length; i++) {
-                _pc('order:addItem', this.config.tracking.order.items[i]);
-            }
-            _pc('order:track');
+            _pc('order', this.config.tracking.order);
         }
 
         if(this.config.tracking.cart) {

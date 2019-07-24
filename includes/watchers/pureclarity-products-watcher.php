@@ -195,10 +195,8 @@ class PureClarity_Products_Watcher {
                 }
             }
 
-            $data = array(
-                "transaction" => $transaction,
-                "items" => $orderItems
-            );
+            $data = $transaction;
+            $data['items'] = $orderItems;
 
             $_SESSION['pureclarity-order'] = $data;
         }
