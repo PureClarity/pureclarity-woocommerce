@@ -106,12 +106,7 @@ var PureClarity = {
             var cartCookieId = this.getCookie("pc_cart_id");
             if (cartCookieId != this.config.tracking.cart.id){
                 this.setCookie("pc_cart_id", this.config.tracking.cart.id);
-                if (this.config.tracking.cart.items.length == 0){
-                    _pc("set_basket", {cart_empty: true});
-                }
-                else {
-                    _pc("set_basket", this.config.tracking.cart.items);
-                }
+                _pc("set_basket", this.config.tracking.cart.items);
             }
         }
     },
