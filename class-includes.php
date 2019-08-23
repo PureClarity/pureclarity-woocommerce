@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // Ensure path constant is set
 if ( ! defined( 'PURECLARITY_PATH' ) ) {
@@ -17,5 +17,5 @@ require_once PURECLARITY_PATH . 'includes/pureclarity-cron.php';
 
 // Add admin only classes
 if ( is_admin() ) {
-    require_once PURECLARITY_PATH . 'includes/admin/pureclarity-admin.php';
+	require_once PURECLARITY_PATH . 'includes/admin/pureclarity-admin.php';
 }

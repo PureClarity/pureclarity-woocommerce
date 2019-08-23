@@ -1,13 +1,13 @@
 <?php
 /**
-* Plugin Name: 	PureClarity for WooCommerce
-* Description: 	Increase revenues by 26% in your WooCommerce store with AI-based real-time personalization. Integrates with PureClarity's multi-award winning ecommerce personalization software.
-* Plugin URI: 	https://www.pureclarity.com
-* Version:		2.0.4
-* Author:		PureClarity
-* Author URI:	https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity
-* Text Domain:  pureclarity
-**/
+ * Plugin Name:  PureClarity for WooCommerce
+ * Description:  Increase revenues by 26% in your WooCommerce store with AI-based real-time personalization. Integrates with PureClarity's multi-award winning ecommerce personalization software.
+ * Plugin URI:   https://www.pureclarity.com
+ * Version:      2.0.4
+ * Author:       PureClarity
+ * Author URI:   https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity
+ * Text Domain:  pureclarity
+ **/
 
 // Abort if called directly
 if ( ! defined( 'WPINC' ) ) {
@@ -21,13 +21,15 @@ if ( ! defined( 'PURECLARITY_PATH' ) ) {
 }
 
 // Ensure woocommerce is enabled
-include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-if ( ! is_plugin_active('woocommerce/woocommerce.php') ) {
-	add_action( 'admin_notices', function() {
-		echo '<div class="error notice"><p>' . __( 'The PureClarity plugin requires WooCommerce to be enabled.', 'pureclarity' ) . '</p></div>';
-	} );
-}
-else {
+require_once ABSPATH . 'wp-admin/includes/plugin.php';
+if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+	add_action(
+		'admin_notices',
+		function() {
+			echo '<div class="error notice"><p>' . __( 'The PureClarity plugin requires WooCommerce to be enabled.', 'pureclarity' ) . '</p></div>';
+		}
+	);
+} else {
 
 	// include classes
 	require_once PURECLARITY_PATH . 'class-includes.php';

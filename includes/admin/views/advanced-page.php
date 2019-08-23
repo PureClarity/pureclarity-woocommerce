@@ -3,7 +3,7 @@
 	<form method="post" action="options.php">
 		<?php
 			settings_fields( self::ADVANCED_OPTION_GROUP_NAME ); // PureClarity_Admin
-			do_settings_sections( self::ADVANCED_MENU_SLUG ); 
+			do_settings_sections( self::ADVANCED_MENU_SLUG );
 			submit_button();
 		?>
 	</form>
