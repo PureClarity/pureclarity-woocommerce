@@ -1,11 +1,45 @@
 <?php
+/**
+ * PureClarity_Cron class
+ *
+ * @package PureClarity for WooCommerce
+ * @since 2.0.0
+ */
 
+/**
+ * Handles cron related code
+ */
 class PureClarity_Cron {
 
+	/**
+	 * PureClarity Plugin class
+	 *
+	 * @since 2.0.0
+	 * @var PureClarity_Plugin $plugin
+	 */
 	private $plugin;
-	private $setting;
+
+	/**
+	 * PureClarity Settings class
+	 *
+	 * @since 2.0.0
+	 * @var PureClarity_Settings $settings
+	 */
+	private $settings;
+
+	/**
+	 * PureClarity Feed class
+	 *
+	 * @since 2.0.0
+	 * @var PureClarity_Feed $feed
+	 */
 	private $feed;
 
+	/**
+	 * Builds class dependencies & calls processing code
+	 *
+	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 */
 	public function __construct( &$plugin ) {
 		$this->plugin   = $plugin;
 		$this->settings = $plugin->get_settings();
@@ -18,6 +52,9 @@ class PureClarity_Cron {
 		}
 	}
 
+	/**
+	 * Processes a product delta
+	 */
 	public function process_products() {
 
 		try {
@@ -71,6 +108,9 @@ class PureClarity_Cron {
 		}
 	}
 
+	/**
+	 * Processes a category delta
+	 */
 	public function process_categories() {
 
 		if ( ! $this->settings->is_category_feed_sent() ) {
@@ -94,6 +134,9 @@ class PureClarity_Cron {
 		}
 	}
 
+	/**
+	 * Processes a user delta
+	 */
 	public function process_users() {
 
 		try {

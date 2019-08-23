@@ -9,18 +9,18 @@
  * Text Domain:  pureclarity
  **/
 
-// Abort if called directly
+// Abort if called directly.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-// Set version and path constants
+// Set version and path constants.
 define( 'PURECLARITY_VERSION', '2.0.4' );
 if ( ! defined( 'PURECLARITY_PATH' ) ) {
 	define( 'PURECLARITY_PATH', plugin_dir_path( __FILE__ ) );
 }
 
-// Ensure woocommerce is enabled
+// Ensure woocommerce is enabled.
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 	add_action(
@@ -31,10 +31,10 @@ if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 	);
 } else {
 
-	// include classes
+	// include classes.
 	require_once PURECLARITY_PATH . 'class-includes.php';
 
-	// Create static instance
+	// Create static instance.
 	$pureclarity = PureClarity_Plugin::getInstance();
 
 }

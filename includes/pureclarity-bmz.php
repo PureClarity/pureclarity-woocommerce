@@ -1,13 +1,61 @@
 <?php
+/**
+ * PureClarity_Bmz class
+ *
+ * @package PureClarity for WooCommerce
+ * @since 2.0.0
+ */
 
+/**
+ * Handles bmz rendering
+ */
 class PureClarity_Bmz {
 
+	/**
+	 * Current Category ID
+	 *
+	 * @since 2.0.0
+	 * @var $currentCategoryId integer
+	 */
 	private $currentCategoryId;
+
+	/**
+	 * Current Product
+	 *
+	 * @since 2.0.0
+	 * @var integer $currentCategoryId
+	 */
 	private $currentProduct;
+
+	/**
+	 * PureClarity Plugin class
+	 *
+	 * @since 2.0.0
+	 * @var PureClarity_Plugin $plugin
+	 */
 	private $plugin;
+
+	/**
+	 * PureClarity Settings class
+	 *
+	 * @since 2.0.0
+	 * @var PureClarity_Settings $settings
+	 */
 	private $settings;
+
+	/**
+	 * PureClarity State class
+	 *
+	 * @since 2.0.0
+	 * @var PureClarity_State $state
+	 */
 	private $state;
 
+	/**
+	 * Builds class dependencies & sets up template codes
+	 *
+	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 */
 	public function __construct( &$plugin ) {
 		$this->plugin   = $plugin;
 		$this->settings = $plugin->get_settings();
@@ -16,6 +64,9 @@ class PureClarity_Bmz {
 		add_action( 'template_redirect', array( $this, 'render_bmzs' ), 10, 1 );
 	}
 
+	/**
+	 * Sets up rendering of BMZs
+	 */
 	public function render_bmzs() {
 
 		if ( ! $this->settings->is_merch_enabled() ) {
@@ -25,7 +76,7 @@ class PureClarity_Bmz {
 		$this->currentProduct    = $this->state->get_product();
 		$this->currentCategoryId = $this->state->get_category_id();
 
-		// Homepage and Order Received Page BMZs
+		// Homepage and Order Received Page BMZs.
 		if ( is_front_page() && $this->settings->is_bmz_on_home_page() ) {
 			add_filter(
 				'the_content',
@@ -36,7 +87,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Category Page BMZs (Only add if PC is not controlling prod lists, otherwise we'll it through JS)
+		// Category Page BMZs (Only add if PC is not controlling prod lists, otherwise we'll it through JS).
 		if ( ( is_product_category() || is_shop() )
 				&& $this->settings->is_bmz_on_category_page()
 				&& ! $this->settings->is_prod_enabled()
@@ -59,7 +110,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Search Results BMZs (Only add if PC is not controlling search, otherwise we'll it through JS)
+		// Search Results BMZs (Only add if PC is not controlling search, otherwise we'll it through JS).
 		if ( is_search()
 			&& $this->settings->is_bmz_on_search_page()
 			&& ! $this->settings->is_search_enabled()
@@ -82,7 +133,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Product Page BMZs
+		// Product Page BMZs.
 		if ( is_product() && $this->settings->is_bmz_on_product_page() ) {
 			remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
 			add_action(
@@ -119,7 +170,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Cart Page BMZs
+		// Cart Page BMZs.
 		if ( is_cart() && $this->settings->is_bmz_on_basket_page() ) {
 			add_action(
 				'woocommerce_before_cart',
@@ -139,7 +190,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Order Received Page BMZs
+		// Order Received Page BMZs.
 		if ( is_order_received_page() && $this->settings->is_bmz_on_checkout_page() ) {
 			add_filter(
 				'the_content',
@@ -152,14 +203,27 @@ class PureClarity_Bmz {
 
 	}
 
+	/**
+	 * Sets up front page content
+	 *
+	 * @param string $content - existing content.
+	 */
 	public function front_page( $content ) {
 		return "[pureclarity-bmz id='HP-01' bottom='10']" . $content . "[pureclarity-bmz id='HP-02' top='10'][pureclarity-bmz id='HP-03' top='10'][pureclarity-bmz id='HP-04' top='10']";
 	}
 
+	/**
+	 * Sets up order received page content
+	 *
+	 * @param string $content - existing content.
+	 */
 	public function order_received_page( $content ) {
 		return "[pureclarity-bmz id='OC-01' bottom='10']" . $content . "[pureclarity-bmz id='OC-02' top='10']";
 	}
 
+	/**
+	 * Sets up product page zone 1 content
+	 */
 	public function product_page_1() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -170,6 +234,9 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Sets up product page zone 2 content
+	 */
 	public function product_page_2() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -180,6 +247,9 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Sets up product page zone 3 content
+	 */
 	public function product_page_3() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -190,6 +260,9 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Sets up product page zone 4 content
+	 */
 	public function product_page_4() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -200,6 +273,9 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Sets up category page zone 1 content
+	 */
 	public function cat_page_1() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -210,6 +286,9 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Sets up category page zone 2 content
+	 */
 	public function cat_page_2() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -221,6 +300,9 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Sets up search page zone 1 content
+	 */
 	public function search_page_1() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -232,6 +314,9 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Sets up search page zone 2 content
+	 */
 	public function search_page_2() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -243,6 +328,9 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Sets up cart page zone 1 content
+	 */
 	public function cart_page_1() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -253,6 +341,9 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Sets up cart page zone 2 content
+	 */
 	public function cart_page_2() {
 		return $this->pureclarity_render_bmz(
 			array(
@@ -263,6 +354,12 @@ class PureClarity_Bmz {
 		);
 	}
 
+	/**
+	 * Renders a zone
+	 *
+	 * @param array  $atts - zone attributes.
+	 * @param string $content - custom content.
+	 */
 	public function pureclarity_render_bmz( $atts, $content = null ) {
 
 		$arguments = shortcode_atts(

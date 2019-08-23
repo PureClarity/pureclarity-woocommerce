@@ -1,15 +1,52 @@
 <?php
+/**
+ * PureClarity_Feed class
+ *
+ * @package PureClarity for WooCommerce
+ * @since 2.0.0
+ */
 
+/**
+ * Handles feed generation & sending
+ */
 class PureClarity_Feed {
 
+	/**
+	 * PureClarity Plugin class
+	 *
+	 * @var PureClarity_Plugin $plugin
+	 */
 	private $plugin;
+
+	/**
+	 * Product tags map
+	 *
+	 * @var string[] $settings
+	 */
 	private $productTagsMap;
+
+	/**
+	 * PureClarity Settings class
+	 *
+	 * @var PureClarity_Settings $settings
+	 */
 	private $settings;
+
+	/**
+	 * Unique ID for feed being generated
+	 *
+	 * @var PureClarity_Settings $settings
+	 */
 	private $uniqueId;
 
 	const PAGE_SIZE       = 100;
 	const GATEWAY_TIMEOUT = 504;
 
+	/**
+	 * Builds class dependencies & includes http class
+	 *
+	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 */
 	public function __construct( &$plugin ) {
 		$this->plugin   = $plugin;
 		$this->settings = $plugin->get_settings();
@@ -19,11 +56,21 @@ class PureClarity_Feed {
 		}
 	}
 
+	/**
+	 * Gets the total number of pages for the feed
+	 *
+	 * @param string $type - feed type.
+	 */
 	public function get_total_pages( $type ) {
 		$items = $this->get_total_items( $type );
 		return (int) ceil( $items / self::PAGE_SIZE );
 	}
 
+	/**
+	 * Gets the total number of items for the feed
+	 *
+	 * @param string $type - feed type.
+	 */
 	public function get_total_items( $type ) {
 		switch ( $type ) {
 			case 'product':
@@ -45,6 +92,11 @@ class PureClarity_Feed {
 		return 0;
 	}
 
+	/**
+	 * Sends a http request to start the feed
+	 *
+	 * @param string $type - feed type.
+	 */
 	public function start_feed( $type ) {
 		$url  = $this->settings->get_feed_baseurl() . 'feed-create';
 		$body = null;
@@ -66,18 +118,38 @@ class PureClarity_Feed {
 		$this->http_post( $url, $body );
 	}
 
+	/**
+	 * Sends a http request for feed data
+	 *
+	 * @param string $type - feed type.
+	 * @param array  $data - data to send.
+	 */
 	public function send_data( $type, $data ) {
 		$url  = $this->settings->get_feed_baseurl() . 'feed-append';
 		$body = $this->get_request_body( $type, $data );
 		$this->http_post( $url, $body );
 	}
 
+	/**
+	 * Sends a http request to end the feed
+	 *
+	 * @param string $type - feed type.
+	 */
 	public function end_feed( $type ) {
 		$url  = $this->settings->get_feed_baseurl() . 'feed-close';
 		$body = $this->get_request_body( $type, ( $type == 'order' ? '' : ']}' ) );
 		$this->http_post( $url, $body );
 	}
 
+	/**
+	 * Sends a HTTP POST request
+	 *
+	 * @param string  $url - url to POST to.
+	 * @param array   $body - body data.
+	 * @param boolean $checkOk - whether to verify response.
+	 *
+	 * @throws Exception - if varous erros occur.
+	 */
 	public function http_post( $url, $body, $checkOk = true ) {
 		$request = new WP_Http();
 		for ( $x = 0; $x <= 5; $x++ ) {
@@ -110,6 +182,12 @@ class PureClarity_Feed {
 		}
 	}
 
+	/**
+	 * Builds standard data to send for feeds, with custom data added
+	 *
+	 * @param string $type - feed type.
+	 * @param array  $data - custom data to send.
+	 */
 	public function get_request_body( $type, $data ) {
 		$request = array(
 			'accessKey' => $this->settings->get_access_key(),
@@ -122,6 +200,9 @@ class PureClarity_Feed {
 		return $request;
 	}
 
+	/**
+	 * Generates a uniqueid for the feed
+	 */
 	public function getUniqueId() {
 		if ( is_null( $this->uniqueId ) ) {
 			$this->uniqueId = uniqid();
@@ -129,10 +210,21 @@ class PureClarity_Feed {
 		return $this->uniqueId;
 	}
 
+	/**
+	 * Manually set a uniqueid for the feed
+	 *
+	 * @param string $uniqueId - unique id for feed.
+	 */
 	public function setUniqueId( $uniqueId ) {
 		$this->uniqueId = $uniqueId;
 	}
 
+	/**
+	 * Builds items for the given page number & feed type
+	 *
+	 * @param string  $type - feed type.
+	 * @param integer $currentPage - current page number.
+	 */
 	public function build_items( $type, $currentPage ) {
 		$items = array();
 		switch ( $type ) {
@@ -152,6 +244,12 @@ class PureClarity_Feed {
 		return $items;
 	}
 
+	/**
+	 * Gets the required page of product data
+	 *
+	 * @param integer $currentPage - current page number.
+	 * @param integer $pageSize - current page size.
+	 */
 	public function get_products( $currentPage, $pageSize ) {
 		$query = new WP_Query(
 			array(
@@ -188,6 +286,12 @@ class PureClarity_Feed {
 		return $products;
 	}
 
+	/**
+	 * Genrates feed data for an individual product
+	 *
+	 * @param WC_Product $product - product to generate feed data for.
+	 * @param boolean    $log_error - whether to log errors.
+	 */
 	public function get_product_data( $product, $log_error = true ) {
 		if ( $product->get_catalog_visibility() == 'hidden' ) {
 			if ( $log_error ) {
@@ -264,7 +368,7 @@ class PureClarity_Feed {
 		$this->add_variant_info( $product_data, $product );
 		$this->add_child_products( $product_data, $product );
 
-		// Check is valid
+		// Check is valid.
 		$error = array();
 		if ( ! array_key_exists( 'Prices', $product_data )
 				|| ( is_array( $product_data['Prices'] ) && sizeof( $product_data['Prices'] ) == 0 )
@@ -288,6 +392,13 @@ class PureClarity_Feed {
 		return $product_data;
 	}
 
+	/**
+	 * Adds data to the provided array, checkign for existing keys & merging data if needed
+	 *
+	 * @param string $key - key to add to.
+	 * @param array  $json - existing data array.
+	 * @param mixed  $value - value to add.
+	 */
 	private function add_to_array( $key, &$json, $value ) {
 		if ( ! empty( $value ) ) {
 			if ( ! array_key_exists( $key, $json ) ) {
@@ -299,6 +410,12 @@ class PureClarity_Feed {
 		}
 	}
 
+	/**
+	 * Adds variant info to data array
+	 *
+	 * @param array      $json - existing data array.
+	 * @param WC_Product $product - product to process.
+	 */
 	private function add_variant_info( &$json, &$product ) {
 
 		if ( $product->get_type() != 'variable' ) {
@@ -326,6 +443,12 @@ class PureClarity_Feed {
 		}
 	}
 
+	/**
+	 * Adds child product info to data array
+	 *
+	 * @param array      $json - existing data array.
+	 * @param WC_Product $product - product to process.
+	 */
 	private function add_child_products( &$json, &$product ) {
 
 		if ( $product->get_type() != 'grouped' ) {
@@ -346,10 +469,21 @@ class PureClarity_Feed {
 		}
 	}
 
+	/**
+	 * Checks if product is visible
+	 *
+	 * @param WC_Product $product - product to process.
+	 */
 	private function productIsVisible( $product ) {
 		return $product->get_catalog_visibility() != 'hidden' && $product->get_status() == 'publish';
 	}
 
+	/**
+	 * Sets search tags for a product on data array
+	 *
+	 * @param array      $json - existing data array.
+	 * @param WC_Product $product - product to process.
+	 */
 	private function set_search_tags( &$json, &$product ) {
 		foreach ( $product->get_tag_ids() as $tagId ) {
 			if ( array_key_exists( $tagId, $this->productTagsMap ) ) {
@@ -358,6 +492,12 @@ class PureClarity_Feed {
 		}
 	}
 
+	/**
+	 * Sets prices for a product on data array
+	 *
+	 * @param array      $json - existing data array.
+	 * @param WC_Product $product - product to process.
+	 */
 	private function set_product_price( &$json, &$product ) {
 		if ( $product->get_regular_price() ) {
 			$price = $product->get_regular_price() . ' ' . get_woocommerce_currency();
@@ -372,6 +512,11 @@ class PureClarity_Feed {
 		}
 	}
 
+	/**
+	 * Checks if product is going to be on sale
+	 *
+	 * @param WC_Product $product - product to process.
+	 */
 	private function product_has_future_sale( $product ) {
 		$saleDate = $product->get_date_on_sale_from();
 		if ( ! empty( $saleDate ) ) {
@@ -380,6 +525,12 @@ class PureClarity_Feed {
 		return false;
 	}
 
+	/**
+	 * Sets base product attributes on data array
+	 *
+	 * @param array      $json - existing data array.
+	 * @param WC_Product $product - product to process.
+	 */
 	private function set_basic_attributes( &$json, &$product ) {
 		$this->add_to_array( 'Weight', $json, $product->get_weight() );
 		$this->add_to_array( 'Length', $json, $product->get_length() );
@@ -387,6 +538,9 @@ class PureClarity_Feed {
 		$this->add_to_array( 'Height', $json, $product->get_height() );
 	}
 
+	/**
+	 * Loads all product tags
+	 */
 	public function loadProductTagsMap() {
 		$this->productTagsMap = [];
 		$terms                = get_terms( 'product_tag' );
@@ -395,6 +549,9 @@ class PureClarity_Feed {
 		}
 	}
 
+	/**
+	 * Gets category data for feed
+	 */
 	public function get_categories() {
 		$json       = '';
 		$categories = get_terms(
@@ -425,7 +582,7 @@ class PureClarity_Feed {
 				'Link'        => $url,
 			);
 
-			// If category is a root category (has no parent), add to new Shop category so that we can search in Shop for all products
+			// If category is a root category (has no parent), add to new Shop category so that we can search in Shop for all products.
 			$data['ParentIds'] = [ ( ! empty( $category->parent ) && $category->parent > 0 ) ? (string) $category->parent : '-1' ];
 
 			$thumbnail_id = get_woocommerce_term_meta( $category->term_id, 'thumbnail_id', true );
@@ -440,6 +597,9 @@ class PureClarity_Feed {
 		return $json;
 	}
 
+	/**
+	 * Gets count of all users
+	 */
 	public function get_users_count() {
 		$args = array(
 			'order'   => 'ASC',
@@ -450,6 +610,12 @@ class PureClarity_Feed {
 		return $users->get_total();
 	}
 
+	/**
+	 * Gets the required page of users data
+	 *
+	 * @param integer $currentPage - current page number.
+	 * @param integer $pageSize - current page size.
+	 */
 	public function get_users( $currentPage, $pageSize ) {
 
 		$args = array(
@@ -480,11 +646,21 @@ class PureClarity_Feed {
 		return $items;
 	}
 
+	/**
+	 * Gets roles for provided user id
+	 *
+	 * @param integer $userId - user id to process.
+	 */
 	public function get_roles( $userId ) {
 		$user_roles = get_user_meta( $userId, 'wp_capabilities' );
 		return array_keys( $user_roles[0] );
 	}
 
+	/**
+	 * Processes a user for the feed
+	 *
+	 * @param integer $userId - user id to process.
+	 */
 	public function parse_user( $userId ) {
 		$customer = new WC_Customer( $userId );
 
@@ -497,7 +673,7 @@ class PureClarity_Feed {
 				'Roles'     => $this->get_roles( $userId ),
 			);
 
-			if ( method_exists( $customer, 'get_billing' ) ) { // doesn't in earlier WC versions
+			if ( method_exists( $customer, 'get_billing' ) ) { // doesn't in earlier WC versions.
 				$billing = $customer->get_billing();
 				if ( ! empty( $billing ) ) {
 					if ( ! empty( $billing['city'] ) ) {
@@ -526,6 +702,9 @@ class PureClarity_Feed {
 		return null;
 	}
 
+	/**
+	 * Gets count of all orders in last 12 months
+	 */
 	public function get_order_count() {
 		$args = array(
 			'status'       => 'completed',
@@ -539,6 +718,12 @@ class PureClarity_Feed {
 		return $results->total;
 	}
 
+	/**
+	 * Gets the required page of order data
+	 *
+	 * @param integer $currentPage - current page number.
+	 * @param integer $pageSize - current page size.
+	 */
 	public function get_orders( $currentPage, $pageSize ) {
 		$args = array(
 			'limit'        => $pageSize,
@@ -579,6 +764,12 @@ class PureClarity_Feed {
 		return $items;
 	}
 
+	/**
+	 * Sends a product delta to PureClarity
+	 *
+	 * @param array $products - products to add/update.
+	 * @param array $productsToDelete - products to delete.
+	 */
 	public function send_product_delta( $products, $productsToDelete ) {
 		$request = array(
 			'AppKey'         => $this->settings->get_access_key(),
@@ -592,6 +783,12 @@ class PureClarity_Feed {
 
 	}
 
+	/**
+	 * Sends a user delta to PureClarity
+	 *
+	 * @param array $users - users to add/update.
+	 * @param array $deletes - users to delete.
+	 */
 	public function send_user_delta( $users, $deletes ) {
 
 		$request = array(
@@ -606,6 +803,11 @@ class PureClarity_Feed {
 
 	}
 
+	/**
+	 * Removes protocl from the provided url
+	 *
+	 * @param string $url - url to process.
+	 */
 	public function removeUrlProtocol( $url ) {
 		return empty( $url ) ? $url : str_replace(
 			array(

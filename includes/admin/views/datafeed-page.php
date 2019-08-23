@@ -1,6 +1,13 @@
 <?php
-	$runningFeed = __( 'Running Feed' ) . '...';
-	$clickButton = __( 'Click button to run the %s data feed and submit it to PureClarity', 'pureclarity' );
+/**
+ * Data Feed page html
+ *
+ * @package PureClarity for WooCommerce
+ * @since 2.0.0
+ */
+
+$runningFeed = __( 'Running Feed' ) . '...';
+$clickButton = __( 'Click button to run the %s data feed and submit it to PureClarity', 'pureclarity' );
 ?>
 <style>
 	.pureclarity-message { 

@@ -1,11 +1,42 @@
 <?php
+/**
+ * PureClarity_Template class
+ *
+ * @package PureClarity for WooCommerce
+ * @since 2.0.0
+ */
 
+/**
+ * Renders template related code.
+ */
 class PureClarity_Template {
 
+	/**
+	 * PureClarity Bmz class
+	 *
+	 * @var PureClarity_Bmz $bmz
+	 */
 	private $bmz;
+
+	/**
+	 * PureClarity Plugin class
+	 *
+	 * @var PureClarity_Plugin $pureClarityPlugin
+	 */
 	private $pureClarityPlugin;
+
+	/**
+	 * PureClarity Settings class
+	 *
+	 * @var PureClarity_Settings $pureClarityPluginSettings
+	 */
 	private $pureClarityPluginSettings;
 
+	/**
+	 * Builds class dependencies & sets up watchers
+	 *
+	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 */
 	public function __construct( &$plugin ) {
 		$this->pureClarityPlugin = $plugin;
 		$this->bmz               = $this->pureClarityPlugin->get_bmz();
@@ -20,6 +51,9 @@ class PureClarity_Template {
 		}
 	}
 
+	/**
+	 * Renders configuration json
+	 */
 	public function render_pureclarity_json() {
 		$style = '';
 		if ( $this->is_pureclarity_active()
@@ -37,6 +71,11 @@ class PureClarity_Template {
 		echo $style . $script;
 	}
 
+	/**
+	 * Gets PureClarity configuration
+	 *
+	 * @return array
+	 */
 	private function getConfig() {
 		$pureclarity_settings = $this->get_pureclarity_plugin_settings();
 		$pureclarity_session  = $this->get_pureclarity_plugin()->get_state();
@@ -81,6 +120,11 @@ class PureClarity_Template {
 		);
 	}
 
+	/**
+	 * Returns whether PureClarity is active
+	 *
+	 * @return boolean
+	 */
 	private function is_pureclarity_active() {
 		return (
 				$this->get_pureclarity_plugin_settings()->is_search_enabled()
@@ -91,10 +135,20 @@ class PureClarity_Template {
 			&& $this->get_pureclarity_plugin_settings()->is_pureclarity_enabled();
 	}
 
+	/**
+	 * Returns an instance of the PureClarity_Plugin class
+	 *
+	 * @return PureClarity_Plugin
+	 */
 	private function get_pureclarity_plugin() {
 		return $this->pureClarityPlugin;
 	}
 
+	/**
+	 * Returns the settings class
+	 *
+	 * @return PureClarity_Settings
+	 */
 	private function get_pureclarity_plugin_settings() {
 		if ( ! isset( $this->pureClarityPluginSettings ) ) {
 			$this->pureClarityPluginSettings = $this->get_pureclarity_plugin()->get_settings();
@@ -102,6 +156,12 @@ class PureClarity_Template {
 		return $this->pureClarityPluginSettings;
 	}
 
+	/**
+	 * Gets HTML for a BMZ with the given ID
+	 *
+	 * @param string $bmz_id - BMZ to render.
+	 * @return string
+	 */
 	private function get_bmz( $bmz_id ) {
 		$acronym = substr( $bmz_id, 0, 2 );
 		$index   = (int) substr( $bmz_id, 4, 5 );

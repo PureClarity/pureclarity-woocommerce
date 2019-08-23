@@ -1,9 +1,29 @@
 <?php
+/**
+ * PureClarity_Settings class
+ *
+ * @package PureClarity for WooCommerce
+ * @since 2.0.0
+ */
 
+/**
+ * Handles config getting and setting
+ */
 class PureClarity_Settings {
 
+	/**
+	 * PureClarity script url
+	 *
+	 * @var string $scriptUrl
+	 */
 	public $scriptUrl = '//pcs.pureclarity.net';
-	private $regions  = array(
+
+	/**
+	 * PureClarity region urls
+	 *
+	 * @var array $regions
+	 */
+	private $regions = array(
 		'1'  => 'https://api-eu-w-1.pureclarity.net',
 		'2'  => 'https://api-eu-w-2.pureclarity.net',
 		'3'  => 'https://api-eu-c-1.pureclarity.net',
@@ -20,6 +40,11 @@ class PureClarity_Settings {
 		'14' => 'https://api-sa-e-1.pureclarity.net',
 	);
 
+	/**
+	 * PureClarity sftp region urls
+	 *
+	 * @var array $sftpRegions
+	 */
 	private $sftpRegions = array(
 		'1'  => 'https://sftp-eu-w-1.pureclarity.net',
 		'2'  => 'https://sftp-eu-w-2.pureclarity.net',
@@ -37,15 +62,15 @@ class PureClarity_Settings {
 		'14' => 'https://sftp-sa-e-1.pureclarity.net',
 	);
 
+	/**
+	 * Sets up PureClarity options with default values
+	 */
 	public function __construct() {
 		add_option( 'pureclarity_accesskey', '' );
 		add_option( 'pureclarity_secretkey', '' );
 		add_option( 'pureclarity_region', '1' );
 		add_option( 'pureclarity_mode', 'off' );
-		// add_option( 'pureclarity_search_enabled', 'no' );
-		// add_option( 'pureclarity_merch_enabled', 'no' );
 		add_option( 'pureclarity_shop_enabled', 'no' );
-		// add_option( 'pureclarity_prodlist_enabled', 'no' );
 		add_option( 'pureclarity_prodfeed_run', '0' );
 		add_option( 'pureclarity_catfeed_run', '0' );
 		add_option( 'pureclarity_brandfeed_run', '0' );
@@ -68,26 +93,56 @@ class PureClarity_Settings {
 		add_option( 'pureclarity_user_deltas', '{}' );
 	}
 
+	/**
+	 * Gets Access Key config value
+	 *
+	 * @return string
+	 */
 	public function get_access_key() {
 		return (string) get_option( 'pureclarity_accesskey', '' );
 	}
 
+	/**
+	 * Gets Secret Key config value
+	 *
+	 * @return string
+	 */
 	public function get_secret_key() {
 		return (string) get_option( 'pureclarity_secretkey', '' );
 	}
 
+	/**
+	 * Gets region urls
+	 *
+	 * @return string[]
+	 */
 	public function get_regions() {
 		return $this->regions;
 	}
 
+	/**
+	 * Gets region config value
+	 *
+	 * @return string
+	 */
 	public function get_region() {
 		return (string) get_option( 'pureclarity_region', '1' );
 	}
 
+	/**
+	 * Gets mode config value
+	 *
+	 * @return string
+	 */
 	public function get_pureclarity_mode() {
 		return get_option( 'pureclarity_mode', 'off' );
 	}
 
+	/**
+	 * Gets enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_pureclarity_enabled() {
 		switch ( $this->get_pureclarity_mode() ) {
 			case 'on':
@@ -98,52 +153,101 @@ class PureClarity_Settings {
 		return false;
 	}
 
+	/**
+	 * Gets search enabled admin config value
+	 *
+	 * @return string
+	 */
 	public function is_search_enabled_admin() {
 		return false;
-		// return ( get_option( 'pureclarity_search_enabled', '' ) == "on" );
 	}
 
+	/**
+	 * Gets merch enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_merch_enabled_admin() {
 		return true;
-		// return ( get_option( 'pureclarity_merch_enabled', '' ) == "on" );
 	}
 
+	/**
+	 * Gets product listing enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_prod_enabled_admin() {
 		return false;
-		// return ( get_option( 'pureclarity_prodlist_enabled', '' ) == "on" );
 	}
 
+	/**
+	 * Gets deltas enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_deltas_enabled_admin() {
 		return ( get_option( 'pureclarity_deltas_enabled', '' ) == 'on' );
 	}
 
+	/**
+	 * Gets search enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_search_enabled() {
 		return false;
-		// return $this->is_search_enabled_admin() && $this->is_pureclarity_enabled();
 	}
 
+	/**
+	 * Gets merch enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_merch_enabled() {
 		return true;
-		// return $this->is_merch_enabled_admin() && $this->is_pureclarity_enabled();
 	}
 
+	/**
+	 * Gets product list enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_prod_enabled() {
 		return false;
-		// return $this->is_prod_enabled_admin() && $this->is_pureclarity_enabled();
 	}
 
+	/**
+	 * Gets deltas enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_deltas_enabled() {
 		return $this->is_deltas_enabled_admin() && $this->is_pureclarity_enabled();
 	}
 
+	/**
+	 * Gets bmz debug enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_bmz_debug_enabled() {
 		return ( get_option( 'pureclarity_bmz_debug', '' ) == 'on' );
 	}
 
+	/**
+	 * Gets shop page enabled config value
+	 *
+	 * @return string
+	 */
 	public function is_shop_enabled_admin() {
 		return ( get_option( 'pureclarity_shop_enabled', '' ) == 'on' );
 	}
 
+	/**
+	 * Gets PureClarity API url
+	 *
+	 * @return string
+	 */
 	public function get_api_url() {
 		$url = getenv( 'PURECLARITY_SCRIPT_URL' );
 		if ( empty( $url ) ) {
@@ -152,6 +256,11 @@ class PureClarity_Settings {
 		return $url;
 	}
 
+	/**
+	 * Gets PureClarity feed url
+	 *
+	 * @return string
+	 */
 	public function get_feed_baseurl() {
 		$url  = getenv( 'PURECLARITY_FEED_HOST' );
 		$port = getenv( 'PURECLARITY_FEED_PORT' );
@@ -164,42 +273,92 @@ class PureClarity_Settings {
 		return $url . '/';
 	}
 
+	/**
+	 * Gets search dom selector config value
+	 *
+	 * @return string
+	 */
 	public function get_search_selector() {
 		return (string) get_option( 'pureclarity_search_selector', '.search-field' );
 	}
 
+	/**
+	 * Gets shop dom selector config value
+	 *
+	 * @return string
+	 */
 	public function get_shop_selector() {
 		return (string) get_option( 'pureclarity_shop_selector', '#main' );
 	}
 
+	/**
+	 * Gets search result dom selector config value
+	 *
+	 * @return string
+	 */
 	public function get_search_result_element() {
 		return (string) get_option( 'pureclarity_search_result_selector', '#main' );
 	}
 
+	/**
+	 * Gets product list dom selector config value
+	 *
+	 * @return string
+	 */
 	public function get_prodlist_result_element() {
 		return (string) get_option( 'pureclarity_prodlist_selector', '#main' );
 	}
 
+	/**
+	 * Gets whether product feed has been sent already
+	 *
+	 * @return string
+	 */
 	public function is_product_feed_sent() {
 		return ( get_option( 'pureclarity_prodfeed_run', '0' ) == '1' );
 	}
 
+	/**
+	 * Gets whether category feed has been sent already
+	 *
+	 * @return string
+	 */
 	public function is_category_feed_sent() {
 		return ( get_option( 'pureclarity_catfeed_run', '0' ) == '1' );
 	}
 
+	/**
+	 * Gets whether brand feed has been sent already
+	 *
+	 * @return string
+	 */
 	public function is_brand_feed_sent() {
 		return ( get_option( 'pureclarity_brandfeed_run', '0' ) == '1' );
 	}
 
+	/**
+	 * Gets whether user feed has been sent already
+	 *
+	 * @return string
+	 */
 	public function is_user_feed_sent() {
 		return ( get_option( 'pureclarity_userfeed_run', '0' ) == '1' );
 	}
 
+	/**
+	 * Gets whether order feed has been sent already
+	 *
+	 * @return string
+	 */
 	public function is_order_feed_sent() {
 		return ( get_option( 'pureclarity_orderfeed_run', '0' ) == '1' );
 	}
 
+	/**
+	 * Saves config to say that a feed has been sent
+	 *
+	 * @param string $type - type of feed sent.
+	 */
 	public function set_feed_type_sent( $type ) {
 		$option = '';
 		switch ( $type ) {
@@ -224,6 +383,9 @@ class PureClarity_Settings {
 		}
 	}
 
+	/**
+	 * Gets PureClarity Delta feed url
+	 */
 	public function get_delta_url() {
 		$url  = getenv( 'PURECLARITY_API_ENDPOINT' );
 		$port = getenv( 'PURECLARITY_API_PORT' );
@@ -236,34 +398,75 @@ class PureClarity_Settings {
 		return $url . '/api/delta';
 	}
 
+	/**
+	 * Returns whether BMZ should appear on homepage
+	 *
+	 * @return boolean
+	 */
 	public function is_bmz_on_home_page() {
 		return ( get_option( 'pureclarity_add_bmz_homepage', '' ) == 'on' );
 	}
 
+	/**
+	 * Returns whether BMZ should appear on category page
+	 *
+	 * @return boolean
+	 */
 	public function is_bmz_on_category_page() {
 		return ( get_option( 'pureclarity_add_bmz_categorypage', '' ) == 'on' );
 	}
 
+	/**
+	 * Returns whether BMZ should appear on search page
+	 *
+	 * @return boolean
+	 */
 	public function is_bmz_on_search_page() {
 		return ( get_option( 'pureclarity_add_bmz_searchpage', '' ) == 'on' );
 	}
 
+	/**
+	 * Returns whether BMZ should appear on product page
+	 *
+	 * @return boolean
+	 */
 	public function is_bmz_on_product_page() {
 		return ( get_option( 'pureclarity_add_bmz_productpage', '' ) == 'on' );
 	}
 
+	/**
+	 * Returns whether BMZ should appear on basket page
+	 *
+	 * @return boolean
+	 */
 	public function is_bmz_on_basket_page() {
 		return ( get_option( 'pureclarity_add_bmz_basketpage', '' ) == 'on' );
 	}
 
+	/**
+	 * Returns whether BMZ should appear on checkout page
+	 *
+	 * @return boolean
+	 */
 	public function is_bmz_on_checkout_page() {
 		return ( get_option( 'pureclarity_add_bmz_checkoutpage', '' ) == 'on' );
 	}
 
+	/**
+	 * Adds a product to the delta delete queue
+	 *
+	 * @param integer $id - product id.
+	 */
 	public function add_product_delta_delete( $id ) {
 		$this->add_product_delta( $id, -1 );
 	}
 
+	/**
+	 * Adds a product to the delta
+	 *
+	 * @param integer $id - product id.
+	 * @param integer $size - data size.
+	 */
 	public function add_product_delta( $id, $size ) {
 		$deltas = $this->get_product_deltas();
 		if ( empty( $deltas ) ) {
@@ -273,6 +476,11 @@ class PureClarity_Settings {
 		update_option( 'pureclarity_product_deltas', json_encode( $deltas, true ) );
 	}
 
+	/**
+	 * Removes a product from the delta
+	 *
+	 * @param integer $id - product id.
+	 */
 	public function remove_product_delta( $id ) {
 		$deltas = $this->get_product_deltas();
 		if ( ! empty( $deltas ) && array_key_exists( $id, $deltas ) ) {
@@ -281,6 +489,11 @@ class PureClarity_Settings {
 		}
 	}
 
+	/**
+	 * Returns product delta array
+	 *
+	 * @return array
+	 */
 	public function get_product_deltas() {
 		$deltastring = get_option( 'pureclarity_product_deltas', '{}' );
 		if ( ! empty( $deltastring ) ) {
@@ -289,30 +502,56 @@ class PureClarity_Settings {
 		return array();
 	}
 
+	/**
+	 * Updates pureclarity_category_feed_required option to time now
+	 */
 	public function set_category_feed_required() {
 		update_option( 'pureclarity_category_feed_required', time() );
 	}
 
+	/**
+	 * Updates pureclarity_category_feed_required option to empty
+	 */
 	public function clear_category_feed_required() {
 		update_option( 'pureclarity_category_feed_required', '' );
 	}
 
+	/**
+	 * Returns value for pureclarity_category_feed_required option
+	 */
 	public function get_category_feed_required() {
 		return get_option( 'pureclarity_category_feed_required', '' );
 	}
 
+	/**
+	 * Updates pureclarity_user_feed_required option to time now
+	 */
 	public function set_user_feed_required() {
 		update_option( 'pureclarity_user_feed_required', time() );
 	}
 
+	/**
+	 * Updates pureclarity_user_feed_required option to time empty
+	 */
 	public function clear_user_feed_required() {
 		update_option( 'pureclarity_user_feed_required', '' );
 	}
 
+	/**
+	 * Adds a user to the delta for deletion
+	 *
+	 * @param integer $id - user id.
+	 */
 	public function add_user_delta_delete( $id ) {
 		$this->add_user_delta( $id, -1 );
 	}
 
+	/**
+	 * Adds a user to the delta
+	 *
+	 * @param integer $id - user id.
+	 * @param integer $size - data size.
+	 */
 	public function add_user_delta( $id, $size ) {
 		$deltas = $this->get_user_deltas();
 		if ( empty( $deltas ) ) {
@@ -322,6 +561,11 @@ class PureClarity_Settings {
 		update_option( 'pureclarity_user_deltas', json_encode( $deltas, true ) );
 	}
 
+	/**
+	 * Removes a user from the delta
+	 *
+	 * @param integer $id - user id.
+	 */
 	public function remove_user_delta( $id ) {
 		$deltas = $this->get_user_deltas();
 		if ( ! empty( $deltas ) && array_key_exists( $id, $deltas ) ) {
@@ -330,6 +574,11 @@ class PureClarity_Settings {
 		}
 	}
 
+	/**
+	 * Returns all user deltas
+	 *
+	 * @return array
+	 */
 	public function get_user_deltas() {
 		$deltastring = get_option( 'pureclarity_user_deltas', '{}' );
 		return ( ! empty( $deltastring ) ? json_decode( $deltastring, true ) : array() );

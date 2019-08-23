@@ -1,12 +1,49 @@
 <?php
+/**
+ * PureClarity_Products_Watcher class
+ *
+ * @package PureClarity for WooCommerce
+ * @since 2.0.0
+ */
 
+/**
+ * Handles action related to product, category & user data changes
+ */
 class PureClarity_Products_Watcher {
 
+	/**
+	 * PureClarity Feed class
+	 *
+	 * @var PureClarity_Feed $feed
+	 */
 	private $feed;
+
+	/**
+	 * PureClarity Plugin class
+	 *
+	 * @var PureClarity_Plugin $plugin
+	 */
 	private $plugin;
+
+	/**
+	 * PureClarity Settings class
+	 *
+	 * @var PureClarity_Settings $settings
+	 */
 	private $settings;
+
+	/**
+	 * PureClarity State class
+	 *
+	 * @var PureClarity_State $state
+	 */
 	private $state;
 
+	/**
+	 * Builds class dependencies & sets up watchers
+	 *
+	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 */
 	public function __construct( &$plugin ) {
 		$this->plugin   = $plugin;
 		$this->feed     = $plugin->get_feed();
@@ -37,12 +74,12 @@ class PureClarity_Products_Watcher {
 	 */
 	private function register_product_listeners() {
 
-		// new / updated or un-trashed products
+		// new / updated or un-trashed products.
 		add_action( 'woocommerce_new_product', array( $this, 'save_product_via_deltas' ), 10, 3 );
 		add_action( 'woocommerce_update_product', array( $this, 'save_product_via_deltas' ), 10, 3 );
 		add_action( 'untrashed_post', array( $this, 'save_product_via_deltas' ) );
 
-		// trashed or deleted products
+		// trashed or deleted products.
 		add_action( 'trashed_post', array( $this, 'delete_item' ) );
 		add_action( 'woocommerce_delete_product', array( $this, 'delete_item' ), 10, 3 );
 		add_action( 'woocommerce_trash_product', array( $this, 'delete_item' ) );
@@ -83,6 +120,9 @@ class PureClarity_Products_Watcher {
 		add_action( 'woocommerce_cart_item_removed', array( $this, 'set_cart' ), 10, 1 );
 	}
 
+	/**
+	 * Registers callback functions for when orders occur
+	 */
 	private function register_order_listeners() {
 		if ( is_admin() ) {
 			add_action( 'woocommerce_order_status_completed', array( $this, 'moto_order_placed' ), 10, 1 );
@@ -93,12 +133,25 @@ class PureClarity_Products_Watcher {
 		}
 	}
 
+	/**
+	 * Adds a category to deltas if required
+	 *
+	 * @param mixed  $term_id - Term ID (not used).
+	 * @param mixed  $tt_id - TT ID (not used).
+	 * @param string $taxonomy - Taxonomy type.
+	 * @return void
+	 */
 	public function add_category_feed_to_deltas( $term_id, $tt_id, $taxonomy ) {
 		if ( $taxonomy == 'product_cat' ) {
 			$this->settings->set_category_feed_required();
 		}
 	}
 
+	/**
+	 * Saves a user for deltas
+	 *
+	 * @param integer $user_id - Id of user being saved.
+	 */
 	public function save_user_via_deltas( $user_id ) {
 		$data = $this->feed->parse_user( $user_id );
 		if ( ! empty( $data ) ) {
@@ -108,10 +161,20 @@ class PureClarity_Products_Watcher {
 		}
 	}
 
+	/**
+	 * Triggers delta for user delete
+	 *
+	 * @param integer $user_id - Id of user being deleted.
+	 */
 	public function delete_user_via_deltas( $user_id ) {
 		$this->settings->add_user_delta_delete( $user_id );
 	}
 
+	/**
+	 * Triggers delta for product save
+	 *
+	 * @param integer $id - Id of product being updated.
+	 */
 	public function save_product_via_deltas( $id ) {
 
 		if ( ! current_user_can( 'edit_product', $id ) ) {
@@ -122,7 +185,7 @@ class PureClarity_Products_Watcher {
 		$post    = get_post( $id );
 
 		if ( $post->post_status == 'publish' ) {
-			// Add as delta
+			// Add as delta.
 			$this->feed->loadProductTagsMap();
 			$data = $this->feed->get_product_data( $product );
 
@@ -131,17 +194,22 @@ class PureClarity_Products_Watcher {
 				$this->settings->add_product_delta( $id, strlen( $json ) );
 				update_post_meta( $id, 'pc_delta', $json );
 			} else {
-				// Delete as delta
+				// Delete as delta.
 				delete_post_meta( $id, 'pc_delta' );
 				$this->settings->add_product_delta_delete( $id );
 			}
 		} elseif ( $post->post_status != 'importing' ) {
-			// Delete as delta
+			// Delete as delta.
 			delete_post_meta( $id, 'pc_delta' );
 			$this->settings->add_product_delta_delete( $id );
 		}
 	}
 
+	/**
+	 * Triggers delta for product delete
+	 *
+	 * @param integer $id - Id of product being deleted.
+	 */
 	public function delete_item( $id ) {
 		$post = get_post( $id );
 		if ( $post->post_type == 'product' && $post->post_status === 'trash' ) {
@@ -150,21 +218,41 @@ class PureClarity_Products_Watcher {
 		}
 	}
 
+	/**
+	 * Triggers user login session update
+	 *
+	 * @param string  $user_login - param passed by event (not used).
+	 * @param WP_User $user - user that logged in.
+	 * @return void
+	 */
 	public function user_login( $user_login, $user ) {
 		if ( ! empty( $user ) ) {
 			$this->state->set_customer( $user->ID );
 		}
 	}
 
+	/**
+	 * Triggers user logout session update
+	 */
 	public function user_logout() {
 		$_SESSION['pureclarity-logout'] = true;
 		$this->state->clear_customer();
 	}
 
+	/**
+	 * Triggers MOTO order event
+	 *
+	 * @param integer $order_id - order id.
+	 */
 	public function moto_order_placed( $order_id ) {
-		// Order is placed in the admin and is complete
+		// Order is placed in the admin and is complete.
 	}
 
+	/**
+	 * Triggers order placed event
+	 *
+	 * @param integer $order_id - order id.
+	 */
 	public function order_placed( $order_id ) {
 
 		$order    = wc_get_order( $order_id );
@@ -201,6 +289,11 @@ class PureClarity_Products_Watcher {
 		}
 	}
 
+	/**
+	 * Triggers cart update
+	 *
+	 * @param mixed $update - woocommerce event parameter (not used).
+	 */
 	public function set_cart( $update ) {
 		try {
 			$this->state->set_cart();

@@ -1,5 +1,14 @@
 <?php
+/**
+ * PureClarity_Admin class
+ *
+ * @package PureClarity for WooCommerce
+ * @since 2.0.0
+ */
 
+/**
+ * Handles admin display & actions code
+ */
 class PureClarity_Admin {
 
 	const ADVANCED_OPTION_GROUP_NAME = 'pureclarity_advanced';
@@ -12,10 +21,32 @@ class PureClarity_Admin {
 	const SETTINGS_SECTION_ID        = 'pureclarity_section_settings';
 	const SETTINGS_SLUG              = 'pureclarity-settings';
 
+	/**
+	 * PureClarity Feed class
+	 *
+	 * @var PureClarity_Feed $feed
+	 */
 	private $feed;
+
+	/**
+	 * PureClarity Plugin class
+	 *
+	 * @var PureClarity_Plugin $plugin
+	 */
 	private $plugin;
+
+	/**
+	 * PureClarity Settings class
+	 *
+	 * @var PureClarity_Settings $settings
+	 */
 	private $settings;
 
+	/**
+	 * Builds class dependencies & sets up admin actions
+	 *
+	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 */
 	public function __construct( &$plugin ) {
 
 		$this->plugin   = $plugin;
@@ -41,6 +72,11 @@ class PureClarity_Admin {
 		);
 	}
 
+	/**
+	 * Runs a chosen data feed
+	 *
+	 * @throws RuntimeException When an error occurs.
+	 */
 	public function run_data_feed() {
 		try {
 			session_write_close();
@@ -101,6 +137,9 @@ class PureClarity_Admin {
 		}
 	}
 
+	/**
+	 * Adds PureClarity menus
+	 */
 	public function add_menus() {
 		add_menu_page(
 			'PureClarity',
@@ -140,28 +179,51 @@ class PureClarity_Admin {
 		);
 	}
 
+	/**
+	 * PureClarity svg string
+	 */
 	public function pureclarity_svg() {
 		return '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';
 	}
 
+	/**
+	 * Renders settings page
+	 */
 	public function settings_render() {
 		include_once 'views/settings-page.php';
 	}
 
+	/**
+	 * Renders datafeed page
+	 */
 	public function datafeed_render() {
 		include_once 'views/datafeed-page.php';
 	}
 
+	/**
+	 * Renders advanced settings page
+	 */
 	public function advanced_render() {
 		include_once 'views/advanced-page.php';
 	}
 
+	/**
+	 * Adds settings sections
+	 */
 	public function add_settings() {
 		$this->add_general_settings();
-		// for data feed settings, see pureclarity/includes/admin/views/settings-page.php
+		// for data feed settings, see pureclarity/includes/admin/views/settings-page.php.
 		$this->add_advanced_settings();
 	}
 
+	/**
+	 * Adss the provided fields to the settings
+	 *
+	 * @param array  $fields - fields to add.
+	 * @param string $slug - fields slug.
+	 * @param string $sectionId - fields section.
+	 * @param string $groupName - settings group name.
+	 */
 	private function add_fields( $fields, $slug, $sectionId, $groupName = null ) {
 		foreach ( $fields as $field ) {
 			$optionName = $field[0];
@@ -181,6 +243,9 @@ class PureClarity_Admin {
 		}
 	}
 
+	/**
+	 * Adds the general settings scetion
+	 */
 	private function add_general_settings() {
 		add_settings_section(
 			self::SETTINGS_SECTION_ID,
@@ -196,6 +261,9 @@ class PureClarity_Admin {
 		);
 	}
 
+	/**
+	 * Adds the advanced settings scetion
+	 */
 	private function add_advanced_settings() {
 		add_settings_section(
 			self::ADVANCED_SECTION_ID,
@@ -211,6 +279,9 @@ class PureClarity_Admin {
 		);
 	}
 
+	/**
+	 * Generates the accesskey setting html
+	 */
 	public function accesskey_callback() {
 
 		?>
@@ -222,6 +293,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the secretkey setting html
+	 */
 	public function secretkey_callback() {
 
 		?>
@@ -233,6 +307,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the region setting html
+	 */
 	public function pureclarity_region_callback() {
 
 		$regions = $this->settings->get_regions();
@@ -251,7 +328,9 @@ class PureClarity_Admin {
 
 	}
 
-
+	/**
+	 * Generates the plugin mode setting html
+	 */
 	public function pureclarity_mode_callback() {
 
 		$mode     = $this->settings->get_pureclarity_mode();
@@ -270,6 +349,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the search enabled setting html
+	 */
 	public function search_enabled_callback() {
 
 		?>
@@ -281,6 +363,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the merchandising enabled setting html
+	 */
 	public function merch_enabled_callback() {
 
 		?>
@@ -292,6 +377,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the product list enabled setting html
+	 */
 	public function prodlist_enabled_callback() {
 
 		?>
@@ -303,6 +391,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the shop page enabled setting html
+	 */
 	public function shop_enabled_callback() {
 
 		?>
@@ -314,6 +405,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the deltas enabled setting html
+	 */
 	public function enabled_deltas_callback() {
 
 		?>
@@ -325,6 +419,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the bmz debug enabled setting html
+	 */
 	public function pureclarity_bmz_debug_callback() {
 
 		?>
@@ -336,6 +433,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the bmz on homepage enabled setting html
+	 */
 	public function pureclarity_add_bmz_homepage_callback() {
 
 		?>
@@ -347,6 +447,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the bmz on category page enabled setting html
+	 */
 	public function pureclarity_add_bmz_categorypage_callback() {
 
 		?>
@@ -358,6 +461,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the bmz on search page enabled setting html
+	 */
 	public function pureclarity_add_bmz_searchpage_callback() {
 
 		?>
@@ -369,6 +475,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the bmz on product page enabled setting html
+	 */
 	public function pureclarity_add_bmz_productpage_callback() {
 
 		?>
@@ -380,6 +489,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the bmz on basket page enabled setting html
+	 */
 	public function pureclarity_add_bmz_basketpage_callback() {
 
 		?>
@@ -391,6 +503,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the bmz on checkout page enabled setting html
+	 */
 	public function pureclarity_add_bmz_checkoutpage_callback() {
 
 		?>
@@ -402,6 +517,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the search dom selector setting html
+	 */
 	public function searchselector_callback() {
 
 		?>
@@ -413,7 +531,9 @@ class PureClarity_Admin {
 
 	}
 
-
+	/**
+	 * Generates the search results dom selector setting html
+	 */
 	public function searchresults_selector_callback() {
 
 		?>
@@ -425,7 +545,9 @@ class PureClarity_Admin {
 
 	}
 
-
+	/**
+	 * Generates the shop results dom selector setting html
+	 */
 	public function shop_selector_callback() {
 
 		?>
@@ -437,6 +559,9 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Generates the product list dom selector setting html
+	 */
 	public function prodlist_selector_callback() {
 
 		?>
@@ -448,17 +573,25 @@ class PureClarity_Admin {
 
 	}
 
+	/**
+	 * Sanitizes a checkbox value
+	 *
+	 * @param string $value - setting to sanitize.
+	 */
 	public function sanitize_checkbox( $value ) {
 		return ( $value == 'on' ? 'yes' : 'no' );
 	}
 
+	/**
+	 * Generates html for top of settings page
+	 */
 	public function print_settings_section_text() {
 		echo '<p>' . __( 'To get started with PureClarity, you will need a PureClarity account and to then enter your access credentials below.', 'pureclarity' ) . '</p>';
 		$url  = 'https://www.pureclarity.com/free-trial/?source=woocommerce&medium=plugin&campaign=freetrial';
 		$link = sprintf(
-			wp_kses(    // sanitize result
+			wp_kses(    // sanitize result.
 				__( "If you don't yet have an account, you can get started for free - <a href='%s' target='_blank'>register for your free trial today</a>.", 'pureclarity' ),
-				array(      // permitted html
+				array(      // permitted html.
 					'a' => array(
 						'href'   => array(),
 						'target' => array(),
@@ -470,12 +603,15 @@ class PureClarity_Admin {
 		echo $link;
 	}
 
+	/**
+	 * Generates html for top of advanced page
+	 */
 	public function print_advanced_section_text() {
 		$url  = 'https://support.pureclarity.com/hc/en-us/sections/360001594074-WooCommerce';
 		$link = sprintf(
-			wp_kses(    // sanitize result
+			wp_kses(    // sanitize result.
 				__( "Configure advanced settings for PureClarity.  For more information, please see the <a href='%s' target='_blank'>PureClarity support documentation</a>.", 'pureclarity' ),
-				array(      // permitted html
+				array(      // permitted html.
 					'a' => array(
 						'href'   => array(),
 						'target' => array(),
@@ -487,6 +623,9 @@ class PureClarity_Admin {
 		echo $link;
 	}
 
+	/**
+	 * Generates html for dependency notices
+	 */
 	public function display_dependency_notices() {
 		if ( ! extension_loaded( 'curl' ) ) {
 			echo '<div class="error notice">
@@ -522,12 +661,15 @@ class PureClarity_Admin {
 		endif;
 	}
 
+	/**
+	 * Gets fields for the general settings page
+	 */
 	private function get_general_fields() {
 		$accessKeyField             = array(
 			'pureclarity_accesskey',
 			'Access Key',
 			'accesskey_callback',
-			false, // not a checkbox
+			false, // not a checkbox.
 		);
 		$secretKeyField             = array(
 			'pureclarity_secretkey',
@@ -551,7 +693,7 @@ class PureClarity_Admin {
 			'pureclarity_search_enabled',
 			'Enable Search',
 			'search_enabled_callback',
-			true, // a checkbox
+			true, // a checkbox.
 		);
 		$productListEnabledCheckbox = array(
 			'pureclarity_prodlist_enabled',
@@ -576,19 +718,19 @@ class PureClarity_Admin {
 			$secretKeyField,
 			$regionField,
 			$modeSelect,
-			// $searchEnabledCheckbox,
-			// $productListEnabledCheckbox,
-			// $merchEnabledCheckbox,
 			$deltasEnabledCheckbox,
 		);
 	}
 
+	/**
+	 * Gets fields for the advanced settings page
+	 */
 	private function get_advanced_fields() {
 		$bmzDebugCheckbox           = array(
 			'pureclarity_bmz_debug',
 			'Enable BMZ Debugging',
 			'pureclarity_bmz_debug_callback',
-			true, // checkbox
+			true, // checkbox.
 		);
 		$searchSelector             = array(
 			'pureclarity_search_selector',
@@ -658,11 +800,6 @@ class PureClarity_Admin {
 		);
 		return array(
 			$bmzDebugCheckbox,
-			// $searchSelector,
-			// $searchResultSelector,
-			// $productListResultSelector,
-			// $shopEnabledCheckbox,
-			// $shopSelector,
 			$addBmzHomepageCheckbox,
 			$addBmzCategoryPageCheckbox,
 			$addBmzSearchPageCheckbox,

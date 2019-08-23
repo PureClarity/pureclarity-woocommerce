@@ -1,15 +1,70 @@
 <?php
+/**
+ * PureClarity_State class
+ *
+ * @package PureClarity for WooCommerce
+ * @since 2.0.0
+ */
 
+/**
+ * Handles session related code
+ */
 class PureClarity_State {
 
+	/**
+	 * Cart Data
+	 *
+	 * @var array $cart
+	 */
 	private $cart;
+
+	/**
+	 * Current Category ID
+	 *
+	 * @var integer $currentCategoryId
+	 */
 	private $currentCategoryId;
+
+	/**
+	 * Product Data
+	 *
+	 * @var array $currentProduct
+	 */
 	private $currentProduct;
+
+	/**
+	 * Customer Data
+	 *
+	 * @var array $customer
+	 */
 	private $customer;
+
+	/**
+	 * Flag for if event is a logout
+	 *
+	 * @var boolean $islogout
+	 */
 	private $islogout = false;
+
+	/**
+	 * Order Data
+	 *
+	 * @var array $order
+	 */
 	private $order;
+
+	/**
+	 * PureClarity Plugin class
+	 *
+	 * @var PureClarity_Plugin $plugin
+	 */
 	private $plugin;
 
+	/**
+	 * Builds class dependencies & starts session
+	 *
+	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 */
 	public function __construct( &$plugin ) {
 		$this->plugin = $plugin;
 		if ( ! session_id() ) {
@@ -17,12 +72,19 @@ class PureClarity_State {
 		}
 	}
 
-
+	/**
+	 * Clears PureClarity customer data
+	 */
 	public function clear_customer() {
 		$_SESSION['pureclarity-customer'] = null;
 		$this->customer                   = null;
 	}
 
+	/**
+	 * Sets PureClarity customer data
+	 *
+	 * @param integer $user_id - customer id.
+	 */
 	public function set_customer( $user_id ) {
 		if ( ! empty( $user_id ) ) {
 			$customer = new WC_Customer( $user_id );
@@ -44,6 +106,9 @@ class PureClarity_State {
 		}
 	}
 
+	/**
+	 * Gets PureClarity customer data
+	 */
 	public function get_customer() {
 
 		if ( ! empty( $this->customer ) ) {
@@ -62,6 +127,9 @@ class PureClarity_State {
 		return $this->set_customer( get_current_user_id() );
 	}
 
+	/**
+	 * Gets PureClarity logout event data
+	 */
 	public function is_logout() {
 		if ( $this->islogout ) {
 			return true;
@@ -74,6 +142,9 @@ class PureClarity_State {
 		return false;
 	}
 
+	/**
+	 * Gets PureClarity product data
+	 */
 	public function get_product() {
 		if ( ! empty( $this->currentProduct ) ) {
 			return $this->currentProduct;
@@ -92,6 +163,9 @@ class PureClarity_State {
 		return null;
 	}
 
+	/**
+	 * Gets current product data
+	 */
 	public function get_wc_product() {
 		if ( is_product() ) {
 			global $product;
@@ -110,6 +184,9 @@ class PureClarity_State {
 		return null;
 	}
 
+	/**
+	 * Gets current category id
+	 */
 	public function get_category_id() {
 		if ( ! empty( $this->currentCategoryId ) ) {
 			return $this->currentCategoryId;
@@ -122,6 +199,9 @@ class PureClarity_State {
 		return null;
 	}
 
+	/**
+	 * Sets PureClarity cart data
+	 */
 	public function set_cart() {
 
 		$cart_items = WC()->cart->get_cart();
@@ -150,6 +230,9 @@ class PureClarity_State {
 		return $this->cart;
 	}
 
+	/**
+	 * Gets PureClarity cart data
+	 */
 	public function get_cart() {
 
 		if ( $this->cart != null ) {
@@ -161,11 +244,13 @@ class PureClarity_State {
 			return $this->cart;
 		}
 
-		// must be new session
+		// must be new session.
 		return $this->set_cart();
 	}
 
-
+	/**
+	 * Gets PureClarity order data
+	 */
 	public function get_order() {
 		if ( ! empty( $this->order ) ) {
 			return $this->order;
