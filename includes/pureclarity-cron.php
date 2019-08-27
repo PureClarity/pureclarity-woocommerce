@@ -46,10 +46,60 @@ class PureClarity_Cron {
 		$this->feed     = $plugin->get_feed();
 
 		if ( $this->settings->is_deltas_enabled() ) {
-			$this->process_products();
-			$this->process_categories();
-			$this->process_users();
+			add_filter(
+				'cron_schedules',
+				array(
+					$this,
+					'add_cron_interval',
+				)
+			);
+			$this->create_schedule();
 		}
+	}
+
+	/**
+	 * Schedules the delta task
+	 *
+	 * @param array $schedules - existingt schedules.
+	 * @return array
+	 */
+	public function add_cron_interval( $schedules ) {
+		$schedules['pureclarity_every_minute'] = array(
+			'interval' => 60,
+			'display'  => esc_html__( 'Every Minute' ),
+		);
+
+		return $schedules;
+	}
+
+	/**
+	 * Schedules the delta task
+	 */
+	private function create_schedule() {
+		add_action(
+			'pureclarity_scheduled_deltas_cron',
+			array(
+				$this,
+				'run_delta_schedule',
+			)
+		);
+
+		if ( ! wp_next_scheduled( 'pureclarity_scheduled_deltas_cron' ) ) {
+			wp_schedule_event(
+				time(),
+				'pureclarity_every_minute',
+				'pureclarity_scheduled_deltas_cron'
+			);
+		}
+	}
+
+	/**
+	 * Runs outstanding delta tasks
+	 */
+	public function run_delta_schedule() {
+		$this->process_products();
+		$this->process_categories();
+		$this->process_users();
 	}
 
 	/**
@@ -72,36 +122,43 @@ class PureClarity_Cron {
 				$totalpacket = 0;
 				$count       = 0;
 
-				foreach ( $product_deltas as $id => $size ) {
+				$this->feed->load_product_tags_map();
+
+				$processed_ids = array();
+
+				foreach ( array_keys( $product_deltas ) as $id ) {
 
 					if ( $totalpacket >= 250000 || $count > 100 ) {
 						break;
 					}
 
-					$this->settings->remove_product_delta( $id );
-					if ( $size > -1 ) {
-						$meta_value = get_post_meta( $id, 'pc_delta' );
-						if ( ! empty( $meta_value )
-							&& is_array( $meta_value )
-							&& count( $meta_value ) > 0 ) {
-							delete_post_meta( $id, 'pc_delta' );
-							$product = json_decode( $meta_value[0] );
-							if ( ! empty( $product ) ) {
-								$totalpacket += $size;
-								$products[]   = $product;
-							}
+					$product = wc_get_product( $id );
+					$post    = get_post( $id );
+
+					if ( 'publish' === $post->post_status ) {
+						$data = $this->feed->get_product_data( $product );
+						if ( ! empty( $data ) ) {
+							$products[]   = $data;
+							$json         = wp_json_encode( $data );
+							$totalpacket += strlen( $json );
+						} else {
+							$totalpacket         += strlen( $id );
+							$products_to_delete[] = (string) $id;
 						}
-					} else {
-						$totalpacket       += strlen( $id );
+					} elseif ( 'importing' !== $post->post_status ) {
+						$totalpacket         += strlen( $id );
 						$products_to_delete[] = (string) $id;
 					}
 
-					$count += 1;
+					$processed_ids[] = $id;
+					$count++;
 				}
 
 				if ( count( $products ) > 0 || count( $products_to_delete ) > 0 ) {
 					$this->feed->send_product_delta( $products, $products_to_delete );
 				}
+
+				$this->settings->remove_product_deltas( $processed_ids );
 			}
 		} catch ( \Exception $exception ) {
 			error_log( 'PureClarity: An error occurred updating product deltas: ' . $exception->getMessage() );
