@@ -63,16 +63,16 @@ class PureClarity_Cron {
 				return;
 			}
 
-			$productDeltas = $this->settings->get_product_deltas();
-			if ( count( $productDeltas ) > 0 ) {
+			$product_deltas = $this->settings->get_product_deltas();
+			if ( count( $product_deltas ) > 0 ) {
 
-				$products         = array();
-				$productsToDelete = array();
+				$products           = array();
+				$products_to_delete = array();
 
 				$totalpacket = 0;
 				$count       = 0;
 
-				foreach ( $productDeltas as $id => $size ) {
+				foreach ( $product_deltas as $id => $size ) {
 
 					if ( $totalpacket >= 250000 || $count > 100 ) {
 						break;
@@ -93,14 +93,14 @@ class PureClarity_Cron {
 						}
 					} else {
 						$totalpacket       += strlen( $id );
-						$productsToDelete[] = (string) $id;
+						$products_to_delete[] = (string) $id;
 					}
 
 					$count += 1;
 				}
 
-				if ( count( $products ) > 0 || count( $productsToDelete ) > 0 ) {
-					$this->feed->send_product_delta( $products, $productsToDelete );
+				if ( count( $products ) > 0 || count( $products_to_delete ) > 0 ) {
+					$this->feed->send_product_delta( $products, $products_to_delete );
 				}
 			}
 		} catch ( \Exception $exception ) {

@@ -269,11 +269,11 @@ class PureClarity_Products_Watcher {
 				'ordertotal' => $order->get_total(),
 			);
 
-			$orderItems = array();
+			$order_items = array();
 			foreach ( $order->get_items() as $item_id => $item ) {
 				$product = $order->get_product_from_item( $item );
 				if ( is_object( $product ) ) {
-					$orderItems[] = array(
+					$order_items[] = array(
 						'orderid'   => $order->get_id(),
 						'id'        => $item->get_product_id(),
 						'qty'       => $item['qty'],
@@ -283,7 +283,7 @@ class PureClarity_Products_Watcher {
 			}
 
 			$data          = $transaction;
-			$data['items'] = $orderItems;
+			$data['items'] = $order_items;
 
 			$_SESSION['pureclarity-order'] = $data;
 		}

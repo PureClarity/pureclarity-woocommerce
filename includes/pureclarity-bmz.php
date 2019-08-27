@@ -15,17 +15,17 @@ class PureClarity_Bmz {
 	 * Current Category ID
 	 *
 	 * @since 2.0.0
-	 * @var $currentCategoryId integer
+	 * @var $current_category_id integer
 	 */
-	private $currentCategoryId;
+	private $current_category_id;
 
 	/**
 	 * Current Product
 	 *
 	 * @since 2.0.0
-	 * @var integer $currentCategoryId
+	 * @var integer $current_product
 	 */
-	private $currentProduct;
+	private $current_product;
 
 	/**
 	 * PureClarity Plugin class
@@ -69,8 +69,8 @@ class PureClarity_Bmz {
 	 */
 	public function render_bmzs() {
 
-		$this->currentProduct    = $this->state->get_product();
-		$this->currentCategoryId = $this->state->get_category_id();
+		$this->current_product    = $this->state->get_product();
+		$this->current_category_id = $this->state->get_category_id();
 
 		// Homepage and Order Received Page BMZs.
 		if ( is_front_page() && $this->settings->is_bmz_on_home_page() ) {
@@ -395,10 +395,10 @@ class PureClarity_Bmz {
 			}
 
 			$data = '';
-			if ( ! empty( $this->currentProduct ) ) {
-				$data = 'id:' . $this->currentProduct['id'];
-			} elseif ( ! empty( $this->currentCategoryId ) ) {
-				$data = 'categoryid:' . $this->currentCategoryId;
+			if ( ! empty( $this->current_product ) ) {
+				$data = 'id:' . $this->current_product['id'];
+			} elseif ( ! empty( $this->current_category_id ) ) {
+				$data = 'categoryid:' . $this->current_category_id;
 			}
 
 			$bmz = "<div class='" . $class . "' style='" . $style . "' data-pureclarity='bmz:" . $arguments['id'] . ';' . $data . "'>" . $html . "</div><div class='pureclarity_bmz_clearfix'></div>";

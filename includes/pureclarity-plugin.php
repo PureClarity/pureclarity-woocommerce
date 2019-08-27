@@ -63,7 +63,7 @@ class PureClarity_Plugin {
 	 *
 	 * @return PureClarity_Plugin
 	 */
-	public static function getInstance() {
+	public static function get_instance() {
 		if ( self::$pureclarity === null ) {
 			self::$pureclarity = new PureClarity_Plugin();
 		}

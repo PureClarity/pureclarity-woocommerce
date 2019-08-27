@@ -89,44 +89,44 @@ class PureClarity_Admin {
 			if ( ! isset( $type ) ) {
 				throw new RuntimeException( 'Type has not been set.' );
 			}
-			$acceptableTypes = array(
+			$acceptable_types = array(
 				'product',
 				'category',
 				'brand',
 				'user',
 				'order',
 			);
-			if ( ! in_array( $type, $acceptableTypes ) ) {
+			if ( ! in_array( $type, $acceptable_types ) ) {
 				throw new RuntimeException( 'Unknown type.' );
 			}
 
 			if ( isset( $_POST['feedname'] ) ) {
-				$this->feed->setUniqueId( $_POST['feedname'] );
+				$this->feed->set_unique_id( $_POST['feedname'] );
 			}
 
-			$currentPage     = (int) $_POST['page'];
-			$totalPagesCount = $this->feed->get_total_pages( $type );
+			$current_page      = (int) $_POST['page'];
+			$total_pages_count = $this->feed->get_total_pages( $type );
 
-			if ( $currentPage == 1 && $totalPagesCount > 0 ) {
+			if ( $current_page == 1 && $total_pages_count > 0 ) {
 				$this->feed->start_feed( $type );
 			}
 
-			if ( $currentPage <= $totalPagesCount ) {
-				$data = $this->feed->build_items( $type, $currentPage );
+			if ( $current_page <= $total_pages_count ) {
+				$data = $this->feed->build_items( $type, $current_page );
 				$this->feed->send_data( $type, $data );
 			}
 
-			$isFinished = ( $currentPage >= $totalPagesCount );
+			$is_finished = ( $current_page >= $total_pages_count );
 
-			if ( $isFinished && $totalPagesCount > 0 ) {
+			if ( $is_finished && $total_pages_count > 0 ) {
 				$this->feed->end_feed( $type );
 				$this->settings->set_feed_type_sent( $type );
 			}
 
 			$response = array(
-				'totalPagesCount' => $totalPagesCount,
-				'finished'        => $isFinished,
-				'feedname'        => $this->feed->getUniqueId(),
+				'totalPagesCount' => $total_pages_count,
+				'finished'        => $is_finished,
+				'feedname'        => $this->feed->get_unique_id()(),
 			);
 
 			wp_send_json( $response );
@@ -221,24 +221,24 @@ class PureClarity_Admin {
 	 *
 	 * @param array  $fields - fields to add.
 	 * @param string $slug - fields slug.
-	 * @param string $sectionId - fields section.
-	 * @param string $groupName - settings group name.
+	 * @param string $section_id - fields section.
+	 * @param string $group_name - settings group name.
 	 */
-	private function add_fields( $fields, $slug, $sectionId, $groupName = null ) {
+	private function add_fields( $fields, $slug, $section_id, $group_name = null ) {
 		foreach ( $fields as $field ) {
-			$optionName = $field[0];
-			$label      = $field[1];
-			$callback   = $field[2];
-			$isCheckbox = $field[3];
+			$option_name = $field[0];
+			$label       = $field[1];
+			$callback    = $field[2];
+			$is_checkbox = $field[3];
 			add_settings_field(
-				$optionName,
+				$option_name,
 				__( $label, 'pureclarity' ),
 				array( $this, $callback ),
 				$slug,
-				$sectionId
+				$section_id
 			);
-			if ( $groupName ) {
-				register_setting( $groupName, $optionName, ( $isCheckbox ? 'sanitize_checkbox' : 'sanitize_callback' ) );
+			if ( $group_name ) {
+				register_setting( $group_name, $option_name, ( $is_checkbox ? 'sanitize_checkbox' : 'sanitize_callback' ) );
 			}
 		}
 	}
@@ -553,42 +553,42 @@ class PureClarity_Admin {
 	 * Gets fields for the general settings page
 	 */
 	private function get_general_fields() {
-		$accessKeyField             = array(
+		$access_key_field        = array(
 			'pureclarity_accesskey',
 			'Access Key',
 			'accesskey_callback',
 			false, // not a checkbox.
 		);
-		$secretKeyField             = array(
+		$secret_key_field        = array(
 			'pureclarity_secretkey',
 			'Secret Key',
 			'secretkey_callback',
 			false,
 		);
-		$regionField                = array(
+		$region_field            = array(
 			'pureclarity_region',
 			'Region',
 			'pureclarity_region_callback',
 			false,
 		);
-		$modeSelect                 = array(
+		$mode_select             = array(
 			'pureclarity_mode',
 			'Enable Mode',
 			'pureclarity_mode_callback',
 			false,
 		);
-		$deltasEnabledCheckbox      = array(
+		$deltas_enabled_checkbox = array(
 			'pureclarity_deltas_enabled',
 			'Enable Data Sync',
 			'enabled_deltas_callback',
 			true,
 		);
 		return array(
-			$accessKeyField,
-			$secretKeyField,
-			$regionField,
-			$modeSelect,
-			$deltasEnabledCheckbox,
+			$access_key_field,
+			$secret_key_field,
+			$region_field,
+			$mode_select,
+			$deltas_enabled_checkbox,
 		);
 	}
 
@@ -596,56 +596,56 @@ class PureClarity_Admin {
 	 * Gets fields for the advanced settings page
 	 */
 	private function get_advanced_fields() {
-		$bmzDebugCheckbox           = array(
+		$bmz_debug_checkbox           = array(
 			'pureclarity_bmz_debug',
 			'Enable BMZ Debugging',
 			'pureclarity_bmz_debug_callback',
 			true, // checkbox.
 		);
-		$addBmzHomepageCheckbox     = array(
+		$add_bmz_homepage_checkbox     = array(
 			'pureclarity_add_bmz_homepage',
 			'Show Home Page BMZs',
 			'pureclarity_add_bmz_homepage_callback',
 			true,
 		);
-		$addBmzCategoryPageCheckbox = array(
+		$add_bmz_category_page_checkbox = array(
 			'pureclarity_add_bmz_categorypage',
 			'Show Product Listing BMZs',
 			'pureclarity_add_bmz_categorypage_callback',
 			true,
 		);
-		$addBmzSearchPageCheckbox   = array(
+		$add_bmz_search_page_checkbox   = array(
 			'pureclarity_add_bmz_searchpage',
 			'Show Search Results BMZs',
 			'pureclarity_add_bmz_searchpage_callback',
 			true,
 		);
-		$addBmzProductPageCheckbox  = array(
+		$add_bmz_product_page_checkbox  = array(
 			'pureclarity_add_bmz_productpage',
 			'Show Product Page BMZs',
 			'pureclarity_add_bmz_productpage_callback',
 			true,
 		);
-		$addBmzBasketPageCheckbox   = array(
+		$add_bmz_basket_page_checkbox   = array(
 			'pureclarity_add_bmz_basketpage',
 			'Show Cart Page BMZs',
 			'pureclarity_add_bmz_basketpage_callback',
 			true,
 		);
-		$addBmzCheckoutPageCheckbox = array(
+		$add_bmz_checkout_page_checkbox = array(
 			'pureclarity_add_bmz_checkoutpage',
 			'Show Order Confirmation BMZs',
 			'pureclarity_add_bmz_checkoutpage_callback',
 			true,
 		);
 		return array(
-			$bmzDebugCheckbox,
-			$addBmzHomepageCheckbox,
-			$addBmzCategoryPageCheckbox,
-			$addBmzSearchPageCheckbox,
-			$addBmzProductPageCheckbox,
-			$addBmzBasketPageCheckbox,
-			$addBmzCheckoutPageCheckbox,
+			$bmz_debug_checkbox,
+			$add_bmz_homepage_checkbox,
+			$add_bmz_category_page_checkbox,
+			$add_bmz_search_page_checkbox,
+			$add_bmz_product_page_checkbox,
+			$add_bmz_basket_page_checkbox,
+			$add_bmz_checkout_page_checkbox,
 		);
 	}
 }
