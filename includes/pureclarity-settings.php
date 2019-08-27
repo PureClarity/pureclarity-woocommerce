@@ -439,39 +439,35 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Adds a user to the delta for deletion
-	 *
-	 * @param integer $id - user id.
-	 */
-	public function add_user_delta_delete( $id ) {
-		$this->add_user_delta( $id, -1 );
-	}
-
-	/**
 	 * Adds a user to the delta
 	 *
 	 * @param integer $id - user id.
-	 * @param integer $size - data size.
+	 * @param integer $type - delta type (-1 = delete, 1 = add/update).
 	 */
-	public function add_user_delta( $id, $size ) {
+	public function add_user_delta( $id, $type ) {
 		$deltas = $this->get_user_deltas();
 		if ( empty( $deltas ) ) {
 			$deltas = array();
 		}
-		$deltas[ $id ] = $size;
-		update_option( 'pureclarity_user_deltas', json_encode( $deltas, true ) );
+		$deltas[ $id ] = $type;
+		update_option( 'pureclarity_user_deltas', wp_json_encode( $deltas, true ) );
 	}
 
 	/**
 	 * Removes a user from the delta
 	 *
-	 * @param integer $id - user id.
+	 * @param integer[] $ids - user ids to remove from deltas.
 	 */
-	public function remove_user_delta( $id ) {
+	public function remove_user_deltas( $ids ) {
 		$deltas = $this->get_user_deltas();
-		if ( ! empty( $deltas ) && array_key_exists( $id, $deltas ) ) {
-			unset( $deltas[ $id ] );
-			update_option( 'pureclarity_user_deltas', json_encode( $deltas, true ) );
+
+		if ( ! empty( $deltas ) ) {
+			foreach ( $ids as $id ) {
+				if ( isset( $deltas[ $id ] ) ) {
+					unset( $deltas[ $id ] );
+				}
+			}
+			update_option( 'pureclarity_user_deltas', wp_json_encode( $deltas, true ) );
 		}
 	}
 

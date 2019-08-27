@@ -205,11 +205,11 @@ class PureClarity_Cron {
 			$deltas = $this->settings->get_user_deltas();
 			if ( count( $deltas ) > 0 ) {
 
-				$users   = array();
-				$deletes = array();
-
-				$totalpacket = 0;
-				$count       = 0;
+				$users         = array();
+				$deletes       = array();
+				$totalpacket   = 0;
+				$count         = 0;
+				$processed_ids = array();
 
 				foreach ( $deltas as $id => $size ) {
 
@@ -217,28 +217,30 @@ class PureClarity_Cron {
 						break;
 					}
 
-					$this->settings->remove_user_delta( $id );
 					if ( $size > -1 ) {
-						$meta_value = get_user_meta( $id, 'pc_delta' );
-						if ( ! empty( $meta_value ) && is_array( $meta_value ) && count( $meta_value ) > 0 ) {
-							delete_user_meta( $id, 'pc_delta' );
-							$user = json_decode( $meta_value[0] );
-							if ( ! empty( $user ) ) {
-								$totalpacket += $size;
-								$users[]      = $user;
-							}
+						$user_data = $this->feed->parse_user( $id );
+						if ( ! empty( $user_data ) ) {
+							$json         = wp_json_encode( $user_data );
+							$totalpacket += strlen( $json );
+							$users[]      = $user_data;
+						} else {
+							$totalpacket += strlen( $id );
+							$deletes[]    = (string) $id;
 						}
 					} else {
 						$totalpacket += strlen( $id );
 						$deletes[]    = (string) $id;
 					}
 
-					$count += 1;
+					$processed_ids[] = $id;
+					$count++;
 				}
 
 				if ( count( $users ) > 0 || count( $deletes ) > 0 ) {
 					$this->feed->send_user_delta( $users, $deletes );
 				}
+
+				$this->settings->remove_user_deltas( $processed_ids );
 			}
 		} catch ( \Exception $exception ) {
 			error_log( 'PureClarity: An error occurred updating user deltas: ' . $exception->getMessage() );

@@ -153,12 +153,7 @@ class PureClarity_Products_Watcher {
 	 * @param integer $user_id - Id of user being saved.
 	 */
 	public function save_user_via_deltas( $user_id ) {
-		$data = $this->feed->parse_user( $user_id );
-		if ( ! empty( $data ) ) {
-			$json = json_encode( $data );
-			$this->settings->add_user_delta( $user_id, strlen( $json ) );
-			update_user_meta( $user_id, 'pc_delta', $json );
-		}
+		$this->settings->add_user_delta( $user_id, 1 );
 	}
 
 	/**
@@ -167,7 +162,7 @@ class PureClarity_Products_Watcher {
 	 * @param integer $user_id - Id of user being deleted.
 	 */
 	public function delete_user_via_deltas( $user_id ) {
-		$this->settings->add_user_delta_delete( $user_id );
+		$this->settings->add_user_delta( $user_id, -1 );
 	}
 
 	/**
