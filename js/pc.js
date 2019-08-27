@@ -12,64 +12,6 @@ var PureClarity = {
 
         if (!this.config.enabled) return;
 
-        if (this.config.autocomplete.enabled){
-            $searchFields = jQuery(this.config.autocomplete.searchSelector);
-            if ($searchFields){
-                $searchFields.attr("id", "pc_search");
-            }
-        }
-
-        if (this.config.shop.do) {
-
-            var pcContainer = document.createElement('div');
-            var wrapper = document.createElement('div');
-            jQuery(pcContainer).addClass('shop');
-            jQuery(wrapper).addClass('pureclarity-wrapper');
-            jQuery(pcContainer).addClass('pureclarity-container').attr("data-pureclarity", "navigation_category:-1");
-            jQuery(this.config.shop.domSelector).wrap(wrapper).hide();
-            jQuery(".pureclarity-wrapper").append(pcContainer);
-            jQuery(wrapper).addClass('site-main');
-            if (this.config.shop.bmz1) {
-                jQuery(".pureclarity-wrapper").prepend(this.config.prodlist.bmz1);
-            }
-            if (this.config.shop.bmz2) {
-                jQuery(".pureclarity-wrapper").append(this.config.prodlist.bmz2);
-            }
-        }
-
-        if (this.config.search.do){
-            
-            var pcContainer = document.createElement('div');
-            var wrapper = document.createElement('div');
-            jQuery(wrapper).addClass('pureclarity-wrapper');
-            jQuery(pcContainer).addClass('pureclarity-container').attr("data-pureclarity", "navigation_search");
-            jQuery(this.config.search.domSelector).wrap(wrapper).hide();
-            jQuery(".pureclarity-wrapper").append(pcContainer);
-            jQuery(wrapper).addClass('site-main')
-            if (this.config.search.bmz1) {
-                jQuery(".pureclarity-wrapper").prepend(this.config.search.bmz1);
-            }
-            if (this.config.search.bmz2) {
-                jQuery(".pureclarity-wrapper").append(this.config.search.bmz2);
-            }
-        }
-
-        if (this.config.prodlist.do){
-            var pcContainer = document.createElement('div');
-            var wrapper = document.createElement('div');
-            jQuery(wrapper).addClass('pureclarity-wrapper');
-            jQuery(pcContainer).addClass('pureclarity-container').attr("data-pureclarity", "navigation_category:" + this.config.categoryId);
-            jQuery(this.config.prodlist.domSelector).wrap(wrapper).hide();
-            jQuery(".pureclarity-wrapper").append(pcContainer);
-            jQuery(wrapper).addClass('site-main')
-            if (this.config.prodlist.bmz1) {
-                jQuery(".pureclarity-wrapper").prepend(this.config.prodlist.bmz1);
-            }
-            if (this.config.prodlist.bmz2) {
-                jQuery(".pureclarity-wrapper").append(this.config.prodlist.bmz2);
-            }
-        }
-
         (function (w, d, s, u, f) {
             w['PureClarityObject'] = f;w[f] = w[f] || function () { 
                 (w[f].q = w[f].q || []).push(arguments)

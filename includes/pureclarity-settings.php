@@ -70,7 +70,6 @@ class PureClarity_Settings {
 		add_option( 'pureclarity_secretkey', '' );
 		add_option( 'pureclarity_region', '1' );
 		add_option( 'pureclarity_mode', 'off' );
-		add_option( 'pureclarity_shop_enabled', 'no' );
 		add_option( 'pureclarity_prodfeed_run', '0' );
 		add_option( 'pureclarity_catfeed_run', '0' );
 		add_option( 'pureclarity_brandfeed_run', '0' );
@@ -78,10 +77,7 @@ class PureClarity_Settings {
 		add_option( 'pureclarity_orderfeed_run', '0' );
 		add_option( 'pureclarity_bmz_debug', 'no' );
 		add_option( 'pureclarity_deltas_enabled', 'no' );
-		add_option( 'pureclarity_search_selector', '.search-field' );
-		add_option( 'pureclarity_search_result_selector', '#main' );
 		add_option( 'pureclarity_shop_result_selector', '#main' );
-		add_option( 'pureclarity_prodlist_result_selector', '#main' );
 		add_option( 'pureclarity_add_bmz_homepage', 'on' );
 		add_option( 'pureclarity_add_bmz_searchpage', 'on' );
 		add_option( 'pureclarity_add_bmz_categorypage', 'on' );
@@ -154,66 +150,12 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Gets search enabled admin config value
-	 *
-	 * @return string
-	 */
-	public function is_search_enabled_admin() {
-		return false;
-	}
-
-	/**
-	 * Gets merch enabled config value
-	 *
-	 * @return string
-	 */
-	public function is_merch_enabled_admin() {
-		return true;
-	}
-
-	/**
-	 * Gets product listing enabled config value
-	 *
-	 * @return string
-	 */
-	public function is_prod_enabled_admin() {
-		return false;
-	}
-
-	/**
 	 * Gets deltas enabled config value
 	 *
 	 * @return string
 	 */
 	public function is_deltas_enabled_admin() {
 		return ( get_option( 'pureclarity_deltas_enabled', '' ) == 'on' );
-	}
-
-	/**
-	 * Gets search enabled config value
-	 *
-	 * @return string
-	 */
-	public function is_search_enabled() {
-		return false;
-	}
-
-	/**
-	 * Gets merch enabled config value
-	 *
-	 * @return string
-	 */
-	public function is_merch_enabled() {
-		return true;
-	}
-
-	/**
-	 * Gets product list enabled config value
-	 *
-	 * @return string
-	 */
-	public function is_prod_enabled() {
-		return false;
 	}
 
 	/**
@@ -232,15 +174,6 @@ class PureClarity_Settings {
 	 */
 	public function is_bmz_debug_enabled() {
 		return ( get_option( 'pureclarity_bmz_debug', '' ) == 'on' );
-	}
-
-	/**
-	 * Gets shop page enabled config value
-	 *
-	 * @return string
-	 */
-	public function is_shop_enabled_admin() {
-		return ( get_option( 'pureclarity_shop_enabled', '' ) == 'on' );
 	}
 
 	/**
@@ -271,33 +204,6 @@ class PureClarity_Settings {
 			$url = $url . ':' . $port;
 		}
 		return $url . '/';
-	}
-
-	/**
-	 * Gets search dom selector config value
-	 *
-	 * @return string
-	 */
-	public function get_search_selector() {
-		return (string) get_option( 'pureclarity_search_selector', '.search-field' );
-	}
-
-	/**
-	 * Gets shop dom selector config value
-	 *
-	 * @return string
-	 */
-	public function get_shop_selector() {
-		return (string) get_option( 'pureclarity_shop_selector', '#main' );
-	}
-
-	/**
-	 * Gets search result dom selector config value
-	 *
-	 * @return string
-	 */
-	public function get_search_result_element() {
-		return (string) get_option( 'pureclarity_search_result_selector', '#main' );
 	}
 
 	/**

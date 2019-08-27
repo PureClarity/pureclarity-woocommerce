@@ -350,62 +350,6 @@ class PureClarity_Admin {
 	}
 
 	/**
-	 * Generates the search enabled setting html
-	 */
-	public function search_enabled_callback() {
-
-		?>
-
-		<input type="checkbox" id="checkbox_search" name="pureclarity_search_enabled" class="regular-text" <?php echo ( $this->settings->is_search_enabled_admin() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Check to activate PureClarity Search.', 'pureclarity' ); ?></p>
-
-		<?php
-
-	}
-
-	/**
-	 * Generates the merchandising enabled setting html
-	 */
-	public function merch_enabled_callback() {
-
-		?>
-
-		<input type="checkbox" id="checkbox_merch" name="pureclarity_merch_enabled" class="regular-text" <?php echo ( $this->settings->is_merch_enabled_admin() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Check to activate PureClarity Merchandizing', 'pureclarity' ); ?></p>
-
-		<?php
-
-	}
-
-	/**
-	 * Generates the product list enabled setting html
-	 */
-	public function prodlist_enabled_callback() {
-
-		?>
-
-		<input type="checkbox" id="checkbox_prodlist"  name="pureclarity_prodlist_enabled" class="regular-text" <?php echo ( $this->settings->is_prod_enabled_admin() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Check to activate PureClarity Product Listing', 'pureclarity' ); ?></p>
-
-		<?php
-
-	}
-
-	/**
-	 * Generates the shop page enabled setting html
-	 */
-	public function shop_enabled_callback() {
-
-		?>
-
-		<input type="checkbox" id="checkbox_shop"  name="pureclarity_shop_enabled" class="regular-text" <?php echo ( $this->settings->is_shop_enabled_admin() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Check to activate PureClarity on the Shop page', 'pureclarity' ); ?></p>
-
-		<?php
-
-	}
-
-	/**
 	 * Generates the deltas enabled setting html
 	 */
 	public function enabled_deltas_callback() {
@@ -512,62 +456,6 @@ class PureClarity_Admin {
 
 		<input type="checkbox" id="checkbox_bmz_checkoutpage"  name="pureclarity_add_bmz_checkoutpage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_checkout_page() ? 'checked' : '' ); ?> />
 		<p class="description" id="home-description"><?php _e( 'Auto-insert BMZs on Order Confirmation page', 'pureclarity' ); ?></p>
-
-		<?php
-
-	}
-
-	/**
-	 * Generates the search dom selector setting html
-	 */
-	public function searchselector_callback() {
-
-		?>
-
-		<input type="text" name="pureclarity_search_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_search_selector() ); ?>" />
-		<p class="description" id="home-description"><?php _e( 'Enter DOM selector for the autocomplete input box (default is .search-field).', 'pureclarity' ); ?></p>
-
-		<?php
-
-	}
-
-	/**
-	 * Generates the search results dom selector setting html
-	 */
-	public function searchresults_selector_callback() {
-
-		?>
-
-		<input type="text" name="pureclarity_search_result_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_search_result_element() ); ?>" />
-		<p class="description" id="home-description"><?php _e( 'Enter DOM selector for the main body where search results will be displayed (default is #main).', 'pureclarity' ); ?></p>
-
-		<?php
-
-	}
-
-	/**
-	 * Generates the shop results dom selector setting html
-	 */
-	public function shop_selector_callback() {
-
-		?>
-
-		<input type="text" name="pureclarity_shop_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_shop_selector() ); ?>" />
-		<p class="description" id="home-description"><?php _e( 'Enter DOM selector for the main body where shop results will be displayed (default is #main).', 'pureclarity' ); ?></p>
-
-		<?php
-
-	}
-
-	/**
-	 * Generates the product list dom selector setting html
-	 */
-	public function prodlist_selector_callback() {
-
-		?>
-
-		<input type="text" name="pureclarity_prodlist_selector" class="regular-text" value="<?php echo esc_attr( $this->settings->get_prodlist_result_element() ); ?>" />
-		<p class="description" id="home-description"><?php _e( 'Enter DOM selector for the main body where product list results will be displayed (default is #main)', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -689,24 +577,6 @@ class PureClarity_Admin {
 			'pureclarity_mode_callback',
 			false,
 		);
-		$searchEnabledCheckbox      = array(
-			'pureclarity_search_enabled',
-			'Enable Search',
-			'search_enabled_callback',
-			true, // a checkbox.
-		);
-		$productListEnabledCheckbox = array(
-			'pureclarity_prodlist_enabled',
-			'Enable Product Listing',
-			'prodlist_enabled_callback',
-			true,
-		);
-		$merchEnabledCheckbox       = array(
-			'pureclarity_merch_enabled',
-			'Enable Merchandizing',
-			'merch_enabled_callback',
-			true,
-		);
 		$deltasEnabledCheckbox      = array(
 			'pureclarity_deltas_enabled',
 			'Enable Data Sync',
@@ -731,36 +601,6 @@ class PureClarity_Admin {
 			'Enable BMZ Debugging',
 			'pureclarity_bmz_debug_callback',
 			true, // checkbox.
-		);
-		$searchSelector             = array(
-			'pureclarity_search_selector',
-			'Autocomplete Input DOM Selector',
-			'searchselector_callback',
-			false,
-		);
-		$searchResultSelector       = array(
-			'pureclarity_search_result_selector',
-			'Search Results DOM Selector',
-			'searchresults_selector_callback',
-			false,
-		);
-		$productListResultSelector  = array(
-			'pureclarity_prodlist_result_selector',
-			'Product List DOM Selector',
-			'prodlist_selector_callback',
-			false,
-		);
-		$shopEnabledCheckbox        = array(
-			'pureclarity_shop_enabled',
-			'Enable Shop',
-			'shop_enabled_callback',
-			true,
-		);
-		$shopSelector               = array(
-			'pureclarity_shop_selector',
-			'Shop DOM Selector',
-			'shop_selector_callback',
-			false,
 		);
 		$addBmzHomepageCheckbox     = array(
 			'pureclarity_add_bmz_homepage',
