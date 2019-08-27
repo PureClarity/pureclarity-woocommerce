@@ -77,7 +77,6 @@ class PureClarity_Settings {
 		add_option( 'pureclarity_orderfeed_run', '0' );
 		add_option( 'pureclarity_bmz_debug', 'no' );
 		add_option( 'pureclarity_deltas_enabled', 'no' );
-		add_option( 'pureclarity_shop_result_selector', '#main' );
 		add_option( 'pureclarity_add_bmz_homepage', 'on' );
 		add_option( 'pureclarity_add_bmz_searchpage', 'on' );
 		add_option( 'pureclarity_add_bmz_categorypage', 'on' );
