@@ -69,10 +69,6 @@ class PureClarity_Bmz {
 	 */
 	public function render_bmzs() {
 
-		if ( ! $this->settings->is_merch_enabled() ) {
-			return;
-		}
-
 		$this->currentProduct    = $this->state->get_product();
 		$this->currentCategoryId = $this->state->get_category_id();
 
@@ -87,10 +83,9 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Category Page BMZs (Only add if PC is not controlling prod lists, otherwise we'll it through JS).
-		if ( ( is_product_category() || is_shop() )
+		// Category Page BMZs.
+		if ( ( is_product_category() || ( is_shop() && ! is_search() ) )
 				&& $this->settings->is_bmz_on_category_page()
-				&& ! $this->settings->is_prod_enabled()
 		) {
 			add_action(
 				'woocommerce_before_main_content',
@@ -110,10 +105,9 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Search Results BMZs (Only add if PC is not controlling search, otherwise we'll it through JS).
+		// Search Results BMZs.
 		if ( is_search()
 			&& $this->settings->is_bmz_on_search_page()
-			&& ! $this->settings->is_search_enabled()
 		) {
 			add_action(
 				'woocommerce_before_main_content',
@@ -373,7 +367,6 @@ class PureClarity_Bmz {
 			$atts
 		);
 		if ( $this->settings->is_pureclarity_enabled()
-				&& $this->settings->is_merch_enabled()
 				&& ! empty( $arguments['id'] )
 			) {
 
