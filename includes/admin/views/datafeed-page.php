@@ -6,8 +6,8 @@
  * @since 2.0.0
  */
 
-$runningFeed = __( 'Running Feed' ) . '...';
-$clickButton = __( 'Click button to run the %s data feed and submit it to PureClarity', 'pureclarity' );
+$running_feed = __( 'Running Feed' ) . '...';
+$click_button = __( 'Click button to run the %s data feed and submit it to PureClarity', 'pureclarity' );
 ?>
 <style>
 	.pureclarity-message { 
@@ -31,7 +31,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 		<p>
 			<?php
 				printf(
-					$clickButton,
+					$click_button,
 					'PRODUCT'
 				);
 				?>
@@ -40,7 +40,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 			<input type="button" class="button button-primary pureclarity-buttons pureclarity-product-datafeed" value="<?php _e( 'Run Product Feed', 'pureclarity' ); ?>"/>
 		</p>
 		<p id="pureclarity-product-message" class="pureclarity-message">
-			<?php echo $runningFeed; ?>
+			<?php echo $running_feed; ?>
 		</p>
 	</div>
 
@@ -51,7 +51,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 		<p>
 			<?php
 				printf(
-					$clickButton,
+					$click_button,
 					'CATEGORY'
 				);
 				?>
@@ -60,7 +60,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 			<input type="button" class="button button-primary pureclarity-buttons pureclarity-category-datafeed" value="<?php _e( 'Run Category Feed', 'pureclarity' ); ?>"/>
 		</p>
 		<p id="pureclarity-category-message" class="pureclarity-message">
-			<?php echo $runningFeed; ?>
+			<?php echo $running_feed; ?>
 		</p>
 	</div>
 
@@ -71,7 +71,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 		<p>
 			<?php
 				printf(
-					$clickButton,
+					$click_button,
 					'BRAND'
 				);
 				?>
@@ -80,7 +80,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 			<input type="button" class="button button-primary pureclarity-buttons pureclarity-brand-datafeed" value="<?php _e( 'Run Brand Feed', 'pureclarity' ); ?>"/>
 		</p>
 		<p id="pureclarity-brand-message" class="pureclarity-message">
-			<?php echo $runningFeed; ?>
+			<?php echo $running_feed; ?>
 		</p>
 	</div> -->
 
@@ -91,7 +91,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 		<p>
 			<?php
 				printf(
-					$clickButton,
+					$click_button,
 					'USER'
 				);
 				?>
@@ -100,7 +100,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 			<input type="button" class="button button-primary pureclarity-buttons pureclarity-user-datafeed" value="<?php _e( 'Run User Feed', 'pureclarity' ); ?>"/>
 		</p>
 		<p id="pureclarity-user-message" class="pureclarity-message">
-			<?php echo $runningFeed; ?>
+			<?php echo $running_feed; ?>
 		</p>
 	</div>
 
@@ -111,7 +111,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 		<p>
 			<?php
 				printf(
-					$clickButton,
+					$click_button,
 					'ORDER'
 				);
 				?>
@@ -120,7 +120,7 @@ $clickButton = __( 'Click button to run the %s data feed and submit it to PureCl
 			<input type="button" class="button button-primary pureclarity-buttons pureclarity-order-datafeed" value="<?php _e( 'Run Order Feed', 'pureclarity' ); ?>"/>
 		</p>
 		<p id="pureclarity-order-message" class="pureclarity-message">
-			<?php echo $runningFeed; ?>
+			<?php echo $running_feed; ?>
 		</p>
 	</div>
 	

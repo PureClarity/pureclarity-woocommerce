@@ -21,16 +21,16 @@ class PureClarity_State {
 	/**
 	 * Current Category ID
 	 *
-	 * @var integer $currentCategoryId
+	 * @var integer $current_category_id
 	 */
-	private $currentCategoryId;
+	private $current_category_id;
 
 	/**
 	 * Product Data
 	 *
-	 * @var array $currentProduct
+	 * @var array $current_product
 	 */
-	private $currentProduct;
+	private $current_product;
 
 	/**
 	 * Customer Data
@@ -146,8 +146,8 @@ class PureClarity_State {
 	 * Gets PureClarity product data
 	 */
 	public function get_product() {
-		if ( ! empty( $this->currentProduct ) ) {
-			return $this->currentProduct;
+		if ( ! empty( $this->current_product ) ) {
+			return $this->current_product;
 		}
 
 		$product = $this->get_wc_product();
@@ -157,8 +157,8 @@ class PureClarity_State {
 				'sku' => $product->get_sku(),
 			);
 			wp_reset_postdata();
-			$this->currentProduct = $data;
-			return $this->currentProduct;
+			$this->current_product = $data;
+			return $this->current_product;
 		}
 		return null;
 	}
@@ -188,13 +188,13 @@ class PureClarity_State {
 	 * Gets current category id
 	 */
 	public function get_category_id() {
-		if ( ! empty( $this->currentCategoryId ) ) {
-			return $this->currentCategoryId;
+		if ( ! empty( $this->current_category_id ) ) {
+			return $this->current_category_id;
 		}
 		if ( is_product_category() ) {
-			$category                = get_queried_object();
-			$this->currentCategoryId = $category->term_id;
-			return $this->currentCategoryId;
+			$category                  = get_queried_object();
+			$this->current_category_id = $category->term_id;
+			return $this->current_category_id;
 		}
 		return null;
 	}

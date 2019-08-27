@@ -21,16 +21,16 @@ class PureClarity_Template {
 	/**
 	 * PureClarity Plugin class
 	 *
-	 * @var PureClarity_Plugin $pureClarityPlugin
+	 * @var PureClarity_Plugin $plugin
 	 */
-	private $pureClarityPlugin;
+	private $plugin;
 
 	/**
 	 * PureClarity Settings class
 	 *
-	 * @var PureClarity_Settings $pureClarityPluginSettings
+	 * @var PureClarity_Settings $settings
 	 */
-	private $pureClarityPluginSettings;
+	private $settings;
 
 	/**
 	 * Builds class dependencies & sets up watchers
@@ -38,8 +38,8 @@ class PureClarity_Template {
 	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
 	 */
 	public function __construct( &$plugin ) {
-		$this->pureClarityPlugin = $plugin;
-		$this->bmz               = $this->pureClarityPlugin->get_bmz();
+		$this->plugin = $plugin;
+		$this->bmz    = $this->plugin->get_bmz();
 		if ( ! is_ajax() ) {
 			add_filter(
 				'wp_head',
@@ -55,7 +55,7 @@ class PureClarity_Template {
 	 * Renders configuration json
 	 */
 	public function render_pureclarity_json() {
-		$script = '<script type="text/javascript">window.pureclarityConfig = ' . wp_json_encode( $this->getConfig() ) . ';</script>';
+		$script = '<script type="text/javascript">window.pureclarityConfig = ' . wp_json_encode( $this->get_config() ) . ';</script>';
 		echo $script;
 	}
 
@@ -64,7 +64,7 @@ class PureClarity_Template {
 	 *
 	 * @return array
 	 */
-	private function getConfig() {
+	private function get_config() {
 		$pureclarity_settings = $this->get_pureclarity_plugin_settings();
 		$pureclarity_session  = $this->get_pureclarity_plugin()->get_state();
 		return array(
@@ -98,7 +98,7 @@ class PureClarity_Template {
 	 * @return PureClarity_Plugin
 	 */
 	private function get_pureclarity_plugin() {
-		return $this->pureClarityPlugin;
+		return $this->plugin;
 	}
 
 	/**
@@ -107,10 +107,10 @@ class PureClarity_Template {
 	 * @return PureClarity_Settings
 	 */
 	private function get_pureclarity_plugin_settings() {
-		if ( ! isset( $this->pureClarityPluginSettings ) ) {
-			$this->pureClarityPluginSettings = $this->get_pureclarity_plugin()->get_settings();
+		if ( ! isset( $this->settings ) ) {
+			$this->settings = $this->get_pureclarity_plugin()->get_settings();
 		}
-		return $this->pureClarityPluginSettings;
+		return $this->settings;
 	}
 
 }

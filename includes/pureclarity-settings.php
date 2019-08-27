@@ -14,9 +14,9 @@ class PureClarity_Settings {
 	/**
 	 * PureClarity script url
 	 *
-	 * @var string $scriptUrl
+	 * @var string $script_url
 	 */
-	public $scriptUrl = '//pcs.pureclarity.net';
+	public $script_url = '//pcs.pureclarity.net';
 
 	/**
 	 * PureClarity region urls
@@ -43,9 +43,9 @@ class PureClarity_Settings {
 	/**
 	 * PureClarity sftp region urls
 	 *
-	 * @var array $sftpRegions
+	 * @var array $sftp_regions
 	 */
-	private $sftpRegions = array(
+	private $sftp_regions = array(
 		'1'  => 'https://sftp-eu-w-1.pureclarity.net',
 		'2'  => 'https://sftp-eu-w-2.pureclarity.net',
 		'3'  => 'https://sftp-eu-c-1.pureclarity.net',
@@ -183,7 +183,9 @@ class PureClarity_Settings {
 	public function get_api_url() {
 		$url = getenv( 'PURECLARITY_SCRIPT_URL' );
 		if ( empty( $url ) ) {
-			$url = $this->scriptUrl . '/' . $this->get_access_key() . '/cs.js';
+			$url = $this->script_url . '/' . $this->get_access_key() . '/cs.js';
+		} else {
+			$url .= $this->get_access_key() . '/dev.js';
 		}
 		return $url;
 	}
@@ -197,7 +199,7 @@ class PureClarity_Settings {
 		$url  = getenv( 'PURECLARITY_FEED_HOST' );
 		$port = getenv( 'PURECLARITY_FEED_PORT' );
 		if ( empty( $url ) ) {
-			$url = $this->sftpRegions[ $this->get_region() ];
+			$url = $this->sftp_regions[ $this->get_region() ];
 		}
 		if ( ! empty( $port ) ) {
 			$url = $url . ':' . $port;
