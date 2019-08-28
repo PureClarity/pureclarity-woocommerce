@@ -211,22 +211,17 @@ class PureClarity_Cron {
 				$count         = 0;
 				$processed_ids = array();
 
-				foreach ( $deltas as $id => $size ) {
+				foreach ( array_keys( $deltas ) as $id ) {
 
 					if ( $totalpacket >= 250000 || $count > 100 ) {
 						break;
 					}
 
-					if ( $size > -1 ) {
-						$user_data = $this->feed->parse_user( $id );
-						if ( ! empty( $user_data ) ) {
-							$json         = wp_json_encode( $user_data );
-							$totalpacket += strlen( $json );
-							$users[]      = $user_data;
-						} else {
-							$totalpacket += strlen( $id );
-							$deletes[]    = (string) $id;
-						}
+					$user_data = $this->feed->parse_user( $id );
+					if ( ! empty( $user_data ) ) {
+						$json         = wp_json_encode( $user_data );
+						$totalpacket += strlen( $json );
+						$users[]      = $user_data;
 					} else {
 						$totalpacket += strlen( $id );
 						$deletes[]    = (string) $id;

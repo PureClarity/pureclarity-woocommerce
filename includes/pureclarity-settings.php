@@ -442,14 +442,13 @@ class PureClarity_Settings {
 	 * Adds a user to the delta
 	 *
 	 * @param integer $id - user id.
-	 * @param integer $type - delta type (-1 = delete, 1 = add/update).
 	 */
-	public function add_user_delta( $id, $type ) {
+	public function add_user_delta( $id ) {
 		$deltas = $this->get_user_deltas();
 		if ( empty( $deltas ) ) {
 			$deltas = array();
 		}
-		$deltas[ $id ] = $type;
+		$deltas[ $id ] = true;
 		update_option( 'pureclarity_user_deltas', wp_json_encode( $deltas, true ) );
 	}
 
