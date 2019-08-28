@@ -150,15 +150,22 @@ class PureClarity_Feed {
 	 *
 	 * @throws Exception - if varous erros occur.
 	 */
-	public function http_post( $url, $body, $check_ok = true ) {
+	public function http_post( $url, $body, $check_ok = true, $timeout = '' ) {
 		$request = new WP_Http();
 		for ( $x = 0; $x <= 5; $x++ ) {
+
+			$args = array(
+				'method' => 'POST',
+				'body'   => $body,
+			);
+
+			if ( '' !== $timeout ) {
+				$args['timeout'] = $timeout;
+			}
+
 			$response = $request->request(
 				$url,
-				array(
-					'method' => 'POST',
-					'body'   => $body,
-				)
+				$args
 			);
 
 			if ( $response instanceof WP_Error ) {
@@ -779,7 +786,7 @@ class PureClarity_Feed {
 			'Format'         => 'pureclarity_json',
 		);
 
-		$this->http_post( $this->settings->get_delta_url(), $request, false );
+		$this->http_post( $this->settings->get_delta_url(), $request, false, 5 );
 
 	}
 
@@ -799,7 +806,7 @@ class PureClarity_Feed {
 			'Format'      => 'pureclarity_json',
 		);
 
-		$this->http_post( $this->settings->get_delta_url(), $request, false );
+		$this->http_post( $this->settings->get_delta_url(), $request, false, 5 );
 
 	}
 
