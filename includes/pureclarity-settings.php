@@ -154,7 +154,7 @@ class PureClarity_Settings {
 	 * @return string
 	 */
 	public function is_deltas_enabled_admin() {
-		return ( get_option( 'pureclarity_deltas_enabled', '' ) == 'on' );
+		return ( get_option( 'pureclarity_deltas_enabled', '' ) === 'on' );
 	}
 
 	/**
@@ -172,7 +172,7 @@ class PureClarity_Settings {
 	 * @return string
 	 */
 	public function is_bmz_debug_enabled() {
-		return ( get_option( 'pureclarity_bmz_debug', '' ) == 'on' );
+		return ( get_option( 'pureclarity_bmz_debug', '' ) === 'on' );
 	}
 
 	/**
@@ -222,7 +222,7 @@ class PureClarity_Settings {
 	 * @return string
 	 */
 	public function is_product_feed_sent() {
-		return ( get_option( 'pureclarity_prodfeed_run', '0' ) == '1' );
+		return ( get_option( 'pureclarity_prodfeed_run', '0' ) === '1' );
 	}
 
 	/**
@@ -231,7 +231,7 @@ class PureClarity_Settings {
 	 * @return string
 	 */
 	public function is_category_feed_sent() {
-		return ( get_option( 'pureclarity_catfeed_run', '0' ) == '1' );
+		return ( get_option( 'pureclarity_catfeed_run', '0' ) === '1' );
 	}
 
 	/**
@@ -240,7 +240,7 @@ class PureClarity_Settings {
 	 * @return string
 	 */
 	public function is_brand_feed_sent() {
-		return ( get_option( 'pureclarity_brandfeed_run', '0' ) == '1' );
+		return ( get_option( 'pureclarity_brandfeed_run', '0' ) === '1' );
 	}
 
 	/**
@@ -249,7 +249,7 @@ class PureClarity_Settings {
 	 * @return string
 	 */
 	public function is_user_feed_sent() {
-		return ( get_option( 'pureclarity_userfeed_run', '0' ) == '1' );
+		return ( get_option( 'pureclarity_userfeed_run', '0' ) === '1' );
 	}
 
 	/**
@@ -258,7 +258,7 @@ class PureClarity_Settings {
 	 * @return string
 	 */
 	public function is_order_feed_sent() {
-		return ( get_option( 'pureclarity_orderfeed_run', '0' ) == '1' );
+		return ( get_option( 'pureclarity_orderfeed_run', '0' ) === '1' );
 	}
 
 	/**
@@ -311,7 +311,7 @@ class PureClarity_Settings {
 	 * @return boolean
 	 */
 	public function is_bmz_on_home_page() {
-		return ( get_option( 'pureclarity_add_bmz_homepage', '' ) == 'on' );
+		return ( get_option( 'pureclarity_add_bmz_homepage', '' ) === 'on' );
 	}
 
 	/**
@@ -320,7 +320,7 @@ class PureClarity_Settings {
 	 * @return boolean
 	 */
 	public function is_bmz_on_category_page() {
-		return ( get_option( 'pureclarity_add_bmz_categorypage', '' ) == 'on' );
+		return ( get_option( 'pureclarity_add_bmz_categorypage', '' ) === 'on' );
 	}
 
 	/**
@@ -329,7 +329,7 @@ class PureClarity_Settings {
 	 * @return boolean
 	 */
 	public function is_bmz_on_search_page() {
-		return ( get_option( 'pureclarity_add_bmz_searchpage', '' ) == 'on' );
+		return ( get_option( 'pureclarity_add_bmz_searchpage', '' ) === 'on' );
 	}
 
 	/**
@@ -338,7 +338,7 @@ class PureClarity_Settings {
 	 * @return boolean
 	 */
 	public function is_bmz_on_product_page() {
-		return ( get_option( 'pureclarity_add_bmz_productpage', '' ) == 'on' );
+		return ( get_option( 'pureclarity_add_bmz_productpage', '' ) === 'on' );
 	}
 
 	/**
@@ -347,7 +347,7 @@ class PureClarity_Settings {
 	 * @return boolean
 	 */
 	public function is_bmz_on_basket_page() {
-		return ( get_option( 'pureclarity_add_bmz_basketpage', '' ) == 'on' );
+		return ( get_option( 'pureclarity_add_bmz_basketpage', '' ) === 'on' );
 	}
 
 	/**
@@ -356,7 +356,7 @@ class PureClarity_Settings {
 	 * @return boolean
 	 */
 	public function is_bmz_on_checkout_page() {
-		return ( get_option( 'pureclarity_add_bmz_checkoutpage', '' ) == 'on' );
+		return ( get_option( 'pureclarity_add_bmz_checkoutpage', '' ) === 'on' );
 	}
 
 	/**

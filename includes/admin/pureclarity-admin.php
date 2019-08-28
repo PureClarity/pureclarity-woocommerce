@@ -107,7 +107,7 @@ class PureClarity_Admin {
 			$current_page      = (int) $_POST['page'];
 			$total_pages_count = $this->feed->get_total_pages( $type );
 
-			if ( $current_page == 1 && $total_pages_count > 0 ) {
+			if ( 1 === $current_page && $total_pages_count > 0 ) {
 				$this->feed->start_feed( $type );
 			}
 
@@ -319,7 +319,7 @@ class PureClarity_Admin {
 
 		<select id="pureclarity_region" name="pureclarity_region">
 			<?php foreach ( $regions as $key => $url ) : ?>
-				<option value="<?php echo $key; ?>" <?php echo ( $region == $key ? "selected='selected'" : '' ); ?>><?php _e( 'Region', 'pureclarity' ); ?> <?php echo $key; ?></option>
+				<option value="<?php echo $key; ?>" <?php echo ( $region === $key ? "selected='selected'" : '' ); ?>><?php _e( 'Region', 'pureclarity' ); ?> <?php echo $key; ?></option>
 			<?php endforeach; ?>
 		</select>
 		<p class="description" id="home-description"><?php _e( 'Select the Region Id supplied with your PureClarity credentials', 'pureclarity' ); ?></p>
@@ -339,9 +339,9 @@ class PureClarity_Admin {
 		?>
 
 		<select id="pureclarity_mode" name="pureclarity_mode">
-			<option value="on" <?php echo ( $mode == 'on' ? $selected : '' ); ?> ><?php _e( 'On', 'pureclarity' ); ?></option>
-			<option value="admin" <?php echo ( $mode == 'admin' ? $selected : '' ); ?>><?php _e( 'Admin only', 'pureclarity' ); ?></option>
-			<option value="off" <?php echo ( $mode == 'off' ? $selected : '' ); ?>><?php _e( 'Off', 'pureclarity' ); ?></option>
+			<option value="on" <?php echo ( 'on' === $mode ? $selected : '' ); ?> ><?php _e( 'On', 'pureclarity' ); ?></option>
+			<option value="admin" <?php echo ( 'admin' === $mode ? $selected : '' ); ?>><?php _e( 'Admin only', 'pureclarity' ); ?></option>
+			<option value="off" <?php echo ( 'off' === $mode ? $selected : '' ); ?>><?php _e( 'Off', 'pureclarity' ); ?></option>
 		</select>
 		<p class="description" id="home-description"><?php _e( "Set PureClarity Enable Mode. When the mode is set to 'Admin only' PureClarity only shows for administrators on the front end.", 'pureclarity' ); ?></p>
 
@@ -467,7 +467,7 @@ class PureClarity_Admin {
 	 * @param string $value - setting to sanitize.
 	 */
 	public function sanitize_checkbox( $value ) {
-		return ( $value == 'on' ? 'yes' : 'no' );
+		return ( 'on' === $value ? 'yes' : 'no' );
 	}
 
 	/**
@@ -534,7 +534,7 @@ class PureClarity_Admin {
 		);
 		$admin_page            = get_current_screen();
 
-		if ( in_array( $admin_page->base, $whitelist_admin_pages )
+		if ( in_array( $admin_page->base, $whitelist_admin_pages, true )
 			&& isset( $_GET['settings-updated'] )
 			&& $_GET['settings-updated'] ) :
 
@@ -596,13 +596,13 @@ class PureClarity_Admin {
 	 * Gets fields for the advanced settings page
 	 */
 	private function get_advanced_fields() {
-		$bmz_debug_checkbox           = array(
+		$bmz_debug_checkbox             = array(
 			'pureclarity_bmz_debug',
 			'Enable BMZ Debugging',
 			'pureclarity_bmz_debug_callback',
 			true, // checkbox.
 		);
-		$add_bmz_homepage_checkbox     = array(
+		$add_bmz_homepage_checkbox      = array(
 			'pureclarity_add_bmz_homepage',
 			'Show Home Page BMZs',
 			'pureclarity_add_bmz_homepage_callback',

@@ -119,7 +119,7 @@ class PureClarity_State {
 			$this->customer = $_SESSION['pureclarity-customer'];
 			$isadmin        = current_user_can( 'administrator' );
 			$adminset       = ! empty( $this->customer['data']['accid'] );
-			if ( $this->customer['data']['userid'] == get_current_user_id() && $isadmin == $adminset ) {
+			if ( get_current_user_id() === $this->customer['data']['userid'] && $isadmin === $adminset ) {
 				return $this->customer;
 			}
 		}
@@ -235,7 +235,7 @@ class PureClarity_State {
 	 */
 	public function get_cart() {
 
-		if ( $this->cart != null ) {
+		if ( null !== $this->cart ) {
 			return $this->cart;
 		}
 
