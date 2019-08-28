@@ -403,7 +403,16 @@ class PureClarity_Bmz {
 
 			$bmz = "<div class='" . $class . "' style='" . $style . "' data-pureclarity='bmz:" . $arguments['id'] . ';' . $data . "'>" . $html . "</div><div class='pureclarity_bmz_clearfix'></div>";
 			if ( true === $arguments['echo'] ) {
-				echo $bmz;
+				echo wp_kses(
+					$bmz,
+					array(
+						'div' => array(
+							'class'            => array(),
+							'style'            => array(),
+							'data-pureclarity' => array(),
+						),
+					)
+				);
 			} else {
 				return $bmz;
 			}
