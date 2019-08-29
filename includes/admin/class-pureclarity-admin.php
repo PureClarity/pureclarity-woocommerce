@@ -477,11 +477,11 @@ class PureClarity_Admin {
 	 */
 	public function print_settings_section_text() {
 		echo '<p>' . esc_html_e( 'To get started with PureClarity, you will need a PureClarity account and to then enter your access credentials below.', 'pureclarity' ) . '</p>';
-		$url = 'https://www.pureclarity.com/free-trial/?source=woocommerce&medium=plugin&campaign=freetrial';
+		$url = 'https://admin.pureclarity.com/signup/create-account';
 		echo sprintf(
 			wp_kses( // sanitize result.
 				/* translators: %s is replaced with the url */
-				esc_html_e( "If you don't yet have an account, you can get started for free - <a href='%s' target='_blank'>register for your free trial today</a>.", 'pureclarity' ),
+				__( "If you don't yet have an account, you can get started for free - <a href='%s' target='_blank'>register for your free trial today</a>.", 'pureclarity' ),
 				array(      // permitted html.
 					'a' => array(
 						'href'   => array(),
@@ -497,11 +497,11 @@ class PureClarity_Admin {
 	 * Generates html for top of advanced page
 	 */
 	public function print_advanced_section_text() {
-		$url = 'https://support.pureclarity.com/hc/en-us/sections/360001594074-WooCommerce';
+		$url = 'https://www.pureclarity.com/docs/woocommerce/';
 		echo sprintf(
 			wp_kses(// sanitize result.
 				/* translators: %s is replaced with the url */
-				__( "Configure advanced settings for PureClarity.  For more information, please see the <a href='%s' target='_blank'>PureClarity support documentation</a>.", 'pureclarity' ),
+				__( "Configure advanced settings for PureClarity. For more information, please see the <a href='%s' target='_blank'>PureClarity support documentation</a>.", 'pureclarity' ),
 				array(      // permitted html.
 					'a' => array(
 						'href'   => array(),
