@@ -232,6 +232,11 @@ class PureClarity_Products_Watcher {
 				'ordertotal' => $order->get_total(),
 			);
 
+			if ( empty( $transaction['userid'] ) ) {
+				// guest order, so add billing email.
+				$transaction['email'] = $order->get_billing_email();
+			}
+
 			$order_items = array();
 			foreach ( $order->get_items() as $item_id => $item ) {
 				$product = $order->get_product_from_item( $item );
