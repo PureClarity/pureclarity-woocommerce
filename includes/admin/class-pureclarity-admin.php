@@ -60,7 +60,8 @@ class PureClarity_Admin {
 			'pureclarity-adminjs',
 			plugin_dir_url( __FILE__ ) . 'js/pc-admin.js',
 			array( 'jquery' ),
-			PURECLARITY_VERSION
+			PURECLARITY_VERSION,
+			true
 		);
 		wp_enqueue_script( 'pureclarity-adminjs' );
 		add_action(
@@ -81,11 +82,13 @@ class PureClarity_Admin {
 		try {
 			session_write_close();
 
+			check_ajax_referer( 'pureclarity-submit-data-feed', 'security' );
+
 			if ( ! isset( $_POST['page'] ) ) {
 				throw new RuntimeException( 'Page has not been set.' );
 			}
 
-			$type = $_POST['type'];
+			$type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 			if ( ! isset( $type ) ) {
 				throw new RuntimeException( 'Type has not been set.' );
 			}
@@ -96,12 +99,14 @@ class PureClarity_Admin {
 				'user',
 				'order',
 			);
-			if ( ! in_array( $type, $acceptable_types ) ) {
+			if ( ! in_array( $type, $acceptable_types, true ) ) {
 				throw new RuntimeException( 'Unknown type.' );
 			}
 
-			if ( isset( $_POST['feedname'] ) ) {
-				$this->feed->set_unique_id( $_POST['feedname'] );
+			$feedname = isset( $_POST['feedname'] ) ? sanitize_text_field( wp_unslash( $_POST['feedname'] ) ) : '';
+
+			if ( '' !== $feedname ) {
+				$this->feed->set_unique_id( $feedname );
 			}
 
 			$current_page      = (int) $_POST['page'];
@@ -126,7 +131,7 @@ class PureClarity_Admin {
 			$response = array(
 				'totalPagesCount' => $total_pages_count,
 				'finished'        => $is_finished,
-				'feedname'        => $this->feed->get_unique_id()(),
+				'feedname'        => $this->feed->get_unique_id(),
 			);
 
 			wp_send_json( $response );
@@ -232,7 +237,7 @@ class PureClarity_Admin {
 			$is_checkbox = $field[3];
 			add_settings_field(
 				$option_name,
-				__( $label, 'pureclarity' ),
+				$label,
 				array( $this, $callback ),
 				$slug,
 				$section_id
@@ -528,9 +533,9 @@ class PureClarity_Admin {
 		);
 		$admin_page            = get_current_screen();
 
-		if ( in_array( $admin_page->base, $whitelist_admin_pages, true )
-			&& isset( $_GET['settings-updated'] )
-			&& $_GET['settings-updated'] ) :
+		$updated = isset( $_GET['settings-updated'] ) ? sanitize_text_field( wp_unslash( $_GET['settings-updated'] ) ) : false;
+
+		if ( in_array( $admin_page->base, $whitelist_admin_pages, true ) && $updated ) :
 
 			?>
 

@@ -16,6 +16,9 @@
 </style>
 
 <div class="wrap">
+
+	<?php wp_nonce_field( 'pureclarity-submit-data-feed', 'pureclarity-feed-runner-nonce' ); ?>
+
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
 	<div class="notice">
