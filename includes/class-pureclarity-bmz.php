@@ -69,7 +69,7 @@ class PureClarity_Bmz {
 	 */
 	public function render_bmzs() {
 
-		$this->current_product    = $this->state->get_product();
+		$this->current_product     = $this->state->get_product();
 		$this->current_category_id = $this->state->get_category_id();
 
 		// Homepage and Order Received Page BMZs.
@@ -372,7 +372,7 @@ class PureClarity_Bmz {
 
 			$html = ( ! empty( $content ) ? $content : '' );
 
-			if ( $this->settings->is_bmz_debug_enabled() && $html == '' ) {
+			if ( $this->settings->is_bmz_debug_enabled() && '' === $html ) {
 				$html = 'PURECLARITY BMZ: ' . $arguments['id'];
 			}
 
@@ -402,8 +402,17 @@ class PureClarity_Bmz {
 			}
 
 			$bmz = "<div class='" . $class . "' style='" . $style . "' data-pureclarity='bmz:" . $arguments['id'] . ';' . $data . "'>" . $html . "</div><div class='pureclarity_bmz_clearfix'></div>";
-			if ( $arguments['echo'] == true ) {
-				echo $bmz;
+			if ( true === $arguments['echo'] ) {
+				echo wp_kses(
+					$bmz,
+					array(
+						'div' => array(
+							'class'            => array(),
+							'style'            => array(),
+							'data-pureclarity' => array(),
+						),
+					)
+				);
 			} else {
 				return $bmz;
 			}

@@ -137,7 +137,7 @@ class PureClarity_Feed {
 	 */
 	public function end_feed( $type ) {
 		$url  = $this->settings->get_feed_baseurl() . 'feed-close';
-		$body = $this->get_request_body( $type, ( $type == 'order' ? '' : ']}' ) );
+		$body = $this->get_request_body( $type, ( 'order' === $type ? '' : ']}' ) );
 		$this->http_post( $url, $body );
 	}
 
@@ -147,10 +147,11 @@ class PureClarity_Feed {
 	 * @param string  $url - url to POST to.
 	 * @param array   $body - body data.
 	 * @param boolean $check_ok - whether to verify response.
+	 * @param integer $timeout - timeout for post.
 	 *
 	 * @throws Exception - if varous erros occur.
 	 */
-	public function http_post( $url, $body, $check_ok = true, $timeout = '' ) {
+	public function http_post( $url, $body, $check_ok = true, $timeout = 0 ) {
 		$request = new WP_Http();
 		for ( $x = 0; $x <= 5; $x++ ) {
 
@@ -159,7 +160,7 @@ class PureClarity_Feed {
 				'body'   => $body,
 			);
 
-			if ( '' !== $timeout ) {
+			if ( 0 !== $timeout ) {
 				$args['timeout'] = $timeout;
 			}
 
@@ -176,7 +177,7 @@ class PureClarity_Feed {
 				throw new Exception( "Couldn't upload data to the PureClarity server, response errors: " . $error_message );
 			}
 
-			if ( $response['response'] && $response['response']['code'] != self::GATEWAY_TIMEOUT ) {
+			if ( $response['response'] && self::GATEWAY_TIMEOUT !== $response['response']['code'] ) {
 				break;
 			}
 			error_log( "PureClarity 504 (Gateway Timeout) Error, retrying. Error: Couldn't upload data to the PureClarity server: " . wp_json_encode( $response ) );
@@ -184,7 +185,7 @@ class PureClarity_Feed {
 		if ( ! empty( $response->errors ) ) {
 			throw new Exception( "Couldn't upload data to the PureClarity server, response errors: " . wp_json_encode( $response->errors ) );
 		}
-		if ( $check_ok && $response['body'] != 'OK' ) {
+		if ( $check_ok && 'OK' !== $response['body'] ) {
 			throw new Exception( "Couldn't upload data to the PureClarity server, response: " . wp_json_encode( $response ) );
 		}
 	}
@@ -271,7 +272,7 @@ class PureClarity_Feed {
 		);
 
 		$first = false;
-		if ( $current_page == 1 || $page_size == 1 ) {
+		if ( 1 === $current_page || 1 === $page_size ) {
 			$first = true;
 		}
 
@@ -300,7 +301,7 @@ class PureClarity_Feed {
 	 * @param boolean    $log_error - whether to log errors.
 	 */
 	public function get_product_data( $product, $log_error = true ) {
-		if ( $product->get_catalog_visibility() == 'hidden' ) {
+		if ( $product->get_catalog_visibility() === 'hidden' ) {
 			if ( $log_error ) {
 				error_log( 'PureClarity: Product ' . $product->get_id() . ' excluded from the feed. Reason: Catalog visibility = hidden.' );
 			}
@@ -329,13 +330,13 @@ class PureClarity_Feed {
 			'Title'       => $product->get_title(),
 			'Description' => $product->get_description() . ' ' . $product->get_short_description(),
 			'Categories'  => $category_ids,
-			'InStock'     => $product->get_stock_status() == 'instock',
+			'InStock'     => $product->get_stock_status() === 'instock',
 			'Link'        => $product_url,
 			'Image'       => $image_url,
 			'ProductType' => $product->get_type(),
 		);
 
-		if ( $product->get_type() == 'external' && ! empty( $product->get_button_text() ) ) {
+		if ( $product->get_type() === 'external' && ! empty( $product->get_button_text() ) ) {
 			$product_data['ButtonText'] = $product->get_button_text();
 		}
 
@@ -345,7 +346,7 @@ class PureClarity_Feed {
 				wp_get_attachment_url( $attachment_id )
 			);
 		}
-		if ( sizeof( $all_image_urls ) > 0 ) {
+		if ( count( $all_image_urls ) > 0 ) {
 			$product_data['AllImages'] = $all_image_urls;
 		}
 
@@ -353,11 +354,11 @@ class PureClarity_Feed {
 			$product_data['StockQty'] = $product->get_stock_quantity();
 		}
 
-		if ( $product->get_catalog_visibility() == 'catalog' ) {
+		if ( $product->get_catalog_visibility() === 'catalog' ) {
 			$product_data['ExcludeFromSearch'] = true;
 		}
 
-		if ( $product->get_catalog_visibility() == 'search' ) {
+		if ( $product->get_catalog_visibility() === 'search' ) {
 			$product_data['ExcludeFromProductListing'] = true;
 		}
 
@@ -378,7 +379,7 @@ class PureClarity_Feed {
 		// Check is valid.
 		$error = array();
 		if ( ! array_key_exists( 'Prices', $product_data )
-				|| ( is_array( $product_data['Prices'] ) && sizeof( $product_data['Prices'] ) == 0 )
+				|| ( is_array( $product_data['Prices'] ) && count( $product_data['Prices'] ) === 0 )
 			) {
 				$error[] = 'Prices';
 		}
@@ -411,7 +412,7 @@ class PureClarity_Feed {
 			if ( ! array_key_exists( $key, $json ) ) {
 				$json[ $key ] = array();
 			}
-			if ( ! in_array( $value, $json[ $key ] ) ) {
+			if ( ! in_array( $value, $json[ $key ], true ) ) {
 				$json[ $key ][] = $value;
 			}
 		}
@@ -425,7 +426,7 @@ class PureClarity_Feed {
 	 */
 	private function add_variant_info( &$json, &$product ) {
 
-		if ( $product->get_type() != 'variable' ) {
+		if ( 'variable' !== $product->get_type() ) {
 			return;
 		}
 
@@ -436,7 +437,7 @@ class PureClarity_Feed {
 			$price         = $variant['display_price'] . ' ' . get_woocommerce_currency();
 			$regular_price = $variant['display_regular_price'] . ' ' . get_woocommerce_currency();
 
-			if ( $price != $regular_price ) {
+			if ( $regular_price !== $price ) {
 				$this->add_to_array( 'Prices', $json, $regular_price );
 				$this->add_to_array( 'SalePrices', $json, $price );
 			} else {
@@ -458,7 +459,7 @@ class PureClarity_Feed {
 	 */
 	private function add_child_products( &$json, &$product ) {
 
-		if ( $product->get_type() != 'grouped' ) {
+		if ( 'grouped' === $product->get_type() ) {
 			return;
 		}
 
@@ -482,7 +483,7 @@ class PureClarity_Feed {
 	 * @param WC_Product $product - product to process.
 	 */
 	private function product_is_visible( $product ) {
-		return $product->get_catalog_visibility() != 'hidden' && $product->get_status() == 'publish';
+		return 'hidden' !== $product->get_catalog_visibility() && 'publish' === $product->get_status();
 	}
 
 	/**
@@ -527,7 +528,7 @@ class PureClarity_Feed {
 	private function product_has_future_sale( $product ) {
 		$sale_date = $product->get_date_on_sale_from();
 		if ( ! empty( $sale_date ) ) {
-			return ( $product->get_date_on_sale_from( $context )->getTimestamp() > current_time( 'timestamp', true ) );
+			return ( $product->get_date_on_sale_from( 'view' )->getTimestamp() > current_time( 'timestamp', true ) );
 		}
 		return false;
 	}
@@ -633,7 +634,7 @@ class PureClarity_Feed {
 		);
 
 		$users = new WP_User_Query( $args );
-		$first = ( $current_page == 1 || $page_size == 1 );
+		$first = ( 1 === $current_page || 1 === $page_size );
 		$items = '';
 		foreach ( $users->get_results() as $user ) {
 

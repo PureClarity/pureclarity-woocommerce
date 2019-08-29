@@ -1,5 +1,9 @@
 <?php
 /**
+ * PureClarity for WooCommerce
+ *
+ * @package PureClarity for WooCommerce
+ *
  * Plugin Name:  PureClarity for WooCommerce
  * Description:  Increase revenues by 26% in your WooCommerce store with AI-based real-time personalization. Integrates with PureClarity's multi-award winning ecommerce personalization software.
  * Plugin URI:   https://www.pureclarity.com
@@ -26,15 +30,13 @@ if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 	add_action(
 		'admin_notices',
 		function() {
-			echo '<div class="error notice"><p>' . __( 'The PureClarity plugin requires WooCommerce to be enabled.', 'pureclarity' ) . '</p></div>';
+			echo '<div class="error notice"><p>' . esc_html_e( 'The PureClarity plugin requires WooCommerce to be enabled.', 'pureclarity' ) . '</p></div>';
 		}
 	);
 } else {
 
 	// include classes.
 	require_once PURECLARITY_PATH . 'class-includes.php';
-
-	// Create static instance.
-	$pureclarity = PureClarity_Plugin::get_instance();
+	$pureclarity = new PureClarity_Plugin();
 
 }

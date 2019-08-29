@@ -56,7 +56,14 @@ class PureClarity_Template {
 	 */
 	public function render_pureclarity_json() {
 		$script = '<script type="text/javascript">window.pureclarityConfig = ' . wp_json_encode( $this->get_config() ) . ';</script>';
-		echo $script;
+		echo wp_kses(
+			$script,
+			array(
+				'script' => array(
+					'type' => array(),
+				),
+			)
+		);
 	}
 
 	/**

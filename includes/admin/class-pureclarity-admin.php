@@ -60,7 +60,8 @@ class PureClarity_Admin {
 			'pureclarity-adminjs',
 			plugin_dir_url( __FILE__ ) . 'js/pc-admin.js',
 			array( 'jquery' ),
-			PURECLARITY_VERSION
+			PURECLARITY_VERSION,
+			true
 		);
 		wp_enqueue_script( 'pureclarity-adminjs' );
 		add_action(
@@ -81,11 +82,13 @@ class PureClarity_Admin {
 		try {
 			session_write_close();
 
+			check_ajax_referer( 'pureclarity-submit-data-feed', 'security' );
+
 			if ( ! isset( $_POST['page'] ) ) {
 				throw new RuntimeException( 'Page has not been set.' );
 			}
 
-			$type = $_POST['type'];
+			$type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 			if ( ! isset( $type ) ) {
 				throw new RuntimeException( 'Type has not been set.' );
 			}
@@ -96,18 +99,20 @@ class PureClarity_Admin {
 				'user',
 				'order',
 			);
-			if ( ! in_array( $type, $acceptable_types ) ) {
+			if ( ! in_array( $type, $acceptable_types, true ) ) {
 				throw new RuntimeException( 'Unknown type.' );
 			}
 
-			if ( isset( $_POST['feedname'] ) ) {
-				$this->feed->set_unique_id( $_POST['feedname'] );
+			$feedname = isset( $_POST['feedname'] ) ? sanitize_text_field( wp_unslash( $_POST['feedname'] ) ) : '';
+
+			if ( '' !== $feedname ) {
+				$this->feed->set_unique_id( $feedname );
 			}
 
 			$current_page      = (int) $_POST['page'];
 			$total_pages_count = $this->feed->get_total_pages( $type );
 
-			if ( $current_page == 1 && $total_pages_count > 0 ) {
+			if ( 1 === $current_page && $total_pages_count > 0 ) {
 				$this->feed->start_feed( $type );
 			}
 
@@ -126,7 +131,7 @@ class PureClarity_Admin {
 			$response = array(
 				'totalPagesCount' => $total_pages_count,
 				'finished'        => $is_finished,
-				'feedname'        => $this->feed->get_unique_id()(),
+				'feedname'        => $this->feed->get_unique_id(),
 			);
 
 			wp_send_json( $response );
@@ -232,7 +237,7 @@ class PureClarity_Admin {
 			$is_checkbox = $field[3];
 			add_settings_field(
 				$option_name,
-				__( $label, 'pureclarity' ),
+				$label,
 				array( $this, $callback ),
 				$slug,
 				$section_id
@@ -287,7 +292,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="text" name="pureclarity_accesskey" class="regular-text" value="<?php echo esc_attr( $this->settings->get_access_key() ); ?>" />
-		<p class="description" id="home-description"><?php _e( 'Enter your Access Key', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Enter your Access Key', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -301,7 +306,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="text" name="pureclarity_secretkey" class="regular-text" value="<?php echo esc_attr( $this->settings->get_secret_key() ); ?>" />
-		<p class="description" id="home-description"><?php _e( 'Enter your Secret Key', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Enter your Secret Key', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -312,17 +317,17 @@ class PureClarity_Admin {
 	 */
 	public function pureclarity_region_callback() {
 
-		$regions = $this->settings->get_regions();
-		$region  = $this->settings->get_region();
+		$regions = $this->settings->get_display_regions();
+		$region  = (int) $this->settings->get_region();
 
 		?>
 
 		<select id="pureclarity_region" name="pureclarity_region">
-			<?php foreach ( $regions as $key => $url ) : ?>
-				<option value="<?php echo $key; ?>" <?php echo ( $region == $key ? "selected='selected'" : '' ); ?>><?php _e( 'Region', 'pureclarity' ); ?> <?php echo $key; ?></option>
+			<?php foreach ( $regions as $key => $label ) : ?>
+				<option value="<?php echo esc_html( $key ); ?>" <?php echo ( $region === $key ) ? "selected='selected'" : ''; ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>
 		</select>
-		<p class="description" id="home-description"><?php _e( 'Select the Region Id supplied with your PureClarity credentials', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Select the region for your PureClarity enviroment', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -333,18 +338,15 @@ class PureClarity_Admin {
 	 */
 	public function pureclarity_mode_callback() {
 
-		$mode     = $this->settings->get_pureclarity_mode();
-		$selected = "selected='selected'";
+		$mode = $this->settings->get_pureclarity_mode();
 
 		?>
-
 		<select id="pureclarity_mode" name="pureclarity_mode">
-			<option value="on" <?php echo ( $mode == 'on' ? $selected : '' ); ?> ><?php _e( 'On', 'pureclarity' ); ?></option>
-			<option value="admin" <?php echo ( $mode == 'admin' ? $selected : '' ); ?>><?php _e( 'Admin only', 'pureclarity' ); ?></option>
-			<option value="off" <?php echo ( $mode == 'off' ? $selected : '' ); ?>><?php _e( 'Off', 'pureclarity' ); ?></option>
+			<option value="on" <?php echo ( 'on' === $mode ) ? "selected='selected'" : ''; ?> ><?php esc_html_e( 'On', 'pureclarity' ); ?></option>
+			<option value="admin" <?php echo ( 'admin' === $mode ) ? "selected='selected'" : ''; ?>><?php esc_html_e( 'Admin only', 'pureclarity' ); ?></option>
+			<option value="off" <?php echo ( 'off' === $mode ) ? "selected='selected'" : ''; ?>><?php esc_html_e( 'Off', 'pureclarity' ); ?></option>
 		</select>
-		<p class="description" id="home-description"><?php _e( "Set PureClarity Enable Mode. When the mode is set to 'Admin only' PureClarity only shows for administrators on the front end.", 'pureclarity' ); ?></p>
-
+		<p class="description" id="home-description"><?php esc_html_e( "Set PureClarity Enable Mode. When the mode is set to 'Admin only' PureClarity only shows for administrators on the front end.", 'pureclarity' ); ?></p>
 		<?php
 
 	}
@@ -357,7 +359,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="checkbox" id="checkbox_deltas"  name="pureclarity_deltas_enabled" class="regular-text" <?php echo ( $this->settings->is_deltas_enabled_admin() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Check to activate automatic data synchronisation', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Check to activate automatic data synchronisation', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -371,7 +373,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="checkbox" id="checkbox_bmz_debug"  name="pureclarity_bmz_debug" class="regular-text" <?php echo ( $this->settings->is_bmz_debug_enabled() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Check to activate debugging for PureClarity BMZs. They will show even if empty.', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Check to activate debugging for PureClarity BMZs. They will show even if empty.', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -385,7 +387,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="checkbox" id="checkbox_bmz_homepage"  name="pureclarity_add_bmz_homepage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_home_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Auto-insert BMZs on Home page', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Auto-insert BMZs on Home page', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -399,7 +401,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="checkbox" id="checkbox_bmz_categorypage"  name="pureclarity_add_bmz_categorypage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_category_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Auto-insert BMZs on Product Listing page', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Auto-insert BMZs on Product Listing page', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -413,7 +415,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="checkbox" id="checkbox_bmz_searchpage"  name="pureclarity_add_bmz_searchpage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_search_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Auto-insert BMZs on Search Results page', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Auto-insert BMZs on Search Results page', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -427,7 +429,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="checkbox" id="checkbox_bmz_productpage"  name="pureclarity_add_bmz_productpage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_product_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Auto-insert BMZs on Product page', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Auto-insert BMZs on Product page', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -441,7 +443,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="checkbox" id="checkbox_bmz_basketpage"  name="pureclarity_add_bmz_basketpage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_basket_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Auto-insert BMZs on Cart page', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Auto-insert BMZs on Cart page', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -455,7 +457,7 @@ class PureClarity_Admin {
 		?>
 
 		<input type="checkbox" id="checkbox_bmz_checkoutpage"  name="pureclarity_add_bmz_checkoutpage" class="regular-text" <?php echo ( $this->settings->is_bmz_on_checkout_page() ? 'checked' : '' ); ?> />
-		<p class="description" id="home-description"><?php _e( 'Auto-insert BMZs on Order Confirmation page', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Auto-insert BMZs on Order Confirmation page', 'pureclarity' ); ?></p>
 
 		<?php
 
@@ -467,17 +469,18 @@ class PureClarity_Admin {
 	 * @param string $value - setting to sanitize.
 	 */
 	public function sanitize_checkbox( $value ) {
-		return ( $value == 'on' ? 'yes' : 'no' );
+		return ( 'on' === $value ? 'yes' : 'no' );
 	}
 
 	/**
 	 * Generates html for top of settings page
 	 */
 	public function print_settings_section_text() {
-		echo '<p>' . __( 'To get started with PureClarity, you will need a PureClarity account and to then enter your access credentials below.', 'pureclarity' ) . '</p>';
-		$url  = 'https://www.pureclarity.com/free-trial/?source=woocommerce&medium=plugin&campaign=freetrial';
-		$link = sprintf(
-			wp_kses(    // sanitize result.
+		echo '<p>' . esc_html_e( 'To get started with PureClarity, you will need a PureClarity account and to then enter your access credentials below.', 'pureclarity' ) . '</p>';
+		$url = 'https://admin.pureclarity.com/signup/create-account';
+		echo sprintf(
+			wp_kses( // sanitize result.
+				/* translators: %s is replaced with the url */
 				__( "If you don't yet have an account, you can get started for free - <a href='%s' target='_blank'>register for your free trial today</a>.", 'pureclarity' ),
 				array(      // permitted html.
 					'a' => array(
@@ -488,17 +491,17 @@ class PureClarity_Admin {
 			),
 			esc_url( $url )
 		);
-		echo $link;
 	}
 
 	/**
 	 * Generates html for top of advanced page
 	 */
 	public function print_advanced_section_text() {
-		$url  = 'https://support.pureclarity.com/hc/en-us/sections/360001594074-WooCommerce';
-		$link = sprintf(
-			wp_kses(    // sanitize result.
-				__( "Configure advanced settings for PureClarity.  For more information, please see the <a href='%s' target='_blank'>PureClarity support documentation</a>.", 'pureclarity' ),
+		$url = 'https://www.pureclarity.com/docs/woocommerce/';
+		echo sprintf(
+			wp_kses(// sanitize result.
+				/* translators: %s is replaced with the url */
+				__( "Configure advanced settings for PureClarity. For more information, please see the <a href='%s' target='_blank'>PureClarity support documentation</a>.", 'pureclarity' ),
 				array(      // permitted html.
 					'a' => array(
 						'href'   => array(),
@@ -508,7 +511,6 @@ class PureClarity_Admin {
 			),
 			esc_url( $url )
 		);
-		echo $link;
 	}
 
 	/**
@@ -519,10 +521,7 @@ class PureClarity_Admin {
 			echo '<div class="error notice">
                     <p>';
 
-			printf(
-				__( 'PureClarity requires the %s extension to be installed and enabled. Please contact your hosting provider.', 'pureclarity' ),
-				'"cURL" PHP'
-			);
+			echo esc_html_e( 'PureClarity requires the "cURL" PHP extension to be installed and enabled. Please contact your hosting provider.', 'pureclarity' );
 
 			echo '</p>
 				</div>';
@@ -534,14 +533,14 @@ class PureClarity_Admin {
 		);
 		$admin_page            = get_current_screen();
 
-		if ( in_array( $admin_page->base, $whitelist_admin_pages )
-			&& isset( $_GET['settings-updated'] )
-			&& $_GET['settings-updated'] ) :
+		$updated = isset( $_GET['settings-updated'] ) ? sanitize_text_field( wp_unslash( $_GET['settings-updated'] ) ) : false;
+
+		if ( in_array( $admin_page->base, $whitelist_admin_pages, true ) && $updated ) :
 
 			?>
 
 			<div class="notice notice-success is-dismissible"> 
-				<p><strong><?php _e( 'Settings saved.', 'pureclarity' ); ?></strong></p>
+				<p><strong><?php esc_html_e( 'Settings saved.', 'pureclarity' ); ?></strong></p>
 			</div>
 
 			<?php
@@ -596,13 +595,13 @@ class PureClarity_Admin {
 	 * Gets fields for the advanced settings page
 	 */
 	private function get_advanced_fields() {
-		$bmz_debug_checkbox           = array(
+		$bmz_debug_checkbox             = array(
 			'pureclarity_bmz_debug',
 			'Enable BMZ Debugging',
 			'pureclarity_bmz_debug_callback',
 			true, // checkbox.
 		);
-		$add_bmz_homepage_checkbox     = array(
+		$add_bmz_homepage_checkbox      = array(
 			'pureclarity_add_bmz_homepage',
 			'Show Home Page BMZs',
 			'pureclarity_add_bmz_homepage_callback',

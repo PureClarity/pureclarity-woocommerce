@@ -142,7 +142,7 @@ class PureClarity_Products_Watcher {
 	 * @return void
 	 */
 	public function add_category_feed_to_deltas( $term_id, $tt_id, $taxonomy ) {
-		if ( $taxonomy == 'product_cat' ) {
+		if ( 'product_cat' === $taxonomy ) {
 			$this->settings->set_category_feed_required();
 		}
 	}
@@ -221,7 +221,6 @@ class PureClarity_Products_Watcher {
 
 		$order    = wc_get_order( $order_id );
 		$customer = new WC_Customer( $order->get_user_id() );
-		error_log( json_encode( $order ) );
 
 		if ( ! empty( $order ) && ! empty( $customer ) ) {
 

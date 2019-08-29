@@ -26,13 +26,6 @@ class PureClarity_Plugin {
 	private $feed;
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @var PureClarity_Plugin $pureclarity
-	 */
-	static $pureclarity;
-
-	/**
 	 * PureClarity Settings class
 	 *
 	 * @var PureClarity_Settings $settings
@@ -56,18 +49,6 @@ class PureClarity_Plugin {
 		$this->feed = new PureClarity_Feed( $this );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
 		add_action( 'init', array( $this, 'init' ), 15 );
-	}
-
-	/**
-	 * Returns an instance of the PureClarity_Plugin class
-	 *
-	 * @return PureClarity_Plugin
-	 */
-	public static function get_instance() {
-		if ( self::$pureclarity === null ) {
-			self::$pureclarity = new PureClarity_Plugin();
-		}
-		return self::$pureclarity;
 	}
 
 	/**
@@ -113,7 +94,7 @@ class PureClarity_Plugin {
 		wp_register_style( 'pureclarity-css', plugin_dir_url( __FILE__ ) . '../css/pc.css', array(), PURECLARITY_VERSION, 'screen' );
 		wp_enqueue_style( 'pureclarity-css' );
 
-		wp_register_script( 'pureclarity-js', plugin_dir_url( __FILE__ ) . '../js/pc.js', array( 'jquery', 'wp-util' ), PURECLARITY_VERSION );
+		wp_register_script( 'pureclarity-js', plugin_dir_url( __FILE__ ) . '../js/pc.js', array( 'jquery', 'wp-util' ), PURECLARITY_VERSION, true );
 		wp_enqueue_script( 'pureclarity-js' );
 	}
 

@@ -9,6 +9,7 @@
 	padding:10px; 
 	text-align: center; 
 	background-color:#DCF1F6; 
+	display:block; 
 }
 .toplevel_page_pureclarity-settings .form-table td p,
 .pureclarity_page_pureclarity-datafeed .form-table td p,

@@ -12,16 +12,16 @@ if ( ! defined( 'PURECLARITY_PATH' ) ) {
 }
 
 // Include required PureClarity classes.
-require_once PURECLARITY_PATH . 'includes/pureclarity-plugin.php';
-require_once PURECLARITY_PATH . 'includes/pureclarity-settings.php';
-require_once PURECLARITY_PATH . 'includes/pureclarity-state.php';
-require_once PURECLARITY_PATH . 'includes/pureclarity-template.php';
-require_once PURECLARITY_PATH . 'includes/pureclarity-bmz.php';
-require_once PURECLARITY_PATH . 'includes/feeds/pureclarity-feed.php';
-require_once PURECLARITY_PATH . 'includes/watchers/pureclarity-products-watcher.php';
-require_once PURECLARITY_PATH . 'includes/pureclarity-cron.php';
+require_once PURECLARITY_PATH . 'includes/class-pureclarity-plugin.php';
+require_once PURECLARITY_PATH . 'includes/class-pureclarity-settings.php';
+require_once PURECLARITY_PATH . 'includes/class-pureclarity-state.php';
+require_once PURECLARITY_PATH . 'includes/class-pureclarity-template.php';
+require_once PURECLARITY_PATH . 'includes/class-pureclarity-bmz.php';
+require_once PURECLARITY_PATH . 'includes/feeds/class-pureclarity-feed.php';
+require_once PURECLARITY_PATH . 'includes/watchers/class-pureclarity-products-watcher.php';
+require_once PURECLARITY_PATH . 'includes/class-pureclarity-cron.php';
 
 // Add admin only classes.
 if ( is_admin() ) {
-	require_once PURECLARITY_PATH . 'includes/admin/pureclarity-admin.php';
+	require_once PURECLARITY_PATH . 'includes/admin/class-pureclarity-admin.php';
 }
