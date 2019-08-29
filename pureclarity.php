@@ -37,8 +37,6 @@ if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 
 	// include classes.
 	require_once PURECLARITY_PATH . 'class-includes.php';
-
-	// Create static instance.
-	$pureclarity = PureClarity_Plugin::get_instance();
+	$pureclarity = new PureClarity_Plugin();
 
 }

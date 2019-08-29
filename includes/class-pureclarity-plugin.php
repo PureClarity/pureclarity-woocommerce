@@ -26,13 +26,6 @@ class PureClarity_Plugin {
 	private $feed;
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @var PureClarity_Plugin $pureclarity
-	 */
-	static $pureclarity;
-
-	/**
 	 * PureClarity Settings class
 	 *
 	 * @var PureClarity_Settings $settings
@@ -56,18 +49,6 @@ class PureClarity_Plugin {
 		$this->feed = new PureClarity_Feed( $this );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
 		add_action( 'init', array( $this, 'init' ), 15 );
-	}
-
-	/**
-	 * Returns an instance of the PureClarity_Plugin class
-	 *
-	 * @return PureClarity_Plugin
-	 */
-	public static function get_instance() {
-		if ( null === self::$pureclarity ) {
-			self::$pureclarity = new PureClarity_Plugin();
-		}
-		return self::$pureclarity;
 	}
 
 	/**
