@@ -19,6 +19,16 @@ class PureClarity_Settings {
 	public $script_url = '//pcs.pureclarity.net';
 
 	/**
+	 * PureClarity region for use in dropdowns
+	 *
+	 * @var array $regions
+	 */
+	private $display_regions = array(
+		'1' => 'Europe',
+		'4' => 'USA',
+	);
+
+	/**
 	 * PureClarity region urls
 	 *
 	 * @var array $regions
@@ -104,6 +114,15 @@ class PureClarity_Settings {
 	 */
 	public function get_secret_key() {
 		return (string) get_option( 'pureclarity_secretkey', '' );
+	}
+
+	/**
+	 * Gets display friendly region list
+	 *
+	 * @return string[]
+	 */
+	public function get_display_regions() {
+		return $this->display_regions;
 	}
 
 	/**

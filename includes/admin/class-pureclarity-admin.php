@@ -317,17 +317,17 @@ class PureClarity_Admin {
 	 */
 	public function pureclarity_region_callback() {
 
-		$regions = $this->settings->get_regions();
+		$regions = $this->settings->get_display_regions();
 		$region  = (int) $this->settings->get_region();
 
 		?>
 
 		<select id="pureclarity_region" name="pureclarity_region">
-			<?php foreach ( $regions as $key => $url ) : ?>
-				<option value="<?php echo esc_html( $key ); ?>" <?php echo ( $region === $key ) ? "selected='selected'" : ''; ?>><?php esc_html_e( 'Region', 'pureclarity' ); ?> <?php echo esc_html( $key ); ?></option>
+			<?php foreach ( $regions as $key => $label ) : ?>
+				<option value="<?php echo esc_html( $key ); ?>" <?php echo ( $region === $key ) ? "selected='selected'" : ''; ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>
 		</select>
-		<p class="description" id="home-description"><?php esc_html_e( 'Select the Region Id supplied with your PureClarity credentials', 'pureclarity' ); ?></p>
+		<p class="description" id="home-description"><?php esc_html_e( 'Select the region for your PureClarity enviroment', 'pureclarity' ); ?></p>
 
 		<?php
 
