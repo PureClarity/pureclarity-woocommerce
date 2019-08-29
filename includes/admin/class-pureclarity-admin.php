@@ -318,7 +318,7 @@ class PureClarity_Admin {
 	public function pureclarity_region_callback() {
 
 		$regions = $this->settings->get_regions();
-		$region  = $this->settings->get_region();
+		$region  = (int) $this->settings->get_region();
 
 		?>
 
