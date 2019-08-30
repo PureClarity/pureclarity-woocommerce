@@ -21,7 +21,8 @@
 			'action': 'pureclarity_run_datafeed',
             'page': currentPage,
             'type': type,
-            'feedname': feedName
+            'feedname': feedName,
+            'security': $('#pureclarity-feed-runner-nonce').val()
 		};
 		
 		$.post(ajaxurl, data, 
