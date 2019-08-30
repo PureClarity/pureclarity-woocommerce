@@ -34,14 +34,14 @@ With PureClarity, you can present different personalized merchandising campaigns
 
 * Automatically upsell and cross-sell with personalized recommenders
 * Advanced AI recommender engine orchestrates the best recommendation strategy for each visitor. The AI will place the recommender most likely to convert and adapt with each click of the customer journey
-* Recommenders can be placed on any page or within any zone of your website From your home page, product pages, category listings, search results page, cart page, through to  even your order confirmation page and email.
+* Recommenders can be placed on any page or within any zone of your website from your home page, product pages, category listings, search results page, cart page, through to  even your order confirmation page and email.
 * The AI gets to work from day one. You can let the AI get to work 24/7 with no intervention
 * PureClarity’s AI can evaluate which manual recommenders are on a page to ensure there is no recommender duplication
 * Ability to overlay the AI with personalized marketing campaigns throughout your site and set rules to determine which audience segment see which campaign and when.  Personalized campaigns can take the form of online banner ads, carousels and manual personalized recommenders
-* Full insights and opportunities analytics to optimize your campaigns and performance and maximize revenues. PureClarity enables you to real-time you can gain **valuable insight** into the performance of your on-site recommenders, personalization within site search, behavioral merchandising campaigns and personalized email marketing.
+* Full insights and opportunities analytics to optimize your campaigns and performance and maximize revenues. PureClarity enables you to gain **valuable insight** into the performance of your on-site recommenders, personalization within site search, behavioral merchandising campaigns and personalized email marketing.
 * Advanced audience segmentation. Ability to set up as many customer groups as your business needs.
 * Integrates with your WooCommerce store in minutes
-* Works extremely effective with sparse data sets. The AI is constantly learning and will start from day one.
+* Works extremely effectively with sparse data sets. The AI is constantly learning and will start from day one.
 * Fully customizable recommenders to fit your store’s theme
 * Works for both B2C and B2B WooCommerce stores
 * Multi-award winning software
