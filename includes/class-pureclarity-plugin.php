@@ -40,6 +40,13 @@ class PureClarity_Plugin {
 	private $state;
 
 	/**
+	 * PureClarity State class
+	 *
+	 * @var PureClarity_Order $order
+	 */
+	private $order;
+
+	/**
 	 * Sets up dependencies and adds some init actions
 	 */
 	public function __construct() {
@@ -88,6 +95,15 @@ class PureClarity_Plugin {
 	}
 
 	/**
+	 * Returns the order class
+	 *
+	 * @return PureClarity_Order
+	 */
+	public function get_order() {
+		return $this->order;
+	}
+
+	/**
 	 * Registers PureClarity CSS & JS
 	 */
 	public function register_assets() {
@@ -110,6 +126,7 @@ class PureClarity_Plugin {
 			}
 			$this->state = new PureClarity_State( $this );
 			$this->bmz   = new PureClarity_Bmz( $this );
+			$this->order = new PureClarity_Order();
 			new PureClarity_Template( $this );
 		}
 		new PureClarity_Products_Watcher( $this );
