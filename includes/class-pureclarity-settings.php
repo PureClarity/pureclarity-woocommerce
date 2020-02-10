@@ -204,7 +204,7 @@ class PureClarity_Settings {
 		if ( empty( $url ) ) {
 			$url = $this->script_url . '/' . $this->get_access_key() . '/cs.js';
 		} else {
-			$url .= $this->get_access_key() . '/dev.js';
+			$url .= $this->get_access_key() . '/cs.js';
 		}
 		return $url;
 	}
