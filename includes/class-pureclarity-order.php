@@ -57,7 +57,6 @@ class PureClarity_Order {
 				$product = $item->get_product();
 				if ( is_object( $product ) ) {
 					$order_items[] = array(
-						'orderid'   => $order->get_id(),
 						'id'        => $item->get_product_id(),
 						'qty'       => $item['qty'],
 						'unitprice' => wc_format_decimal( $order->get_item_total( $item, false, false ) ),
