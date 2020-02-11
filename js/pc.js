@@ -1,5 +1,4 @@
 var PureClarity = {
-    blah: "sdf",
     config: null,
     init: function() {
         this.config = window.pureclarityConfig;
@@ -36,8 +35,11 @@ var PureClarity = {
             _pc('customer_logout');
         }
 
+        var orderElement = document.getElementById('pc_order_info');
         if(this.config.tracking.order) {
             _pc('order', this.config.tracking.order);
+        } else if(orderElement) {
+            _pc('order', JSON.parse(orderElement.value));
         }
 
         if(this.config.tracking.cart) {

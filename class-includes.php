@@ -17,6 +17,7 @@ require_once PURECLARITY_PATH . 'includes/class-pureclarity-settings.php';
 require_once PURECLARITY_PATH . 'includes/class-pureclarity-state.php';
 require_once PURECLARITY_PATH . 'includes/class-pureclarity-template.php';
 require_once PURECLARITY_PATH . 'includes/class-pureclarity-bmz.php';
+require_once PURECLARITY_PATH . 'includes/class-pureclarity-order.php';
 require_once PURECLARITY_PATH . 'includes/feeds/class-pureclarity-feed.php';
 require_once PURECLARITY_PATH . 'includes/watchers/class-pureclarity-products-watcher.php';
 require_once PURECLARITY_PATH . 'includes/class-pureclarity-cron.php';
