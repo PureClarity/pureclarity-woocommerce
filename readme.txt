@@ -62,7 +62,7 @@ See screenshots below for a visually guide on how PureClarity increases your sal
 
 = Try for Free =
 
-With PureClarity you can Try for Free for 14 days.
+With PureClarity you can Try for Free.
 
 * Unlimited access to all PureClarity features
 * Access to PureClarity Academy
