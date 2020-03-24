@@ -123,3 +123,6 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/?utm_source=mar
 
 = 2.1.1 =
 * Added element to order received page, so that order tracking fires correctly when an externally hosted payment gateway is used
+
+= 2.1.2 =
+* Updated Readme to remove reference to "14 days" in free trial.
