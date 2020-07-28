@@ -97,9 +97,13 @@ class PureClarity_Cron {
 	 * Runs outstanding delta tasks
 	 */
 	public function run_delta_schedule() {
-		$this->process_products();
-		$this->process_categories();
-		$this->process_users();
+		if ( false === $this->settings->is_delta_running() ) {
+			$this->settings->set_is_delta_running( '1' );
+			$this->process_products();
+			$this->process_categories();
+			$this->process_users();
+			$this->settings->set_is_delta_running( '0' );
+		}
 	}
 
 	/**
@@ -197,7 +201,6 @@ class PureClarity_Cron {
 	public function process_users() {
 
 		try {
-
 			if ( ! $this->settings->is_user_feed_sent() ) {
 				return;
 			}
