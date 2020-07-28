@@ -139,7 +139,7 @@ class PureClarity_Cron {
 					$product = wc_get_product( $id );
 					$post    = get_post( $id );
 
-					if ( 'publish' === $post->post_status ) {
+					if ( 'publish' === $post->post_status && false !== $product ) {
 						$data = $this->feed->get_product_data( $product );
 						if ( ! empty( $data ) ) {
 							$products[]   = $data;
