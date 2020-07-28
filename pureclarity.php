@@ -11,7 +11,7 @@
  * Author:       PureClarity
  * Author URI:   https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity
  * Text Domain:  pureclarity
- * WC tested up to: 3.8.1
+ * WC tested up to: 4.3.0
  **/
 
 // Abort if called directly.
