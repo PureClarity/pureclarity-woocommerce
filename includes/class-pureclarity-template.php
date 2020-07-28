@@ -12,6 +12,20 @@
 class PureClarity_Template {
 
 	/**
+	 * PureClarity config data
+	 *
+	 * @var mixed[] $config
+	 */
+	private $config;
+
+	/**
+	 * PureClarity cart config data
+	 *
+	 * @var mixed[] $cart_config
+	 */
+	private $cart_config;
+
+	/**
 	 * PureClarity Bmz class
 	 *
 	 * @var PureClarity_Bmz $bmz
@@ -41,6 +55,16 @@ class PureClarity_Template {
 		$this->plugin = $plugin;
 		$this->bmz    = $this->plugin->get_bmz();
 		if ( ! is_ajax() ) {
+			if ( ! defined( 'DOING_CRON' ) ) {
+				add_filter(
+					'wp_loaded',
+					array(
+						$this,
+						'build_cart_config',
+					)
+				);
+			}
+
 			add_filter(
 				'wp_head',
 				array(
@@ -72,21 +96,32 @@ class PureClarity_Template {
 	 * @return array
 	 */
 	private function get_config() {
-		$pureclarity_settings = $this->get_pureclarity_plugin_settings();
-		$pureclarity_session  = $this->get_pureclarity_plugin()->get_state();
-		return array(
-			'enabled'    => $this->is_pureclarity_active(),
-			'product'    => $pureclarity_session->get_product(),
-			'categoryId' => ( is_shop() ? '*' : $pureclarity_session->get_category_id() ),
-			'tracking'   => array(
-				'accessKey' => $pureclarity_settings->get_access_key(),
-				'apiUrl'    => $pureclarity_settings->get_api_url(),
-				'customer'  => $pureclarity_session->get_customer(),
-				'islogout'  => $pureclarity_session->is_logout(),
-				'order'     => $pureclarity_session->get_order(),
-				'cart'      => $pureclarity_session->get_cart(),
-			),
-		);
+		if ( empty( $this->config ) ) {
+			$pureclarity_settings = $this->get_pureclarity_plugin_settings();
+			$pureclarity_session  = $this->get_pureclarity_plugin()->get_state();
+			$this->config         = array(
+				'enabled'    => $this->is_pureclarity_active(),
+				'product'    => $pureclarity_session->get_product(),
+				'categoryId' => ( is_shop() ? '*' : $pureclarity_session->get_category_id() ),
+				'tracking'   => array(
+					'accessKey' => $pureclarity_settings->get_access_key(),
+					'apiUrl'    => $pureclarity_settings->get_api_url(),
+					'customer'  => $pureclarity_session->get_customer(),
+					'islogout'  => $pureclarity_session->is_logout(),
+					'order'     => $pureclarity_session->get_order(),
+					'cart'      => $this->cart_config,
+				),
+			);
+		}
+		return $this->config;
+	}
+
+	/**
+	 * Gets PureClarity configuration
+	 */
+	public function build_cart_config() {
+		$pureclarity_session = $this->get_pureclarity_plugin()->get_state();
+		$this->cart_config   = $pureclarity_session->get_cart();
 	}
 
 	/**
