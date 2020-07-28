@@ -44,7 +44,7 @@ class PureClarity_State {
 	 *
 	 * @var boolean $islogout
 	 */
-	private $islogout = false;
+	private $islogout;
 
 	/**
 	 * Order Data
@@ -67,8 +67,11 @@ class PureClarity_State {
 	 */
 	public function __construct( &$plugin ) {
 		$this->plugin = $plugin;
-		if ( ! session_id() ) {
-			session_start();
+
+		// if not on the login page, check for the logout cookie, in order to see if we need to trigger customer_logout event.
+		// cannot check on login page as our js isn't on it.
+		if ( 'wp-login.php' !== $GLOBALS['pagenow'] ) {
+			$this->is_logout();
 		}
 	}
 
@@ -76,8 +79,8 @@ class PureClarity_State {
 	 * Clears PureClarity customer data
 	 */
 	public function clear_customer() {
-		$_SESSION['pureclarity-customer'] = null;
-		$this->customer                   = null;
+		WC()->session->set( 'pureclarity-customer', null );
+		$this->customer = null;
 	}
 
 	/**
@@ -96,11 +99,11 @@ class PureClarity_State {
 					'lastname'  => $customer->get_last_name(),
 				);
 
-				$this->customer                   = array(
+				$this->customer = array(
 					'id'   => time(),
 					'data' => $data,
 				);
-				$_SESSION['pureclarity-customer'] = $this->customer;
+				WC()->session->set( 'pureclarity-customer', $this->customer );
 				return $this->customer;
 			}
 		}
@@ -115,11 +118,10 @@ class PureClarity_State {
 			return $this->customer;
 		}
 
-		if ( isset( $_SESSION['pureclarity-customer'] ) ) {
-			$this->customer = $_SESSION['pureclarity-customer'];
-			$isadmin        = current_user_can( 'administrator' );
-			$adminset       = ! empty( $this->customer['data']['accid'] );
-			if ( get_current_user_id() === $this->customer['data']['userid'] && $isadmin === $adminset ) {
+		$customer = WC()->session->get( 'pureclarity-customer' );
+		if ( $customer ) {
+			$this->customer = $customer;
+			if ( get_current_user_id() === $this->customer['data']['userid'] ) {
 				return $this->customer;
 			}
 		}
@@ -128,18 +130,18 @@ class PureClarity_State {
 	}
 
 	/**
-	 * Gets PureClarity logout event data
+	 * Checks for logout cookie, and if present sets $this->islogout to true, for use later in config rendering
 	 */
 	public function is_logout() {
-		if ( $this->islogout ) {
-			return true;
+		if ( ! isset( $this->islogout ) ) {
+			$this->islogout = isset( $_COOKIE['pc_logout'] ) ? (int) $_COOKIE['pc_logout'] : 0;
+			if ( isset( $_COOKIE['pc_logout'] ) ) {
+				unset( $_COOKIE['pc_logout'] );
+				$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
+				wc_setcookie( 'pc_logout', '1', time() - YEAR_IN_SECONDS, $secure, true );
+			}
 		}
-		if ( isset( $_SESSION['pureclarity-logout'] ) ) {
-			$this->islogout                 = $_SESSION['pureclarity-logout'];
-			$_SESSION['pureclarity-logout'] = null;
-			return $this->islogout;
-		}
-		return false;
+		return 1 === $this->islogout;
 	}
 
 	/**
@@ -204,12 +206,15 @@ class PureClarity_State {
 	 */
 	public function set_cart() {
 
+		$items      = array();
 		$cart_items = WC()->cart->get_cart();
+		$cart_id    = time();
 
-		$items = array();
+		if ( empty( $cart_items ) && isset( $_COOKIE['pc_empty_cart'] ) ) {
+			$cart_id = (int) $_COOKIE['pc_empty_cart'];
+		}
 
 		if ( ! empty( $cart_items ) ) {
-
 			foreach ( $cart_items as $cart_item_key => $cart_item ) {
 				$item    = array(
 					'id'        => $cart_item['product_id'],
@@ -218,14 +223,22 @@ class PureClarity_State {
 				);
 				$items[] = $item;
 			}
+
+			if ( isset( $_COOKIE['pc_empty_cart'] ) ) {
+				$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
+				wc_setcookie( 'pc_empty_cart', $cart_id, time() - YEAR_IN_SECONDS, $secure, true );
+			}
+		} else {
+			$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
+			wc_setcookie( 'pc_empty_cart', $cart_id, time() + YEAR_IN_SECONDS, $secure, true );
 		}
 
 		$this->cart = array(
-			'id'    => time(),
+			'id'    => $cart_id,
 			'items' => $items,
 		);
 
-		$_SESSION['pureclarity-cart'] = $this->cart;
+		WC()->session->set( 'pureclarity-cart', $this->cart );
 
 		return $this->cart;
 	}
@@ -239,8 +252,9 @@ class PureClarity_State {
 			return $this->cart;
 		}
 
-		if ( isset( $_SESSION['pureclarity-cart'] ) ) {
-			$this->cart = $_SESSION['pureclarity-cart'];
+		$cart = WC()->session->get( 'pureclarity-cart' );
+		if ( isset( $cart ) ) {
+			$this->cart = $cart;
 			return $this->cart;
 		}
 
@@ -255,9 +269,12 @@ class PureClarity_State {
 		if ( ! empty( $this->order ) ) {
 			return $this->order;
 		}
-		if ( isset( $_SESSION['pureclarity-order'] ) ) {
-			$this->order                   = $_SESSION['pureclarity-order'];
-			$_SESSION['pureclarity-order'] = null;
+
+		$order = WC()->session->get( 'pureclarity-order' );
+
+		if ( isset( $order ) ) {
+			$this->order = $order;
+			WC()->session->set( 'pureclarity-order', null );
 			return $this->order;
 		}
 		return null;

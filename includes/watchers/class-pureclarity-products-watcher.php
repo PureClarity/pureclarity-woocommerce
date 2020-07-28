@@ -54,19 +54,15 @@ class PureClarity_Products_Watcher {
 			return;
 		}
 
-		if ( ! session_id() ) {
-			session_start();
-		}
-
 		if ( $this->settings->is_deltas_enabled() ) {
 			$this->register_product_listeners();
 			$this->register_category_listeners();
 			$this->register_user_listeners();
 		}
+
 		$this->register_user_session_listeners();
 		$this->register_cart_listeners();
 		$this->register_order_listeners();
-
 	}
 
 	/**
@@ -107,8 +103,8 @@ class PureClarity_Products_Watcher {
 	 * Registers callback functions when users log in or out.
 	 */
 	private function register_user_session_listeners() {
-		add_action( 'wp_login', array( $this, 'user_login' ), 10, 2 );
-		add_action( 'wp_logout', array( $this, 'user_logout' ), 10, 2 );
+		add_action( 'wp_login', array( $this, 'user_login' ), 15, 2 );
+		add_action( 'wp_logout', array( $this, 'user_logout' ), 15, 2 );
 	}
 
 	/**
@@ -191,15 +187,20 @@ class PureClarity_Products_Watcher {
 	 */
 	public function user_login( $user_login, $user ) {
 		if ( ! empty( $user ) ) {
+			// remove logout cookie if it's present (just in case user logged in immediately after logout).
+			$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
+			wc_setcookie( 'pc_logout', '1', time() - YEAR_IN_SECONDS, $secure, true );
 			$this->state->set_customer( $user->ID );
 		}
 	}
 
 	/**
-	 * Triggers user logout session update
+	 * Triggers user logout cookie update
 	 */
 	public function user_logout() {
-		$_SESSION['pureclarity-logout'] = true;
+		// add pc_logout cookie so that customer_logout can be triggered on next page load.
+		$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
+		wc_setcookie( 'pc_logout', '1', time() + YEAR_IN_SECONDS, $secure, true );
 		$this->state->clear_customer();
 	}
 
@@ -255,7 +256,8 @@ class PureClarity_Products_Watcher {
 			$data          = $transaction;
 			$data['items'] = $order_items;
 
-			$_SESSION['pureclarity-order'] = $data;
+
+			WC()->session->set( 'pureclarity-order', $data );
 		}
 	}
 
