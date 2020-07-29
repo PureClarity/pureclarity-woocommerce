@@ -281,6 +281,24 @@ class PureClarity_Settings {
 	}
 
 	/**
+	 * Gets whether the delta process is running already
+	 *
+	 * @return boolean
+	 */
+	public function is_delta_running() {
+		return ( get_option( 'pureclarity_delta_running', '0' ) === '1' );
+	}
+
+	/**
+	 * Sets whether the delta process is running already
+	 *
+	 * @param string $running - new value for option ("1" or "0").
+	 */
+	public function set_is_delta_running( $running ) {
+		update_option( 'pureclarity_delta_running', $running );
+	}
+
+	/**
 	 * Saves config to say that a feed has been sent
 	 *
 	 * @param string $type - type of feed sent.
@@ -405,6 +423,7 @@ class PureClarity_Settings {
 					unset( $deltas[ $id ] );
 				}
 			}
+
 			update_option( 'pureclarity_product_deltas', wp_json_encode( $deltas, true ) );
 		}
 	}

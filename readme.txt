@@ -2,8 +2,8 @@
 Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
-Tested up to: 5.3.2
-Stable tag: 2.1.2
+Tested up to: 5.4.2
+Stable tag: 2.2.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -126,3 +126,7 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/?utm_source=mar
 
 = 2.1.2 =
 * Updated Readme to remove reference to "14 days" in free trial.
+
+= 2.2.0 =
+* Removed usage of PHP sessions, in favour of using WooCommerce native sessions
+* Performance improvements to prevent deltas using up too much resource & stop unnecessary user information loading.

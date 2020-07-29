@@ -97,9 +97,13 @@ class PureClarity_Cron {
 	 * Runs outstanding delta tasks
 	 */
 	public function run_delta_schedule() {
-		$this->process_products();
-		$this->process_categories();
-		$this->process_users();
+		if ( false === $this->settings->is_delta_running() ) {
+			$this->settings->set_is_delta_running( '1' );
+			$this->process_products();
+			$this->process_categories();
+			$this->process_users();
+			$this->settings->set_is_delta_running( '0' );
+		}
 	}
 
 	/**
@@ -135,7 +139,7 @@ class PureClarity_Cron {
 					$product = wc_get_product( $id );
 					$post    = get_post( $id );
 
-					if ( 'publish' === $post->post_status ) {
+					if ( 'publish' === $post->post_status && false !== $product ) {
 						$data = $this->feed->get_product_data( $product );
 						if ( ! empty( $data ) ) {
 							$products[]   = $data;
@@ -169,25 +173,23 @@ class PureClarity_Cron {
 	 * Processes a category delta
 	 */
 	public function process_categories() {
+		try {
+			if ( ! $this->settings->is_category_feed_sent() ) {
+				return;
+			}
 
-		if ( ! $this->settings->is_category_feed_sent() ) {
-			return;
-		}
+			if ( ! empty( $this->settings->get_category_feed_required() ) ) {
+				$this->settings->clear_category_feed_required();
 
-		if ( ! empty( $this->settings->get_category_feed_required() ) ) {
-
-			$this->settings->clear_category_feed_required();
-
-			$data = $this->feed->build_items( 'category', 1 );
-			if ( ! empty( $data ) ) {
-				try {
+				$data = $this->feed->build_items( 'category', 1 );
+				if ( ! empty( $data ) ) {
 					$this->feed->start_feed( 'category' );
 					$this->feed->send_data( 'category', $data );
 					$this->feed->end_feed( 'category' );
-				} catch ( \Exception $exception ) {
-					error_log( 'PureClarity: An error occurred updating categories: ' . $exception->getMessage() );
 				}
 			}
+		} catch ( \Exception $exception ) {
+			error_log( 'PureClarity: An error occurred updating categories: ' . $exception->getMessage() );
 		}
 	}
 
@@ -197,7 +199,6 @@ class PureClarity_Cron {
 	public function process_users() {
 
 		try {
-
 			if ( ! $this->settings->is_user_feed_sent() ) {
 				return;
 			}
