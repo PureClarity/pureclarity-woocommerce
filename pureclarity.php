@@ -38,6 +38,7 @@ if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 
 	// include classes.
 	require_once PURECLARITY_PATH . 'class-includes.php';
+	require_once PURECLARITY_PATH . 'functions.php';
 	$pureclarity = new PureClarity_Plugin();
 
 }
