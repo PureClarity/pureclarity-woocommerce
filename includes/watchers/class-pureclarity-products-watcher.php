@@ -122,10 +122,6 @@ class PureClarity_Products_Watcher {
 	private function register_order_listeners() {
 		if ( is_admin() ) {
 			add_action( 'woocommerce_order_status_completed', array( $this, 'moto_order_placed' ), 10, 1 );
-		} else {
-			add_action( 'woocommerce_order_status_processing', array( $this, 'order_placed' ), 10, 1 );
-			add_action( 'woocommerce_order_status_on-hold', array( $this, 'order_placed' ), 10, 1 );
-			add_action( 'woocommerce_order_status_pending', array( $this, 'order_placed' ), 10, 1 );
 		}
 	}
 
@@ -211,54 +207,6 @@ class PureClarity_Products_Watcher {
 	 */
 	public function moto_order_placed( $order_id ) {
 		// Order is placed in the admin and is complete.
-	}
-
-	/**
-	 * Triggers order placed event
-	 *
-	 * @param integer $order_id - order id.
-	 */
-	public function order_placed( $order_id ) {
-
-		$order    = wc_get_order( $order_id );
-		$customer = new WC_Customer( $order->get_user_id() );
-
-		if ( ! empty( $order ) && ! empty( $customer ) ) {
-
-			$transaction = array(
-				'orderid'    => $order->get_id(),
-				'firstname'  => $customer->get_first_name(),
-				'lastname'   => $customer->get_last_name(),
-				'userid'     => $order->get_user_id(),
-				'ordertotal' => $order->get_total(),
-			);
-
-			if ( empty( $transaction['userid'] ) ) {
-				// guest order, so add billing email.
-				$transaction['firstname'] = $order->get_billing_first_name();
-				$transaction['lastname']  = $order->get_billing_last_name();
-				$transaction['email']     = $order->get_billing_email();
-			}
-
-			$order_items = array();
-			foreach ( $order->get_items() as $item_id => $item ) {
-				$product = $order->get_product_from_item( $item );
-				if ( is_object( $product ) ) {
-					$order_items[] = array(
-						'orderid'   => $order->get_id(),
-						'id'        => $item->get_product_id(),
-						'qty'       => $item['qty'],
-						'unitprice' => wc_format_decimal( $order->get_item_total( $item, false, false ) ),
-					);
-				}
-			}
-
-			$data          = $transaction;
-			$data['items'] = $order_items;
-
-
-			WC()->session->set( 'pureclarity-order', $data );
-		}
 	}
 
 	/**
