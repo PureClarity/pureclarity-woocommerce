@@ -12,66 +12,57 @@
 class PureClarity_Order {
 
 	/**
-	 * Sets up dependencies and adds some init actions
-	 */
-	public function __construct() {
-		add_action(
-			'woocommerce_order_details_before_order_table',
-			array(
-				$this,
-				'order_event',
-			),
-			10
-		);
-	}
-
-	/**
-	 * Takes the current order and generates JSON for the order tracking event
+	 * Generates the order data for the given order ID
 	 *
-	 * @param WC_Order $order - the order being displayed on the page.
+	 * @param int $order_id - the order id to get info for.
+	 * @return array|null
 	 */
-	public function order_event( $order ) {
-		$output = '';
+	public function get_order_info( $order_id ) {
+		$order_info = null;
 
 		try {
-			$customer = new WC_Customer( $order->get_user_id() );
+			$order = wc_get_order( $order_id );
+			if ( ! empty( $order ) ) {
+				$customer = new WC_Customer( $order->get_user_id() );
+				if ( ! empty( $customer ) ) {
+					$order_info = array(
+						'orderid'    => $order->get_id(),
+						'firstname'  => $order->get_user_id() ? $customer->get_first_name() : $order->get_billing_first_name(),
+						'lastname'   => $order->get_user_id() ? $customer->get_last_name() : $order->get_billing_last_name(),
+						'userid'     => $order->get_user_id() ?: '',
+						'ordertotal' => $order->get_total(),
+						'email'      => $order->get_user_id() ? $customer->get_email() : $order->get_billing_email(),
+					);
 
-			if ( ! empty( $order ) && ! empty( $customer ) ) {
-				$transaction = array(
-					'orderid'    => $order->get_id(),
-					'firstname'  => $customer->get_first_name(),
-					'lastname'   => $customer->get_last_name(),
-					'userid'     => $order->get_user_id(),
-					'ordertotal' => $order->get_total(),
-				);
-
-				if ( empty( $transaction['userid'] ) ) {
-					// guest order, so add billing email.
-					$transaction['firstname'] = $order->get_billing_first_name();
-					$transaction['lastname']  = $order->get_billing_last_name();
-					$transaction['email']     = $order->get_billing_email();
-				}
-
-				$order_items = array();
-				foreach ( $order->get_items() as $item_id => $item ) {
-					$product = $item->get_product();
-					if ( is_object( $product ) ) {
-						$order_items[] = array(
-							'id'        => $item->get_product_id(),
-							'qty'       => $item['qty'],
-							'unitprice' => wc_format_decimal( $order->get_item_total( $item, false, false ) ),
-						);
+					$order_info['items'] = array();
+					foreach ( $order->get_items() as $item_id => $item ) {
+						$product = $item->get_product();
+						if ( is_object( $product ) ) {
+							$order_info['items'][] = array(
+								'id'        => $item->get_product_id(),
+								'qty'       => $item['qty'],
+								'unitprice' => wc_format_decimal( $order->get_item_total( $item, false, false ) ),
+							);
+						}
 					}
 				}
-
-				$data          = $transaction;
-				$data['items'] = $order_items;
-				$data_string   = wp_json_encode( $data );
-				$output        = '<input type="hidden" id="pc_order_info" value=" ' . htmlentities( $data_string, ENT_QUOTES, 'utf-8' ) . '">';
 			}
 		} catch ( \Exception $e ) {
 			error_log( 'PureClarity: An error occurred trying to output order info: ' . $e->getMessage() );
 		}
+
+		return $order_info;
+	}
+
+	/**
+	 * Generates the order data for the given order ID
+	 *
+	 * @param int $order_id - the order id to get info for.
+	 */
+	public function output_order_event_input( $order_id ) {
+		$data        = $this->get_order_info( $order_id );
+		$data_string = wp_json_encode( $data );
+		$output      = '<input type="hidden" id="pc_order_info" value=" ' . htmlentities( $data_string, ENT_QUOTES, 'utf-8' ) . '">';
 
 		echo wp_kses(
 			$output,

@@ -264,20 +264,29 @@ class PureClarity_State {
 
 	/**
 	 * Gets PureClarity order data
+	 *
+	 * @return array|null
 	 */
 	public function get_order() {
+		// Only do this on "Order-received" page.
+		if ( ! is_wc_endpoint_url( 'order-received' ) ) {
+			return null;
+		}
+
 		if ( ! empty( $this->order ) ) {
 			return $this->order;
 		}
 
-		$order = WC()->session->get( 'pureclarity-order' );
+		global $wp;
+		$order_id = absint( $wp->query_vars['order-received'] );
 
-		if ( isset( $order ) ) {
-			$this->order = $order;
-			WC()->session->set( 'pureclarity-order', null );
-			return $this->order;
+		if ( $order_id ) {
+			$pc_order    = new PureClarity_Order();
+			$order_data  = $pc_order->get_order_info( $order_id );
+			$this->order = $order_data;
 		}
-		return null;
+
+		return $this->order;
 	}
 
 }
