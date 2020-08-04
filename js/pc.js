@@ -18,7 +18,7 @@ var PureClarity = {
             var p = d.createElement(s), h = d.getElementsByTagName(s)[0];
             p.src = u;p.async=1;h.parentNode.insertBefore(p, h);
         })(window, document, 'script', this.config.tracking.apiUrl, '_pc');
-        _pc('page_view');
+        _pc('page_view',this.config.page_view);
         
         if (this.config.product){
             _pc('product_view', { id: this.config.product.id });

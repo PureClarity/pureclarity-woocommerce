@@ -103,6 +103,7 @@ class PureClarity_Template {
 				'enabled'    => $this->is_pureclarity_active(),
 				'product'    => $pureclarity_session->get_product(),
 				'categoryId' => ( is_shop() ? '*' : $pureclarity_session->get_category_id() ),
+				'page_view'  => $pureclarity_session->get_page_view_context(),
 				'tracking'   => array(
 					'accessKey' => $pureclarity_settings->get_access_key(),
 					'apiUrl'    => $pureclarity_settings->get_api_url(),

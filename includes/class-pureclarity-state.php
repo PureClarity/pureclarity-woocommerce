@@ -154,9 +154,12 @@ class PureClarity_State {
 
 		$product = $this->get_wc_product();
 		if ( ! empty( $product ) ) {
-			$data = array(
-				'id'  => (string) $product->get_id(),
-				'sku' => $product->get_sku(),
+			$categories = $product->get_category_ids();
+			$category   = ( count( $categories ) > 0 ) ? array_shift( $categories ) : null;
+			$data       = array(
+				'id'          => (string) $product->get_id(),
+				'sku'         => $product->get_sku(),
+				'category_id' => $category,
 			);
 			wp_reset_postdata();
 			$this->current_product = $data;
@@ -289,4 +292,77 @@ class PureClarity_State {
 		return $this->order;
 	}
 
+	/**
+	 * Works out what page type this page is, based on the target
+	 *
+	 * @return array
+	 */
+	public function get_page_view_context() {
+		return $this->get_page_context( $this->get_page_type() );
+	}
+
+	/**
+	 * Works out what page type this page is, based on WP functions
+	 *
+	 * @return string
+	 */
+	private function get_page_type() {
+		$page_type = '';
+		if ( is_front_page() ) {
+			$page_type = 'homepage';
+		} elseif ( is_search() ) {
+			$page_type = 'search_results';
+		} elseif ( is_product_category() || is_shop() ) {
+			$page_type = 'product_listing_page';
+		} elseif ( is_product() ) {
+			$page_type = 'product_page';
+		} elseif ( is_cart() ) {
+			$page_type = 'basket_page';
+		} elseif ( is_account_page() ) {
+			$page_type = 'my_account';
+		} elseif ( is_wc_endpoint_url( 'order-received' ) ) {
+			$page_type = 'order_complete_page';
+		} elseif ( is_checkout() ) {
+			$page_type = '';
+		} elseif ( is_page() ) {
+			$page_type = 'content_page';
+		}
+		return $page_type;
+	}
+
+	/**
+	 * Gets page-type specific context (e.g. product page - product ID)
+	 *
+	 * @param string $page_type Page Type - the page type currently being viewed.
+	 *
+	 * @return array
+	 */
+	protected function get_page_context( $page_type ) {
+		$context = [];
+
+		if ( $page_type ) {
+			$context['page_type'] = $page_type;
+		}
+
+		switch ( $page_type ) {
+			case 'category_listing_page':
+			case 'product_listing_page':
+				$category_id = $this->get_category_id();
+				if ( $category_id ) {
+					$context['category_id'] = $this->get_category_id();
+				}
+				break;
+			case 'product_page':
+				$product = $this->get_product();
+				if ( is_array( $product ) ) {
+					$context['product_id'] = $product['id'];
+					if ( $product['category_id'] ) {
+						$context['category_id'] = $product['category_id'];
+					}
+				}
+				break;
+		}
+
+		return $context;
+	}
 }
