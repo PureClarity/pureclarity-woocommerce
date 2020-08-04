@@ -3,7 +3,7 @@ Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
 Tested up to: 5.4.2
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -137,3 +137,6 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/?utm_source=mar
 * 2. Removed the order session usage, as it's redundant now.
 * 3. Change the fallback to be a custom way to trigger order events for those with completely custom order received pages.
 * Also fixed a minor issue with user IDs and guest orders being sent as 0, instead of blank
+
+= 2.3.1 =
+* Improvements to page view event to send page type and context
