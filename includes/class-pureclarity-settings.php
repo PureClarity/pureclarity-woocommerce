@@ -11,6 +11,8 @@
  */
 class PureClarity_Settings {
 
+	const OPTION_NIGHTLY_FEED_ENABLED   = 'pureclarity_nightly_feed_enabled';
+
 	/**
 	 * PureClarity script url
 	 *
@@ -174,6 +176,15 @@ class PureClarity_Settings {
 	 */
 	public function is_deltas_enabled_admin() {
 		return ( get_option( 'pureclarity_deltas_enabled', '' ) === 'on' );
+	}
+
+	/**
+	 * Gets nightly feed enabled value
+	 *
+	 * @return string
+	 */
+	public function is_nightly_feed_enabled() {
+		return ( get_option( self::OPTION_NIGHTLY_FEED_ENABLED, '' ) === 'on' );
 	}
 
 	/**
