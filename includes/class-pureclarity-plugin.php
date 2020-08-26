@@ -90,10 +90,10 @@ class PureClarity_Plugin {
 	 * Registers PureClarity CSS & JS
 	 */
 	public function register_assets() {
-		wp_register_style( 'pureclarity-css', plugin_dir_url( __FILE__ ) . '../css/pc.css', array(), PURECLARITY_VERSION, 'screen' );
+		wp_register_style( 'pureclarity-css', PURECLARITY_BASE_URL . 'public/css/pc.css', array(), PURECLARITY_VERSION, 'screen' );
 		wp_enqueue_style( 'pureclarity-css' );
 
-		wp_register_script( 'pureclarity-js', plugin_dir_url( __FILE__ ) . '../js/pc.js', array( 'jquery', 'wp-util' ), PURECLARITY_VERSION, true );
+		wp_register_script( 'pureclarity-js', PURECLARITY_BASE_URL . 'public/js/pc.js', array( 'jquery', 'wp-util' ), PURECLARITY_VERSION, true );
 		wp_enqueue_script( 'pureclarity-js' );
 	}
 

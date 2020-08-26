@@ -25,6 +25,10 @@ if ( ! defined( 'PURECLARITY_PATH' ) ) {
 	define( 'PURECLARITY_PATH', plugin_dir_path( __FILE__ ) );
 }
 
+if ( ! defined( 'PURECLARITY_BASE_URL' ) ) {
+	define( 'PURECLARITY_BASE_URL', plugin_dir_url( __FILE__ ) );
+}
+
 // Ensure woocommerce is enabled.
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
