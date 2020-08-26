@@ -11,7 +11,22 @@
  */
 class PureClarity_Admin {
 
-	const SETTINGS_SLUG              = 'pureclarity-settings';
+	const SETTINGS_SLUG  = 'pureclarity-settings';
+	const DASHBOARD_SLUG = 'pureclarity-dashboard';
+
+	/**
+	 * PureClarity Feed class
+	 *
+	 * @var PureClarity_Feeds $feeds
+	 */
+	private $feeds;
+
+	/**
+	 * PureClarity Dashboard Page class
+	 *
+	 * @var PureClarity_Dashboard_Page $dashboard_page
+	 */
+	private $dashboard_page;
 
 	/**
 	 * PureClarity Settings Page class
@@ -21,18 +36,29 @@ class PureClarity_Admin {
 	private $settings_page;
 
 	/**
+	 * PureClarity Settings Page class
+	 *
+	 * @var PureClarity_Signup $signup
+	 */
+	private $signup;
+
+	/**
 	 * Builds class dependencies & sets up admin actions
 	 *
 	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
 	 */
 	public function __construct( &$plugin ) {
 
+		$this->dashboard_page = new PureClarity_Dashboard_Page( $plugin->get_settings() );
+		$this->feeds          = new PureClarity_Feeds();
+		$this->signup         = new PureClarity_Signup();
 		$this->settings_page  = new PureClarity_Settings_Page( $plugin->get_settings() );
 
 		add_action( 'admin_notices', array( $this, 'display_dependency_notices' ) );
 		add_action( 'admin_menu', array( $this, 'add_menus' ) );
 		add_action( 'admin_init', array( $this->settings_page, 'add_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_js_and_css' ) );
+		$this->add_ajax_actions();
 	}
 
 	/**
@@ -67,25 +93,86 @@ class PureClarity_Admin {
 			);
 
 			wp_enqueue_script( 'pureclarity-adminjs' );
+
+			add_thickbox();
 		}
+	}
+
+	/**
+	 * Adds the various admin ajax actions used by the plugin
+	 */
+	public function add_ajax_actions() {
+
+		// TODO: only enable this if plugin configured
+		add_action(
+			'wp_ajax_pureclarity_request_feeds',
+			array(
+				$this->feeds,
+				'request_feeds_action',
+			)
+		);
+
+		add_action(
+			'wp_ajax_pureclarity_feed_progress',
+			array(
+				$this->feeds,
+				'feed_progress_action',
+			)
+		);
+
+		// TODO: only enable this if plugin not configured
+		add_action(
+			'wp_ajax_pureclarity_signup_submit',
+			array(
+				$this->signup,
+				'submit_signup_action',
+			)
+		);
+
+		add_action(
+			'wp_ajax_pureclarity_signup_progress',
+			array(
+				$this->signup,
+				'signup_progress_action',
+			)
+		);
+
+		add_action(
+			'wp_ajax_pureclarity_link_account',
+			array(
+				$this->signup,
+				'link_account_action',
+			)
+		);
 	}
 
 	/**
 	 * Adds PureClarity menus
 	 */
 	public function add_menus() {
+
+		$dashboard = __( 'Dashboard', 'pureclarity' );
 		add_menu_page(
-			'PureClarity',
+			"PureClarity: {$dashboard}",
 			'PureClarity',
 			'manage_options',
-			self::SETTINGS_SLUG,
-			array( $this, 'settings_render' ),
-			'data:image/svg+xml;base64,' . $this->pureclarity_svg()
+			self::DASHBOARD_SLUG,
+			array( $this->dashboard_page, 'dashboard_render' ),
+			'data:image/png;base64,' . $this->pureclarity_svg()
+		);
+
+		add_submenu_page(
+			self::DASHBOARD_SLUG,
+			"PureClarity: {$dashboard}",
+			$dashboard,
+			'manage_options',
+			self::DASHBOARD_SLUG,
+			array( $this->dashboard_page, 'dashboard_render' )
 		);
 
 		$settings = __( 'Settings', 'pureclarity' );
 		add_submenu_page(
-			self::SETTINGS_SLUG,
+			self::DASHBOARD_SLUG,
 			"PureClarity: {$settings}",
 			$settings,
 			'manage_options',
@@ -116,7 +203,7 @@ class PureClarity_Admin {
 		}
 
 		$whitelist_admin_pages = array(
-			'toplevel_page_pureclarity-settings',
+			'pureclarity_page_pureclarity-settings',
 			'pureclarity_page_pureclarity-advanced',
 		);
 		$admin_page            = get_current_screen();
