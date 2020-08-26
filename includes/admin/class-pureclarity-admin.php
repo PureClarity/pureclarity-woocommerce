@@ -48,13 +48,35 @@ class PureClarity_Admin {
 		add_action( 'admin_notices', array( $this, 'display_dependency_notices' ) );
 		add_action( 'admin_menu', array( $this, 'add_menus' ) );
 		add_action( 'admin_init', array( $this->settings_page, 'add_settings' ) );
-		wp_register_script(
-			'pureclarity-adminjs',
-			plugin_dir_url( __FILE__ ) . 'js/pc-admin.js',
-			array( 'jquery' ),
-			PURECLARITY_VERSION,
-			true
-		);
+		add_action( 'admin_enqueue_scripts', array( $this, 'add_js_and_css' ) );
+	}
+
+	/**
+	 * Adds the PureClarity Admin JS & CSS to the page.
+	 *
+	 * @param string $hook - WP Hook that denotes what page is running.
+	 */
+	public function add_js_and_css( $hook ) {
+
+		if ( strpos( $hook, 'pureclarity' ) !== false ) {
+
+			wp_enqueue_style(
+				'pureclarity-admin-styles',
+				PURECLARITY_BASE_URL . 'admin/css/pc-admin.css',
+				array(),
+				PURECLARITY_VERSION
+			);
+
+			wp_register_script(
+				'pureclarity-adminjs',
+				PURECLARITY_BASE_URL . 'admin/js/pc-admin.js',
+				array( 'jquery' ),
+				PURECLARITY_VERSION,
+				true
+			);
+
+			wp_enqueue_script( 'pureclarity-adminjs' );
+		}
 	}
 
 	/**
