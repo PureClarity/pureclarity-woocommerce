@@ -113,6 +113,7 @@ class PureClarity_Plugin {
 		}
 		new PureClarity_Products_Watcher( $this );
 		new PureClarity_Cron( $this );
+		new PureClarity_Cron_Feeds( $this );
 	}
 
 }
