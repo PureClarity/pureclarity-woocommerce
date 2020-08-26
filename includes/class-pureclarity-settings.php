@@ -230,6 +230,8 @@ class PureClarity_Settings {
 		$port = getenv( 'PURECLARITY_FEED_PORT' );
 		if ( empty( $url ) ) {
 			$url = $this->sftp_regions[ $this->get_region() ];
+		} else {
+			$url = 'http://' . $url;
 		}
 		if ( ! empty( $port ) ) {
 			$url = $url . ':' . $port;
