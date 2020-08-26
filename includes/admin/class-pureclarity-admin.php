@@ -11,12 +11,6 @@
  */
 class PureClarity_Admin {
 
-	const ADVANCED_OPTION_GROUP_NAME = 'pureclarity_advanced';
-	const ADVANCED_SECTION_ID        = 'pureclarity_section_advanced';
-	const ADVANCED_MENU_SLUG         = 'pureclarity-advanced';
-
-	const SETTINGS_OPTION_GROUP_NAME = 'pureclarity_settings';
-	const SETTINGS_SECTION_ID        = 'pureclarity_section_settings';
 	const SETTINGS_SLUG              = 'pureclarity-settings';
 
 	/**
@@ -53,7 +47,7 @@ class PureClarity_Admin {
 
 		add_action( 'admin_notices', array( $this, 'display_dependency_notices' ) );
 		add_action( 'admin_menu', array( $this, 'add_menus' ) );
-		add_action( 'admin_init', array( $this, 'add_settings' ) );
+		add_action( 'admin_init', array( $this->settings_page, 'add_settings' ) );
 		wp_register_script(
 			'pureclarity-adminjs',
 			plugin_dir_url( __FILE__ ) . 'js/pc-admin.js',
