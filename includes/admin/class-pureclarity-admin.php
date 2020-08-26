@@ -21,28 +21,12 @@ class PureClarity_Admin {
 	private $settings_page;
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
-	 * PureClarity Settings class
-	 *
-	 * @var PureClarity_Settings $settings
-	 */
-	private $settings;
-
-	/**
 	 * Builds class dependencies & sets up admin actions
 	 *
 	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
 	 */
 	public function __construct( &$plugin ) {
 
-		$this->plugin   = $plugin;
-		$this->settings = $this->plugin->get_settings();
 		$this->settings_page  = new PureClarity_Settings_Page( $plugin->get_settings() );
 
 		add_action( 'admin_notices', array( $this, 'display_dependency_notices' ) );
