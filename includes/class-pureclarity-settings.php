@@ -344,13 +344,9 @@ class PureClarity_Settings {
 	 * Gets PureClarity Delta feed url
 	 */
 	public function get_delta_url() {
-		$url  = getenv( 'PURECLARITY_API_ENDPOINT' );
-		$port = getenv( 'PURECLARITY_API_PORT' );
+		$url  = getenv( 'PURECLARITY_HOST' );
 		if ( empty( $url ) ) {
 			$url = $this->regions[ $this->get_region() ];
-		}
-		if ( ! empty( $port ) ) {
-			$url = $url . ':' . $port;
 		}
 		return $url . '/api/delta';
 	}
