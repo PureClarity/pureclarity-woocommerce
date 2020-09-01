@@ -164,7 +164,7 @@ class PureClarity_Settings {
 			case 'on':
 				return true;
 			case 'admin':
-				return current_user_can( 'administrator' );
+				return current_user_can( 'administrator' ) || defined( 'DOING_CRON' );
 		}
 		return false;
 	}
