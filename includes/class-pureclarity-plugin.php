@@ -43,10 +43,6 @@ class PureClarity_Plugin {
 	 * Sets up dependencies and adds some init actions
 	 */
 	public function __construct() {
-
-		$this->settings = new PureClarity_Settings();
-
-		$this->feed = new PureClarity_Feed( $this );
 		add_action( 'init', array( $this, 'init' ), 15 );
 	}
 
@@ -101,6 +97,8 @@ class PureClarity_Plugin {
 	 * Initializes the plugin
 	 */
 	public function init() {
+		$this->settings = new PureClarity_Settings();
+		$this->feed     = new PureClarity_Feed( $this );
 		if ( is_admin() ) {
 			new PureClarity_Admin( $this );
 		} else {
