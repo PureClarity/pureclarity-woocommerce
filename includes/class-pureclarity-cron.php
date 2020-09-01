@@ -36,6 +36,13 @@ class PureClarity_Cron {
 	private $feed;
 
 	/**
+	 * PureClarity Delta class
+	 *
+	 * @var PureClarity_Delta $deltas
+	 */
+	private $deltas;
+
+	/**
 	 * Builds class dependencies & calls processing code
 	 *
 	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
@@ -44,6 +51,7 @@ class PureClarity_Cron {
 		$this->plugin   = $plugin;
 		$this->settings = $plugin->get_settings();
 		$this->feed     = $plugin->get_feed();
+		$this->deltas   = new PureClarity_Delta();
 
 		if ( $this->settings->is_deltas_enabled() ) {
 			add_filter(
@@ -84,7 +92,7 @@ class PureClarity_Cron {
 			)
 		);
 
-		if ( ! wp_next_scheduled( 'pureclarity_scheduled_deltas_cron' ) ) {
+		if ( ! wp_next_scheduled( 'pureclarity_scheduled_deltas_cron' ) ) {error_log('HERE2?');
 			wp_schedule_event(
 				time(),
 				'pureclarity_every_minute',
@@ -97,12 +105,12 @@ class PureClarity_Cron {
 	 * Runs outstanding delta tasks
 	 */
 	public function run_delta_schedule() {
-		if ( false === $this->settings->is_delta_running() ) {
-			$this->settings->set_is_delta_running( '1' );
+		if ( false === $this->deltas->is_delta_running() ) {
+			$this->deltas->set_is_delta_running( '1' );
 			$this->process_products();
 			$this->process_categories();
 			$this->process_users();
-			$this->settings->set_is_delta_running( '0' );
+			$this->deltas->set_is_delta_running( '0' );
 		}
 	}
 
@@ -113,11 +121,7 @@ class PureClarity_Cron {
 
 		try {
 
-			if ( ! $this->settings->is_product_feed_sent() ) {
-				return;
-			}
-
-			$product_deltas = $this->settings->get_product_deltas();
+			$product_deltas = $this->deltas->get_product_deltas();
 			if ( count( $product_deltas ) > 0 ) {
 
 				$products           = array();
@@ -130,8 +134,8 @@ class PureClarity_Cron {
 
 				$processed_ids = array();
 
-				foreach ( array_keys( $product_deltas ) as $id ) {
-
+				foreach ( $product_deltas as $product ) {
+					$id = $product['id'];
 					if ( $totalpacket >= 250000 || $count > 100 ) {
 						break;
 					}
@@ -162,7 +166,7 @@ class PureClarity_Cron {
 					$this->feed->send_product_delta( $products, $products_to_delete );
 				}
 
-				$this->settings->remove_product_deltas( $processed_ids );
+				$this->deltas->remove_product_deltas( $processed_ids );
 			}
 		} catch ( \Exception $exception ) {
 			error_log( 'PureClarity: An error occurred updating product deltas: ' . $exception->getMessage() );

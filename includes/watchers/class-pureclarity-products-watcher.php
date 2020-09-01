@@ -40,6 +40,13 @@ class PureClarity_Products_Watcher {
 	private $state;
 
 	/**
+	 * PureClarity Delta class
+	 *
+	 * @var PureClarity_Delta $deltas
+	 */
+	private $deltas;
+
+	/**
 	 * Builds class dependencies & sets up watchers
 	 *
 	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
@@ -49,6 +56,7 @@ class PureClarity_Products_Watcher {
 		$this->feed     = $plugin->get_feed();
 		$this->settings = $plugin->get_settings();
 		$this->state    = $plugin->get_state();
+		$this->deltas   = new PureClarity_Delta();
 
 		if ( ! $this->settings->is_pureclarity_enabled() ) {
 			return;
@@ -145,7 +153,7 @@ class PureClarity_Products_Watcher {
 	 * @param integer $user_id - Id of user being added/edited/deleted.
 	 */
 	public function trigger_user_delta( $user_id ) {
-		$this->settings->add_user_delta( $user_id );
+		$this->deltas->add_user_delta( $user_id );
 	}
 
 	/**
@@ -159,7 +167,7 @@ class PureClarity_Products_Watcher {
 			return $id;
 		}
 
-		$this->settings->add_product_delta( $id );
+		$this->deltas->add_product_delta( $id );
 	}
 
 	/**
@@ -170,7 +178,7 @@ class PureClarity_Products_Watcher {
 	public function delete_item( $id ) {
 		$post = get_post( $id );
 		if ( 'product' === $post->post_type && 'trash' === $post->post_status ) {
-			$this->settings->add_product_delta( $id );
+			$this->deltas->add_product_delta( $id );
 		}
 	}
 
