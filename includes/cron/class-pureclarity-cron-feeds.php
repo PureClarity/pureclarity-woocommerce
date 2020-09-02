@@ -9,7 +9,7 @@
 use PureClarity\Api\Feed\Feed;
 
 /**
- * Handles Feed related cron code
+ * Handles Requested Feed related cron code
  */
 class PureClarity_Cron_Feeds {
 
@@ -54,40 +54,8 @@ class PureClarity_Cron_Feeds {
 		$this->plugin   = $plugin;
 		$this->settings = $plugin->get_settings();
 		$this->feed     = $plugin->get_feed();
-
-		$this->create_schedule();
 	}
 
-	/**
-	 * Schedules the delta task
-	 */
-	private function create_schedule() {
-		add_action(
-			'pureclarity_requested_feeds_cron',
-			array(
-				$this,
-				'run_requested_feeds',
-			)
-		);
-
-		if ( ! wp_next_scheduled( 'pureclarity_requested_feeds_cron' ) ) {
-			wp_schedule_event(
-				time(),
-				'pureclarity_every_minute',
-				'pureclarity_requested_feeds_cron'
-			);
-		}
-	}
-
-	/**
-	 * Runs outstanding delta tasks
-	 */
-	public function get_state_manager() {
-		if ( null === $this->state_manager ) {
-			$this->state_manager = new PureClarity_State_Manager();
-		}
-		return $this->state_manager;
-	}
 	/**
 	 * Runs outstanding delta tasks
 	 */
@@ -179,6 +147,16 @@ class PureClarity_Cron_Feeds {
 		} catch ( \Exception $e ) {
 			$state_manager->set_state_value( $type . '_feed_error', $e->getMessage() );
 		}
+	}
+
+	/**
+	 * Runs outstanding delta tasks
+	 */
+	public function get_state_manager() {
+		if ( null === $this->state_manager ) {
+			$this->state_manager = new PureClarity_State_Manager();
+		}
+		return $this->state_manager;
 	}
 
 }
