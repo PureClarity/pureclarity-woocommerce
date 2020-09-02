@@ -71,8 +71,7 @@ class PureClarity_State_Manager {
 			$this->table_name,
 			array(
 				'name'       => $name_key,
-				'value'      => $value,
-				'website_id' => '',
+				'value'      => $value
 			)
 		);
 	}

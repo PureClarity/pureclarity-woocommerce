@@ -44,7 +44,7 @@ class PureClarity_Delta_Manager {
 	 * @param string $type
 	 * @return mixed[]
 	 */
-	public function get_deltas( $type, $website_id = '' ) {
+	public function get_deltas( $type ) {
 		global $wpdb;
 		$rows = (array) $wpdb->get_results(
 			$wpdb->prepare(
@@ -62,16 +62,14 @@ class PureClarity_Delta_Manager {
 	 *
 	 * @param string $type
 	 * @param string $id
-	 * @param string $website_id
 	 */
-	public function add_delta( $type, $id, $website_id = '' ) {
+	public function add_delta( $type, $id ) {
 
 		$this->wpdb->replace(
 			$this->table_name,
 			array(
 				'type'       => $type,
-				'id'         => $id,
-				'website_id' => $website_id,
+				'id'         => $id
 			)
 		);
 	}
@@ -81,15 +79,13 @@ class PureClarity_Delta_Manager {
 	 *
 	 * @param string $type
 	 * @param string $id
-	 * @param integer $website_id
 	 */
-	public function delete_delta( $type, $id, $website_id = 0 ) {
+	public function delete_delta( $type, $id ) {
 		$this->wpdb->delete(
 			$this->table_name,
 			array(
 				'type'       => $type,
-				'id'         => $id,
-				'website_id' => $website_id,
+				'id'         => $id
 			)
 		);
 	}

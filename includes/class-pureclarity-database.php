@@ -45,7 +45,6 @@ class PureClarity_Database {
 		$sql = "CREATE TABLE $table_name (
   			`name` CHAR(35) NOT NULL,
   			`value` TEXT NOT NULL,
-  			`website_id` integer UNSIGNED NOT NULL,
   			UNIQUE INDEX `pureclarity_unique_name` (`name` ASC));
 		) $charset_collate COMMENT 'PureClarity State Table - Stores key information about the state of the PureClarity integration';";
 
@@ -65,7 +64,6 @@ class PureClarity_Database {
 		$sql = "CREATE TABLE $table_name (
   			`type` CHAR(12) NOT NULL,
   			`id` integer UNSIGNED NOT NULL,
-  			`website_id` integer UNSIGNED NOT NULL,
   			UNIQUE INDEX `pureclarity_unique_name` (`type` ASC, `id` ASC));
 		) $charset_collate COMMENT 'PureClarity Delta Table - Stores ids of enities that need to be sent ot PureClarity as deltas';";
 
