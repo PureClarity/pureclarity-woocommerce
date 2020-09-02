@@ -83,6 +83,7 @@ class PureClarity_Cron {
 	 */
 	private function create_schedule() {
 		$this->schedule_requested_feeds();
+		$this->schedule_nightly_feeds();
 
 		if ( $this->settings->is_deltas_enabled() ) {
 			$this->schedule_deltas();
@@ -90,7 +91,7 @@ class PureClarity_Cron {
 	}
 
 	/**
-	 * Schedules the delta task
+	 * Schedules the requested feed run
 	 */
 	private function schedule_requested_feeds() {
 
@@ -107,6 +108,36 @@ class PureClarity_Cron {
 				time(),
 				'pureclarity_every_minute',
 				'pureclarity_requested_feeds_cron'
+			);
+		}
+	}
+
+	/**
+	 * Schedules the nightly feed run
+	 */
+	private function schedule_nightly_feeds() {
+
+		add_action(
+			'pureclarity_nightly_feeds_cron',
+			array(
+				$this->feeds_cron,
+				'run_nightly_feeds',
+			)
+		);
+
+		if ( ! wp_next_scheduled( 'pureclarity_nightly_feeds_cron' ) ) {
+			$timezone_string = get_option( 'timezone_string' );
+			if ( $timezone_string ) {
+				$date = new DateTime( 'tomorrow 3am', new DateTimeZone( get_option( 'timezone_string' ) ) );
+				$time = $date->getTimestamp();
+			} else {
+				$time = strtotime( 'tomorrow 3am' );
+			}
+
+			wp_schedule_event(
+				$time,
+				'daily',
+				'pureclarity_nightly_feeds_cron'
 			);
 		}
 	}
