@@ -12,20 +12,6 @@
 class PureClarity_Products_Watcher {
 
 	/**
-	 * PureClarity Feed class
-	 *
-	 * @var PureClarity_Feed $feed
-	 */
-	private $feed;
-
-	/**
-	 * PureClarity Plugin class
-	 *
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * PureClarity Settings class
 	 *
 	 * @var PureClarity_Settings $settings
@@ -42,22 +28,31 @@ class PureClarity_Products_Watcher {
 	/**
 	 * PureClarity Delta class
 	 *
-	 * @var PureClarity_Delta $deltas
+	 * @var PureClarity_Delta $delta
 	 */
-	private $deltas;
+	private $delta;
 
 	/**
-	 * Builds class dependencies & sets up watchers
+	 * Builds class dependencies
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @param PureClarity_Settings $settings - PureClarity Settings class.
+	 * @param PureClarity_State    $state - PureClarity State class.
+	 * @param PureClarity_Delta    $delta - PureClarity Delta class.
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin   = $plugin;
-		$this->feed     = $plugin->get_feed();
-		$this->settings = $plugin->get_settings();
-		$this->state    = $plugin->get_state();
-		$this->deltas   = new PureClarity_Delta();
+	public function __construct(
+		$settings,
+		$state,
+		$delta
+	) {
+		$this->settings = $settings;
+		$this->state    = $state;
+		$this->delta    = $delta;
+	}
 
+	/**
+	 * Sets up watchers
+	 */
+	public function init() {
 		if ( ! $this->settings->is_pureclarity_enabled() ) {
 			return;
 		}
@@ -153,7 +148,7 @@ class PureClarity_Products_Watcher {
 	 * @param integer $user_id - Id of user being added/edited/deleted.
 	 */
 	public function trigger_user_delta( $user_id ) {
-		$this->deltas->add_user_delta( $user_id );
+		$this->delta->add_user_delta( $user_id );
 	}
 
 	/**
@@ -167,7 +162,7 @@ class PureClarity_Products_Watcher {
 			return $id;
 		}
 
-		$this->deltas->add_product_delta( $id );
+		$this->delta->add_product_delta( $id );
 	}
 
 	/**
@@ -178,7 +173,7 @@ class PureClarity_Products_Watcher {
 	public function delete_item( $id ) {
 		$post = get_post( $id );
 		if ( 'product' === $post->post_type && 'trash' === $post->post_status ) {
-			$this->deltas->add_product_delta( $id );
+			$this->delta->add_product_delta( $id );
 		}
 	}
 

@@ -11,7 +11,27 @@
  */
 class PureClarity_Settings {
 
+	const OPTION_ACCESSKEY              = 'pureclarity_accesskey';
+	const OPTION_SECRETKEY              = 'pureclarity_secretkey';
+	const OPTION_REGION                 = 'pureclarity_region';
+	const OPTION_MODE                   = 'pureclarity_mode';
+	const OPTION_PRODFEED_RUN           = 'pureclarity_prodfeed_run';
+	const OPTION_CATEGORYFEED_RUN       = 'pureclarity_catfeed_run';
+	const OPTION_BRANDFEED_RUN          = 'pureclarity_brandfeed_run';
+	const OPTION_USERFEED_RUN           = 'pureclarity_userfeed_run';
+	const OPTION_ORDERFEED_RUN          = 'pureclarity_orderfeed_run';
+	const OPTION_ZONE_DEBUG             = 'pureclarity_bmz_debug';
+	const OPTION_DELTAS_ENABLED         = 'pureclarity_deltas_enabled';
 	const OPTION_NIGHTLY_FEED_ENABLED   = 'pureclarity_nightly_feed_enabled';
+	const OPTION_ZONE_HOMEPAGE          = 'pureclarity_add_bmz_homepage';
+	const OPTION_ZONE_SEARCHPAGE        = 'pureclarity_add_bmz_searchpage';
+	const OPTION_ZONE_CATEGORYPAGE      = 'pureclarity_add_bmz_categorypage';
+	const OPTION_ZONE_PRODUCTPAGE       = 'pureclarity_add_bmz_productpage';
+	const OPTION_ZONE_BASKETPAGE        = 'pureclarity_add_bmz_basketpage';
+	const OPTION_ZONE_CHECKOUTPAGE      = 'pureclarity_add_bmz_checkoutpage';
+	const OPTION_PRODUCT_DELTAS         = 'pureclarity_product_deltas';
+	const OPTION_CATEGORY_FEED_REQUIRED = 'pureclarity_category_feed_required';
+	const OPTION_USER_DELTAS            = 'pureclarity_user_deltas';
 
 	/**
 	 * PureClarity script url

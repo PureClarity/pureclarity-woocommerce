@@ -28,14 +28,6 @@ class PureClarity_Bmz {
 	private $current_product;
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @since 2.0.0
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * PureClarity Settings class
 	 *
 	 * @since 2.0.0
@@ -54,12 +46,18 @@ class PureClarity_Bmz {
 	/**
 	 * Builds class dependencies & sets up template codes
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @param PureClarity_Settings $settings - PureClarity Settings class.
+	 * @param PureClarity_State $state - PureClarity State class.
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin   = $plugin;
-		$this->settings = $plugin->get_settings();
-		$this->state    = $plugin->get_state();
+	public function __construct(
+		$settings,
+		$state
+	) {
+		$this->settings = $settings;
+		$this->state    = $state;
+	}
+
+	public function init() {
 		add_shortcode( 'pureclarity-bmz', array( $this, 'pureclarity_render_bmz' ) );
 		add_action( 'template_redirect', array( $this, 'render_bmzs' ), 10, 1 );
 	}

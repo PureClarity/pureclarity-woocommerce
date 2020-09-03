@@ -33,14 +33,20 @@ class PureClarity_Cron_Deltas {
 	private $deltas;
 
 	/**
-	 * Builds class dependencies & calls processing code
+	 * Builds class dependencies
 	 *
-	 * @param PureClarity_Plugin $plugin - PureClarity Plugin class.
+	 * @param PureClarity_Settings $settings - PureClarity Settings class.
+	 * @param PureClarity_Feed     $feed - PureClarity Feed class.
+	 * @param PureClarity_Delta    $deltas - PureClarity Delta class.
 	 */
-	public function __construct( &$plugin ) {
-		$this->settings = $plugin->get_settings();
-		$this->feed     = $plugin->get_feed();
-		$this->deltas   = new PureClarity_Delta();
+	public function __construct(
+		$settings,
+		$feed,
+		$deltas
+	) {
+		$this->settings = $settings;
+		$this->feed     = $feed;
+		$this->deltas   = $deltas;
 	}
 
 	/**

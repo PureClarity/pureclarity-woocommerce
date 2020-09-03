@@ -27,6 +27,10 @@ if ( ! defined( 'PURECLARITY_PATH' ) ) {
 	define( 'PURECLARITY_PATH', plugin_dir_path( __FILE__ ) );
 }
 
+if ( ! defined( 'PURECLARITY_INCLUDES_PATH' ) ) {
+	define( 'PURECLARITY_INCLUDES_PATH', PURECLARITY_PATH . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR );
+}
+
 if ( ! defined( 'PURECLARITY_BASE_URL' ) ) {
 	define( 'PURECLARITY_BASE_URL', plugin_dir_url( __FILE__ ) );
 }
@@ -41,9 +45,9 @@ if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 		}
 	);
 } else {
-
+	require_once PURECLARITY_INCLUDES_PATH . 'class-pureclarity-plugin.php';
 	// include classes.
-	require_once PURECLARITY_PATH . 'class-includes.php';
+	require_once PURECLARITY_INCLUDES_PATH . 'php-sdk' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
 	require_once PURECLARITY_PATH . 'functions.php';
 	$pureclarity = new PureClarity_Plugin();
 

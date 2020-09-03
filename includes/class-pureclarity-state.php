@@ -49,27 +49,27 @@ class PureClarity_State {
 	/**
 	 * Order Data
 	 *
-	 * @var array $order
+	 * @var array $order_data
+	 */
+	private $order_data;
+
+	/**
+	 * PureClarity Order class
+	 *
+	 * @var PureClarity_Order $order
 	 */
 	private $order;
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * Builds class dependencies & starts session
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @param PureClarity_Order $order - PureClarity Order class.
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct( $order ) {
+		$this->order = $order;
 		// if not on the login page, check for the logout cookie, in order to see if we need to trigger customer_logout event.
 		// cannot check on login page as our js isn't on it.
+		// TODO: move this
 		if ( 'wp-login.php' !== $GLOBALS['pagenow'] ) {
 			$this->is_logout();
 		}
@@ -210,6 +210,9 @@ class PureClarity_State {
 	public function set_cart() {
 
 		$items      = array();
+		//if(!WC()->cart) {
+			//return;
+		//}
 		$cart_items = WC()->cart->get_cart();
 		$cart_id    = time();
 
@@ -255,11 +258,13 @@ class PureClarity_State {
 			return $this->cart;
 		}
 
+		//if (WC()->session) {
 		$cart = WC()->session->get( 'pureclarity-cart' );
 		if ( isset( $cart ) ) {
 			$this->cart = $cart;
 			return $this->cart;
 		}
+		//}
 
 		// must be new session.
 		return $this->set_cart();
@@ -276,20 +281,19 @@ class PureClarity_State {
 			return null;
 		}
 
-		if ( ! empty( $this->order ) ) {
-			return $this->order;
+		if ( ! empty( $this->order_data ) ) {
+			return $this->order_data;
 		}
 
 		global $wp;
 		$order_id = absint( $wp->query_vars['order-received'] );
 
 		if ( $order_id ) {
-			$pc_order    = new PureClarity_Order();
-			$order_data  = $pc_order->get_order_info( $order_id );
-			$this->order = $order_data;
+			$order_data = $this->order->get_order_info( $order_id );
+			$this->order_data = $order_data;
 		}
 
-		return $this->order;
+		return $this->order_data;
 	}
 
 	/**

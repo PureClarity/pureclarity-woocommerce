@@ -12,17 +12,8 @@
 class PureClarity_Cron {
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @since 2.0.0
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * PureClarity Settings class
 	 *
-	 * @since 2.0.0
 	 * @var PureClarity_Settings $settings
 	 */
 	private $settings;
@@ -42,16 +33,25 @@ class PureClarity_Cron {
 	private $feeds_cron;
 
 	/**
-	 * Builds class dependencies & calls processing code
+	 * Builds class dependencies
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @param PureClarity_Settings    $settings PureClarity Settings class.
+	 * @param PureClarity_Cron_Deltas $delta_cron PureClarity Delta Cron class.
+	 * @param PureClarity_Cron_Feeds  $feeds_cron PureClarity Feeds Cron class.
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin     = $plugin;
-		$this->settings   = $plugin->get_settings();
-		$this->delta_cron = new PureClarity_Cron_Deltas( $plugin );
-		$this->feeds_cron = new PureClarity_Cron_Feeds( $plugin );
+	public function __construct(
+		$settings,
+		$delta_cron,
+		$feeds_cron
+	) {
+		$this->settings   = $settings;
+		$this->delta_cron = $delta_cron;
+		$this->feeds_cron = $feeds_cron;
+	}
 
+	/**
+	 */
+	public function init() {
 		add_filter(
 			'cron_schedules',
 			array(

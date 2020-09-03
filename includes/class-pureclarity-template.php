@@ -33,13 +33,6 @@ class PureClarity_Template {
 	private $bmz;
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * PureClarity Settings class
 	 *
 	 * @var PureClarity_Settings $settings
@@ -47,23 +40,38 @@ class PureClarity_Template {
 	private $settings;
 
 	/**
-	 * Builds class dependencies & sets up watchers
+	 * PureClarity State class
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @var PureClarity_State $state
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin = $plugin;
-		$this->bmz    = $this->plugin->get_bmz();
+	private $state;
+
+	/**
+	 * Builds class dependencies
+	 *
+	 * @param PureClarity_Settings $settings - PureClarity Settings class.
+	 * @param PureClarity_Bmz      $bmz - PureClarity Bmz class.
+	 * @param PureClarity_State    $state - PureClarity Bmz class.
+	 */
+	public function __construct(
+		$settings,
+		$bmz,
+		$state
+	) {
+		$this->settings = $settings;
+		$this->bmz      = $bmz;
+		$this->state    = $state;
+	}
+
+	public function init() {
 		if ( ! is_ajax() ) {
-			if ( ! defined( 'DOING_CRON' ) ) {
-				add_filter(
-					'wp_loaded',
-					array(
-						$this,
-						'build_cart_config',
-					)
-				);
-			}
+			add_filter(
+				'wp_loaded',
+				array(
+					$this,
+					'build_cart_config',
+				)
+			);
 
 			add_filter(
 				'wp_head',
@@ -72,6 +80,8 @@ class PureClarity_Template {
 					'render_pureclarity_json',
 				)
 			);
+
+			$this->bmz->init();
 		}
 	}
 
@@ -97,19 +107,17 @@ class PureClarity_Template {
 	 */
 	private function get_config() {
 		if ( empty( $this->config ) ) {
-			$pureclarity_settings = $this->get_pureclarity_plugin_settings();
-			$pureclarity_session  = $this->get_pureclarity_plugin()->get_state();
-			$this->config         = array(
+			$this->config = array(
 				'enabled'    => $this->is_pureclarity_active(),
-				'product'    => $pureclarity_session->get_product(),
-				'categoryId' => ( is_shop() ? '*' : $pureclarity_session->get_category_id() ),
-				'page_view'  => $pureclarity_session->get_page_view_context(),
+				'product'    => $this->state->get_product(),
+				'categoryId' => ( is_shop() ? '*' : $this->state->get_category_id() ),
+				'page_view'  => $this->state->get_page_view_context(),
 				'tracking'   => array(
-					'accessKey' => $pureclarity_settings->get_access_key(),
-					'apiUrl'    => $pureclarity_settings->get_api_url(),
-					'customer'  => $pureclarity_session->get_customer(),
-					'islogout'  => $pureclarity_session->is_logout(),
-					'order'     => $pureclarity_session->get_order(),
+					'accessKey' => $this->settings->get_access_key(),
+					'apiUrl'    => $this->settings->get_api_url(),
+					'customer'  => $this->state->get_customer(),
+					'islogout'  => $this->state->is_logout(),
+					'order'     => $this->state->get_order(),
 					'cart'      => $this->cart_config,
 				),
 			);
@@ -121,8 +129,7 @@ class PureClarity_Template {
 	 * Gets PureClarity configuration
 	 */
 	public function build_cart_config() {
-		$pureclarity_session = $this->get_pureclarity_plugin()->get_state();
-		$this->cart_config   = $pureclarity_session->get_cart();
+		$this->cart_config   = $this->state->get_cart();
 	}
 
 	/**
@@ -131,29 +138,8 @@ class PureClarity_Template {
 	 * @return boolean
 	 */
 	private function is_pureclarity_active() {
-		return ( $this->get_pureclarity_plugin_settings()->get_access_key() !== '' )
-			&& $this->get_pureclarity_plugin_settings()->is_pureclarity_enabled();
-	}
-
-	/**
-	 * Returns an instance of the PureClarity_Plugin class
-	 *
-	 * @return PureClarity_Plugin
-	 */
-	private function get_pureclarity_plugin() {
-		return $this->plugin;
-	}
-
-	/**
-	 * Returns the settings class
-	 *
-	 * @return PureClarity_Settings
-	 */
-	private function get_pureclarity_plugin_settings() {
-		if ( ! isset( $this->settings ) ) {
-			$this->settings = $this->get_pureclarity_plugin()->get_settings();
-		}
-		return $this->settings;
+		return ( $this->settings->get_access_key() !== '' )
+			&& $this->settings->is_pureclarity_enabled();
 	}
 
 }

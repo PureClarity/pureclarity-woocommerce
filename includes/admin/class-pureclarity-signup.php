@@ -22,6 +22,17 @@ class PureClarity_Signup {
 	private $state_manager;
 
 	/**
+	 * Builds class dependencies
+	 *
+	 * @param PureClarity_State_Manager $state_manager - PureClarity state manager class.
+	 */
+	public function __construct(
+		$state_manager
+	) {
+		$this->state_manager = $state_manager;
+	}
+
+	/**
 	 * Submit signup action, outputs a json encoded result
 	 */
 	public function submit_signup_action() {
@@ -228,6 +239,7 @@ class PureClarity_Signup {
 	 * @param string $secret_key - Secret Key for the PureClarity Account.
 	 * @param string $region - Region the signup request was made for.
 	 */
+
 	protected function save_config( $access_key, $secret_key, $region ) {
 		update_option( 'pureclarity_mode', 'admin' );
 		update_option( 'pureclarity_accesskey', $access_key );
@@ -291,11 +303,6 @@ class PureClarity_Signup {
 	 * @return string
 	 */
 	protected function get_pureclarity_state( $key ) {
-
-		if ( null === $this->state_manager ) {
-			$this->state_manager = new PureClarity_State_Manager();
-		}
-
 		return $this->state_manager->get_state_value( $key );
 	}
 
@@ -306,11 +313,6 @@ class PureClarity_Signup {
 	 * @param string $value - Value to set against the given key.
 	 */
 	protected function update_pureclarity_state( $key, $value ) {
-
-		if ( null === $this->state_manager ) {
-			$this->state_manager = new PureClarity_State_Manager();
-		}
-
 		$this->state_manager->set_state_value( $key, $value );
 	}
 }

@@ -56,6 +56,17 @@ class PureClarity_Feed_Status {
 	protected $requested_feed_data;
 
 	/**
+	 * Builds class dependencies
+	 *
+	 * @param PureClarity_State_Manager $state_manager - PureClarity Settings class.
+	 */
+	public function __construct(
+		$state_manager
+	) {
+		$this->state_manager = $state_manager;
+	}
+
+	/**
 	 * Returns whether any of the feed types provided are currently in progress
 	 *
 	 * @param string[] $types - array of feed types to check.
@@ -264,11 +275,6 @@ class PureClarity_Feed_Status {
 	 * @return string
 	 */
 	protected function get_pureclarity_state( $key ) {
-
-		if ( null === $this->state_manager ) {
-			$this->state_manager = new PureClarity_State_Manager();
-		}
-
 		return $this->state_manager->get_state_value( $key );
 	}
 
@@ -279,11 +285,6 @@ class PureClarity_Feed_Status {
 	 * @param string $value - Value to set against the given key.
 	 */
 	protected function update_pureclarity_state( $key, $value ) {
-
-		if ( null === $this->state_manager ) {
-			$this->state_manager = new PureClarity_State_Manager();
-		}
-
 		$this->state_manager->set_state_value( $key, $value );
 	}
 }

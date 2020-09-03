@@ -7,7 +7,7 @@
  */
 
 /**
- * Handles config getting and setting
+ * Handles db delta interactions
  */
 class PureClarity_Delta {
 
@@ -26,11 +26,17 @@ class PureClarity_Delta {
 	private $state_manager;
 
 	/**
-	 * Sets up PureClarity options with default values
+	 * PureClarity_Delta  constructor, sets dependencies.
+	 *
+	 * @param PureClarity_Delta_Manager $delta_manager - Delta data manager class.
+	 * @param PureClarity_State_Manager $state_manager - State data manager class.
 	 */
-	public function __construct() {
-		$this->delta_manager = new PureClarity_Delta_Manager();
-		$this->state_manager = new PureClarity_State_Manager();
+	public function __construct(
+		$delta_manager,
+		$state_manager
+	) {
+		$this->delta_manager = $delta_manager;
+		$this->state_manager = $state_manager;
 	}
 
 	/**

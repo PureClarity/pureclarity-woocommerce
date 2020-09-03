@@ -12,13 +12,6 @@
 class PureClarity_Feed {
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * Product tags map
 	 *
 	 * @var string[] $settings
@@ -45,11 +38,10 @@ class PureClarity_Feed {
 	/**
 	 * Builds class dependencies & includes http class
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @param PureClarity_Settings $settings - PureClarity Settings class.
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin   = $plugin;
-		$this->settings = $plugin->get_settings();
+	public function __construct( $settings ) {
+		$this->settings = $settings;
 
 		if ( ! class_exists( 'WP_Http' ) ) {
 			include_once ABSPATH . WPINC . '/class-http.php';

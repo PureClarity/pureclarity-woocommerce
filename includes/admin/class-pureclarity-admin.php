@@ -43,17 +43,26 @@ class PureClarity_Admin {
 	private $signup;
 
 	/**
-	 * Builds class dependencies & sets up admin actions
+	 * Builds class dependencies
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @param PureClarity_Dashboard_Page $dashboard_page
+	 * @param PureClarity_Settings_Page $settings_page
+	 * @param PureClarity_Feeds $feeds
+	 * @param PureClarity_Signup $signup
 	 */
-	public function __construct( &$plugin ) {
+	public function __construct(
+		$dashboard_page,
+		$settings_page,
+		$feeds,
+		$signup
+	) {
+		$this->dashboard_page = $dashboard_page;
+		$this->feeds          = $feeds;
+		$this->signup         = $signup;
+		$this->settings_page  = $settings_page;
+	}
 
-		$this->dashboard_page = new PureClarity_Dashboard_Page( $plugin->get_settings() );
-		$this->feeds          = new PureClarity_Feeds();
-		$this->signup         = new PureClarity_Signup();
-		$this->settings_page  = new PureClarity_Settings_Page( $plugin->get_settings() );
-
+	public function init() {
 		add_action( 'admin_notices', array( $this, 'display_dependency_notices' ) );
 		add_action( 'admin_menu', array( $this, 'add_menus' ) );
 		add_action( 'admin_init', array( $this->settings_page, 'add_settings' ) );

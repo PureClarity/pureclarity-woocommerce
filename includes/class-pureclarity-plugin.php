@@ -40,6 +40,13 @@ class PureClarity_Plugin {
 	private $state;
 
 	/**
+	 * PureClarity_Class_Loader class
+	 *
+	 * @var PureClarity_Class_Loader $loader
+	 */
+	private $loader;
+
+	/**
 	 * Sets up dependencies and adds some init actions
 	 */
 	public function __construct() {
@@ -47,71 +54,31 @@ class PureClarity_Plugin {
 	}
 
 	/**
-	 * Returns the settings class
-	 *
-	 * @return PureClarity_Settings
+	 * Sets up dependencies
 	 */
-	public function get_settings() {
-		return $this->settings;
-	}
-
-	/**
-	 * Returns the feed class
-	 *
-	 * @return PureClarity_Feed
-	 */
-	public function get_feed() {
-		return $this->feed;
-	}
-
-	/**
-	 * Returns the state class
-	 *
-	 * @return PureClarity_State
-	 */
-	public function get_state() {
-		return $this->state;
-	}
-
-	/**
-	 * Returns the bmz class
-	 *
-	 * @return PureClarity_Bmz
-	 */
-	public function get_bmz() {
-		return $this->bmz;
-	}
-
-	/**
-	 * Registers PureClarity CSS & JS
-	 */
-	public function register_assets() {
-		wp_register_style( 'pureclarity-css', PURECLARITY_BASE_URL . 'public/css/pc.css', array(), PURECLARITY_VERSION, 'screen' );
-		wp_enqueue_style( 'pureclarity-css' );
-
-		wp_register_script( 'pureclarity-js', PURECLARITY_BASE_URL . 'public/js/pc.js', array( 'jquery', 'wp-util' ), PURECLARITY_VERSION, true );
-		wp_enqueue_script( 'pureclarity-js' );
+	public function load_dependencies() {
+		require_once PURECLARITY_INCLUDES_PATH . 'class-pureclarity-class-loader.php';
+		$this->loader = new PureClarity_Class_Loader();
 	}
 
 	/**
 	 * Initializes the plugin
 	 */
 	public function init() {
-		$this->settings = new PureClarity_Settings();
-		$this->feed     = new PureClarity_Feed( $this );
+		$this->load_dependencies();
 		if ( is_admin() ) {
-			new PureClarity_Admin( $this );
-		} else {
-			if ( $this->settings->is_pureclarity_enabled() ) {
-				add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
-			}
-			$this->state = new PureClarity_State( $this );
-			$this->bmz   = new PureClarity_Bmz( $this );
-			new PureClarity_Template( $this );
+			$admin = $this->loader->get_admin();
+			$admin->init();
+		} elseif ( defined( 'DOING_CRON' ) ) {
+			$cron = $this->loader->get_cron();
+			$cron->init();
+		} elseif ( ! wp_doing_ajax() ) {
+			$public = $this->loader->get_public();
+			$public->init();
 		}
-		new PureClarity_Products_Watcher( $this );
-		new PureClarity_Cron( $this );
-		new PureClarity_Cron_Feeds( $this );
+
+		$watcher = $this->loader->get_products_watcher();
+		$watcher->init();
 	}
 
 }

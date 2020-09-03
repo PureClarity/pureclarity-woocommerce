@@ -64,12 +64,18 @@ class PureClarity_Dashboard_Page {
 	/**
 	 * Builds class dependencies
 	 *
-	 * @param PureClarity_Settings $settings PureClarity Settings class.
+	 * @param PureClarity_Settings      $settings - PureClarity Settings class.
+	 * @param PureClarity_State_Manager $state_manager - PureClarity state manager class.
+	 * @param PureClarity_Feed_Status   $feed_status - PureClarity feed status class.
 	 */
-	public function __construct( $settings ) {
+	public function __construct(
+		$settings,
+		$state_manager,
+		$feed_status
+	) {
 		$this->settings      = $settings;
-		$this->state_manager = new PureClarity_State_Manager();
-		$this->feed_status   = new PureClarity_Feed_Status();
+		$this->state_manager = $state_manager;
+		$this->feed_status   = $feed_status;
 	}
 
 	/**

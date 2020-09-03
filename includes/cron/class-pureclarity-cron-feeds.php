@@ -14,14 +14,6 @@ use PureClarity\Api\Feed\Feed;
 class PureClarity_Cron_Feeds {
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @since 2.0.0
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * PureClarity Settings class
 	 *
 	 * @since 2.0.0
@@ -46,14 +38,20 @@ class PureClarity_Cron_Feeds {
 	private $state_manager;
 
 	/**
-	 * Builds class dependencies & calls processing code
+	 * Builds class dependencies
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @param PureClarity_Settings      $settings - PureClarity Settings class.
+	 * @param PureClarity_Feed          $feed - PureClarity Feed class.
+	 * @param PureClarity_State_Manager $state_manager - PureClarity State Manager class.
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin   = $plugin;
-		$this->settings = $plugin->get_settings();
-		$this->feed     = $plugin->get_feed();
+	public function __construct(
+		$settings,
+		$feed,
+		$state_manager
+	) {
+		$this->settings      = $settings;
+		$this->feed          = $feed;
+		$this->state_manager = $state_manager;
 	}
 
 	/**
@@ -61,14 +59,13 @@ class PureClarity_Cron_Feeds {
 	 */
 	public function run_requested_feeds() {
 
-		$state_manager = $this->get_state_manager();
-		$feeds         = $state_manager->get_state_value( 'requested_feeds' );
-		$running       = $state_manager->get_state_value( 'requested_feeds_running' );
+		$feeds   = $this->state_manager->get_state_value( 'requested_feeds' );
+		$running = $this->state_manager->get_state_value( 'requested_feeds_running' );
 
 		if ( empty( $running ) && ! empty( $feeds ) ) {
 			try {
 				$requested_feeds = json_decode( $feeds );
-				$state_manager->set_state_value( 'requested_feeds_running', '1' );
+				$this->state_manager->set_state_value( 'requested_feeds_running', '1' );
 
 				foreach ( $requested_feeds as $type ) {
 					$this->run_feed( $type );
@@ -78,8 +75,8 @@ class PureClarity_Cron_Feeds {
 				wp_send_json( array( 'error' => "An error occurred generating the {$type} feed. See error logs for more information." ) );
 			}
 
-			$state_manager->set_state_value( 'requested_feeds_running', '0' );
-			$state_manager->set_state_value( 'requested_feeds', '' );
+			$this->state_manager->set_state_value( 'requested_feeds_running', '0' );
+			$this->state_manager->set_state_value( 'requested_feeds', '' );
 		}
 	}
 
@@ -88,8 +85,7 @@ class PureClarity_Cron_Feeds {
 	 */
 	public function run_nightly_feeds() {
 
-		$state_manager   = new PureClarity_State_Manager();
-		$running         = $state_manager->get_state_value( 'nightly_feeds_running' );
+		$running         = $this->state_manager->get_state_value( 'nightly_feeds_running' );
 		$nightly_enabled = $this->settings->is_nightly_feed_enabled();
 
 		if ( $nightly_enabled && empty( $running ) ) {
@@ -101,7 +97,7 @@ class PureClarity_Cron_Feeds {
 					Feed::FEED_TYPE_USER,
 				);
 
-				$state_manager->set_state_value( 'nightly_feeds_running', '1' );
+				$this->state_manager->set_state_value( 'nightly_feeds_running', '1' );
 
 				foreach ( $requested_feeds as $type ) {
 					$this->run_feed( $type );
@@ -111,7 +107,7 @@ class PureClarity_Cron_Feeds {
 				wp_send_json( array( 'error' => "An error occurred generating the {$type} feed. See error logs for more information." ) );
 			}
 
-			$state_manager->set_state_value( 'nightly_feeds_running', '0' );
+			$this->state_manager->set_state_value( 'nightly_feeds_running', '0' );
 		}
 	}
 
@@ -121,7 +117,6 @@ class PureClarity_Cron_Feeds {
 	 * @param string $type - Type of feed to run.
 	 */
 	private function run_feed( $type ) {
-		$state_manager = $this->get_state_manager();
 		try {
 			$total_pages_count = $this->feed->get_total_pages( $type );
 			for ( $current_page = 1; $current_page <= $total_pages_count; $current_page++ ) {
@@ -141,22 +136,11 @@ class PureClarity_Cron_Feeds {
 					$this->settings->set_feed_type_sent( $type );
 				}
 
-				$state_manager->set_state_value( $type . '_feed_progress', round( ( $total_pages_count / $current_page * 100 ) ) );
+				$this->state_manager->set_state_value( $type . '_feed_progress', round( ( $total_pages_count / $current_page * 100 ) ) );
 			}
-			$state_manager->set_state_value( $type . '_feed_last_run', time() );
+			$this->state_manager->set_state_value( $type . '_feed_last_run', time() );
 		} catch ( \Exception $e ) {
-			$state_manager->set_state_value( $type . '_feed_error', $e->getMessage() );
+			$this->state_manager->set_state_value( $type . '_feed_error', $e->getMessage() );
 		}
 	}
-
-	/**
-	 * Runs outstanding delta tasks
-	 */
-	public function get_state_manager() {
-		if ( null === $this->state_manager ) {
-			$this->state_manager = new PureClarity_State_Manager();
-		}
-		return $this->state_manager;
-	}
-
 }
