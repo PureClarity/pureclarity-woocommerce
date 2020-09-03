@@ -47,11 +47,11 @@ class PureClarity_Class_Loader {
 	private $settings;
 
 	/**
-	 * PureClarity State class
+	 * PureClarity Session class
 	 *
-	 * @var PureClarity_State $state
+	 * @var PureClarity_Session $session
 	 */
-	private $state;
+	private $session;
 
 	/**
 	 * PureClarity Order class
@@ -220,18 +220,18 @@ class PureClarity_Class_Loader {
 	}
 
 	/**
-	 * Returns the PureClarity_State class
+	 * Returns the PureClarity_Session class
 	 *
-	 * @return PureClarity_State
+	 * @return PureClarity_Session
 	 */
 	public function get_state() {
-		if ( is_null( $this->state ) ) {
-			$this->require_class( 'state' );
-			$this->state = new PureClarity_State(
+		if ( is_null( $this->session ) ) {
+			$this->require_class( 'session' );
+			$this->session = new PureClarity_Session(
 				$this->get_order()
 			);
 		}
-		return $this->state;
+		return $this->session;
 	}
 
 	/**

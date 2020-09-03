@@ -1,6 +1,6 @@
 <?php
 /**
- * PureClarity_State class
+ * PureClarity_Session class
  *
  * @package PureClarity for WooCommerce
  * @since 2.0.0
@@ -9,7 +9,7 @@
 /**
  * Handles session related code
  */
-class PureClarity_State {
+class PureClarity_Session {
 
 	/**
 	 * Cart Data

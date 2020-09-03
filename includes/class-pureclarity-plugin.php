@@ -12,34 +12,6 @@
 class PureClarity_Plugin {
 
 	/**
-	 * PureClarity Bmz class
-	 *
-	 * @var PureClarity_Bmz $bmz
-	 */
-	private $bmz;
-
-	/**
-	 * PureClarity Feed class
-	 *
-	 * @var PureClarity_Feed $feed
-	 */
-	private $feed;
-
-	/**
-	 * PureClarity Settings class
-	 *
-	 * @var PureClarity_Settings $settings
-	 */
-	private $settings;
-
-	/**
-	 * PureClarity State class
-	 *
-	 * @var PureClarity_State $state
-	 */
-	private $state;
-
-	/**
 	 * PureClarity_Class_Loader class
 	 *
 	 * @var PureClarity_Class_Loader $loader
@@ -80,5 +52,4 @@ class PureClarity_Plugin {
 		$watcher = $this->loader->get_products_watcher();
 		$watcher->init();
 	}
-
 }

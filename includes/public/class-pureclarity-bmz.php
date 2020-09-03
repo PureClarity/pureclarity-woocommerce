@@ -36,25 +36,25 @@ class PureClarity_Bmz {
 	private $settings;
 
 	/**
-	 * PureClarity State class
+	 * PureClarity Session class
 	 *
 	 * @since 2.0.0
-	 * @var PureClarity_State $state
+	 * @var PureClarity_Session $session
 	 */
-	private $state;
+	private $session;
 
 	/**
 	 * Builds class dependencies & sets up template codes
 	 *
 	 * @param PureClarity_Settings $settings - PureClarity Settings class.
-	 * @param PureClarity_State $state - PureClarity State class.
+	 * @param PureClarity_Session  $session - PureClarity Session class.
 	 */
 	public function __construct(
 		$settings,
-		$state
+		$session
 	) {
 		$this->settings = $settings;
-		$this->state    = $state;
+		$this->session  = $session;
 	}
 
 	public function init() {
@@ -67,8 +67,8 @@ class PureClarity_Bmz {
 	 */
 	public function render_bmzs() {
 
-		$this->current_product     = $this->state->get_product();
-		$this->current_category_id = $this->state->get_category_id();
+		$this->current_product     = $this->session->get_product();
+		$this->current_category_id = $this->session->get_category_id();
 
 		// Homepage and Order Received Page BMZs.
 		if ( is_front_page() && $this->settings->is_bmz_on_home_page() ) {

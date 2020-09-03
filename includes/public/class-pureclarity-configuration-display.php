@@ -31,24 +31,24 @@ class PureClarity_Configuration_Display {
 	private $settings;
 
 	/**
-	 * PureClarity State class
+	 * PureClarity Session class
 	 *
-	 * @var PureClarity_State $state
+	 * @var PureClarity_Session $session
 	 */
-	private $state;
+	private $session;
 
 	/**
 	 * Builds class dependencies
 	 *
 	 * @param PureClarity_Settings $settings - PureClarity Settings class.
-	 * @param PureClarity_State    $state - PureClarity State class.
+	 * @param PureClarity_Session  $session - PureClarity Session class.
 	 */
 	public function __construct(
 		$settings,
-		$state
+		$session
 	) {
 		$this->settings = $settings;
-		$this->state    = $state;
+		$this->session  = $session;
 	}
 
 	public function init() {
@@ -95,15 +95,15 @@ class PureClarity_Configuration_Display {
 		if ( empty( $this->config ) ) {
 			$this->config = array(
 				'enabled'    => $this->is_pureclarity_active(),
-				'product'    => $this->state->get_product(),
-				'categoryId' => ( is_shop() ? '*' : $this->state->get_category_id() ),
-				'page_view'  => $this->state->get_page_view_context(),
+				'product'    => $this->session->get_product(),
+				'categoryId' => ( is_shop() ? '*' : $this->session->get_category_id() ),
+				'page_view'  => $this->session->get_page_view_context(),
 				'tracking'   => array(
 					'accessKey' => $this->settings->get_access_key(),
 					'apiUrl'    => $this->settings->get_api_url(),
-					'customer'  => $this->state->get_customer(),
-					'islogout'  => $this->state->is_logout(),
-					'order'     => $this->state->get_order(),
+					'customer'  => $this->session->get_customer(),
+					'islogout'  => $this->session->is_logout(),
+					'order'     => $this->session->get_order(),
 					'cart'      => $this->cart_config,
 				),
 			);
@@ -115,7 +115,7 @@ class PureClarity_Configuration_Display {
 	 * Gets PureClarity configuration
 	 */
 	public function build_cart_config() {
-		$this->cart_config   = $this->state->get_cart();
+		$this->cart_config = $this->session->get_cart();
 	}
 
 	/**

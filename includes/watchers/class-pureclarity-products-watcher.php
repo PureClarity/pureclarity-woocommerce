@@ -19,11 +19,11 @@ class PureClarity_Products_Watcher {
 	private $settings;
 
 	/**
-	 * PureClarity State class
+	 * PureClarity Session class
 	 *
-	 * @var PureClarity_State $state
+	 * @var PureClarity_Session $session
 	 */
-	private $state;
+	private $session;
 
 	/**
 	 * PureClarity Delta class
@@ -36,16 +36,16 @@ class PureClarity_Products_Watcher {
 	 * Builds class dependencies
 	 *
 	 * @param PureClarity_Settings $settings - PureClarity Settings class.
-	 * @param PureClarity_State    $state - PureClarity State class.
+	 * @param PureClarity_Session  $session - PureClarity Session class.
 	 * @param PureClarity_Delta    $delta - PureClarity Delta class.
 	 */
 	public function __construct(
 		$settings,
-		$state,
+		$session,
 		$delta
 	) {
 		$this->settings = $settings;
-		$this->state    = $state;
+		$this->session  = $session;
 		$this->delta    = $delta;
 	}
 
@@ -189,7 +189,7 @@ class PureClarity_Products_Watcher {
 			// remove logout cookie if it's present (just in case user logged in immediately after logout).
 			$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
 			wc_setcookie( 'pc_logout', '1', time() - YEAR_IN_SECONDS, $secure, true );
-			$this->state->set_customer( $user->ID );
+			$this->session->set_customer( $user->ID );
 		}
 	}
 
@@ -200,7 +200,7 @@ class PureClarity_Products_Watcher {
 		// add pc_logout cookie so that customer_logout can be triggered on next page load.
 		$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
 		wc_setcookie( 'pc_logout', '1', time() + YEAR_IN_SECONDS, $secure, true );
-		$this->state->clear_customer();
+		$this->session->clear_customer();
 	}
 
 	/**
@@ -219,7 +219,7 @@ class PureClarity_Products_Watcher {
 	 */
 	public function set_cart( $update ) {
 		try {
-			$this->state->set_cart();
+			$this->session->set_cart();
 		} catch ( \Exception $exception ) {
 			error_log( "PureClarity: Can't build cart changes tracking event: " . $exception->getMessage() );
 		}
