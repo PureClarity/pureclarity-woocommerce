@@ -168,7 +168,8 @@ class PureClarity_Class_Loader {
 			$this->require_public_class( 'public' );
 			$this->public = new PureClarity_Public(
 				$this->get_settings(),
-				$this->get_configuration_display()
+				$this->get_configuration_display(),
+				$this->get_bmz()
 			);
 		}
 		return $this->public;
@@ -184,7 +185,6 @@ class PureClarity_Class_Loader {
 			$this->require_public_class( 'configuration-display' );
 			$this->configuration_display = new PureClarity_Configuration_Display(
 				$this->get_settings(),
-				$this->get_bmz(),
 				$this->get_state()
 			);
 		}

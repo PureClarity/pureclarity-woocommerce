@@ -23,14 +23,6 @@ class PureClarity_Configuration_Display {
 	 * @var mixed[] $cart_config
 	 */
 	private $cart_config;
-
-	/**
-	 * PureClarity Bmz class
-	 *
-	 * @var PureClarity_Bmz $bmz
-	 */
-	private $bmz;
-
 	/**
 	 * PureClarity Settings class
 	 *
@@ -49,16 +41,13 @@ class PureClarity_Configuration_Display {
 	 * Builds class dependencies
 	 *
 	 * @param PureClarity_Settings $settings - PureClarity Settings class.
-	 * @param PureClarity_Bmz      $bmz - PureClarity Bmz class.
-	 * @param PureClarity_State    $state - PureClarity Bmz class.
+	 * @param PureClarity_State    $state - PureClarity State class.
 	 */
 	public function __construct(
 		$settings,
-		$bmz,
 		$state
 	) {
 		$this->settings = $settings;
-		$this->bmz      = $bmz;
 		$this->state    = $state;
 	}
 
@@ -79,8 +68,6 @@ class PureClarity_Configuration_Display {
 					'render_pureclarity_json',
 				)
 			);
-
-			$this->bmz->init();
 		}
 	}
 
