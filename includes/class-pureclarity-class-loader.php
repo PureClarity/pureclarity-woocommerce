@@ -181,7 +181,7 @@ class PureClarity_Class_Loader {
 	 */
 	public function get_template() {
 		if ( is_null( $this->template ) ) {
-			$this->require_class( 'template' );
+			$this->require_public_class( 'template' );
 			$this->template = new PureClarity_Template(
 				$this->get_settings(),
 				$this->get_bmz(),
@@ -270,7 +270,7 @@ class PureClarity_Class_Loader {
 	 */
 	public function get_bmz() {
 		if ( is_null( $this->bmz ) ) {
-			$this->require_class( 'bmz' );
+			$this->require_public_class( 'bmz' );
 			$this->bmz = new PureClarity_Bmz(
 				$this->get_settings(),
 				$this->get_state()
@@ -355,7 +355,6 @@ class PureClarity_Class_Loader {
 	 */
 	public function get_products_watcher() {
 		if ( is_null( $this->products_watcher ) ) {
-
 			$this->require_watcher_class( 'products-watcher' );
 			$this->products_watcher = new PureClarity_Products_Watcher(
 				$this->get_settings(),
