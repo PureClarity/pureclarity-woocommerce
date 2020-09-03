@@ -1,15 +1,14 @@
 <?php
 /**
- * PureClarity_Template class
+ * PureClarity_Configuration_Display class
  *
  * @package PureClarity for WooCommerce
- * @since 2.0.0
  */
 
 /**
- * Renders template related code.
+ * Renders config json string for use with PureClarity Javascript
  */
-class PureClarity_Template {
+class PureClarity_Configuration_Display {
 
 	/**
 	 * PureClarity config data

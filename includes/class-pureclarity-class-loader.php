@@ -19,11 +19,11 @@ class PureClarity_Class_Loader {
 	private $public;
 
 	/**
-	 * PureClarity Template class
+	 * PureClarity Configuration Display class
 	 *
-	 * @var PureClarity_Template $template
+	 * @var PureClarity_Configuration_Display $configuration_display
 	 */
-	private $template;
+	private $configuration_display;
 
 	/**
 	 * PureClarity Bmz class
@@ -168,27 +168,27 @@ class PureClarity_Class_Loader {
 			$this->require_public_class( 'public' );
 			$this->public = new PureClarity_Public(
 				$this->get_settings(),
-				$this->get_template()
+				$this->get_configuration_display()
 			);
 		}
 		return $this->public;
 	}
 
 	/**
-	 * Returns the PureClarity_Template class
+	 * Returns the PureClarity_Configuration_Display class
 	 *
-	 * @return PureClarity_Template
+	 * @return PureClarity_Configuration_Display
 	 */
-	public function get_template() {
-		if ( is_null( $this->template ) ) {
-			$this->require_public_class( 'template' );
-			$this->template = new PureClarity_Template(
+	public function get_configuration_display() {
+		if ( is_null( $this->configuration_display ) ) {
+			$this->require_public_class( 'configuration-display' );
+			$this->configuration_display = new PureClarity_Configuration_Display(
 				$this->get_settings(),
 				$this->get_bmz(),
 				$this->get_state()
 			);
 		}
-		return $this->template;
+		return $this->configuration_display;
 	}
 
 	/**

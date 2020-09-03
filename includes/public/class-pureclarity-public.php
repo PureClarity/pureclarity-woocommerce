@@ -19,24 +19,24 @@ class PureClarity_Public {
 	private $settings;
 
 	/**
-	 * PureClarity Template class
+	 * PureClarity Configuration Display class
 	 *
-	 * @var PureClarity_Template $template
+	 * @var PureClarity_Configuration_Display $configuration_display
 	 */
-	private $template;
+	private $configuration_display;
 
 	/**
-	 * Builds class dependencies & sets up admin actions
+	 * Builds class dependencies
 	 *
-	 * @param PureClarity_Settings $settings - PureClarity Settings class.
-	 * @param PureClarity_Template $template - PureClarity Plugin class.
+	 * @param PureClarity_Settings              $settings - PureClarity Settings class.
+	 * @param PureClarity_Configuration_Display $configuration_display - PureClarity Configuration Display class.
 	 */
 	public function __construct(
 		$settings,
-		$template
+		$configuration_display
 	) {
-		$this->settings = $settings;
-		$this->template = $template;
+		$this->settings              = $settings;
+		$this->configuration_display = $configuration_display;
 	}
 
 	/**
@@ -45,7 +45,7 @@ class PureClarity_Public {
 	public function init() {
 		if ( $this->settings->is_pureclarity_enabled() ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
-			$this->template->init();
+			$this->configuration_display->init();
 		}
 	}
 
