@@ -126,10 +126,6 @@ class PureClarity_Cron_Deltas {
 	 */
 	public function process_categories() {
 		try {
-			if ( ! $this->settings->is_category_feed_sent() ) {
-				return;
-			}
-
 			if ( ! empty( $this->settings->get_category_feed_required() ) ) {
 				$this->settings->clear_category_feed_required();
 
@@ -151,11 +147,7 @@ class PureClarity_Cron_Deltas {
 	public function process_users() {
 
 		try {
-			if ( ! $this->settings->is_user_feed_sent() ) {
-				return;
-			}
-
-			$deltas = $this->settings->get_user_deltas();
+			$deltas = $this->deltas->get_user_deltas();
 			if ( count( $deltas ) > 0 ) {
 
 				$users         = array();
@@ -164,7 +156,8 @@ class PureClarity_Cron_Deltas {
 				$count         = 0;
 				$processed_ids = array();
 
-				foreach ( array_keys( $deltas ) as $id ) {
+				foreach ( $deltas as $user ) {
+					$id = $user['id'];
 
 					if ( $totalpacket >= 250000 || $count > 100 ) {
 						break;
@@ -188,7 +181,7 @@ class PureClarity_Cron_Deltas {
 					$this->feed->send_user_delta( $users, $deletes );
 				}
 
-				$this->settings->remove_user_deltas( $processed_ids );
+				$this->deltas->remove_user_deltas( $processed_ids );
 			}
 		} catch ( \Exception $exception ) {
 			error_log( 'PureClarity: An error occurred updating user deltas: ' . $exception->getMessage() );
