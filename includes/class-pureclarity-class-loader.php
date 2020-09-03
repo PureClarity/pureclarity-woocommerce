@@ -211,7 +211,7 @@ class PureClarity_Class_Loader {
 	 */
 	public function get_feed() {
 		if ( is_null( $this->feed ) ) {
-			$this->require_class( 'feed' );
+			$this->require_feeds_class( 'feed' );
 			$this->feed = new PureClarity_Feed(
 				$this->get_settings()
 			);
@@ -287,7 +287,7 @@ class PureClarity_Class_Loader {
 	public function get_cron() {
 		if ( is_null( $this->cron ) ) {
 			$this->require_class( 'cron' );
-			$this->admin = new PureClarity_Cron(
+			$this->cron = new PureClarity_Cron(
 				$this->get_settings(),
 				$this->get_cron_deltas(),
 				$this->get_cron_feeds()
@@ -321,7 +321,7 @@ class PureClarity_Class_Loader {
 	public function get_cron_feeds() {
 		if ( is_null( $this->cron_feeds ) ) {
 			$this->require_cron_class( 'feeds' );
-			$this->admin = new PureClarity_Cron_Feeds(
+			$this->cron_feeds = new PureClarity_Cron_Feeds(
 				$this->get_settings(),
 				$this->get_feed(),
 				$this->get_state_manager()
