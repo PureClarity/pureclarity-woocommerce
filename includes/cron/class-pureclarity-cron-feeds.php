@@ -133,7 +133,6 @@ class PureClarity_Cron_Feeds {
 
 				if ( $is_finished && $total_pages_count > 0 ) {
 					$this->feed->end_feed( $type );
-					$this->settings->set_feed_type_sent( $type );
 				}
 
 				$this->state_manager->set_state_value( $type . '_feed_progress', round( ( $total_pages_count / $current_page * 100 ) ) );
