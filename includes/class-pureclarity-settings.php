@@ -6,6 +6,8 @@
  * @since 2.0.0
  */
 
+use PureClarity\Api\Resource\Regions;
+
 /**
  * Handles config getting and setting
  */
@@ -36,12 +38,9 @@ class PureClarity_Settings {
 	/**
 	 * PureClarity region for use in dropdowns
 	 *
-	 * @var array $regions
+	 * @var array $display_regions
 	 */
-	private $display_regions = array(
-		'1' => 'Europe',
-		'4' => 'USA',
-	);
+	private $display_regions;
 
 	/**
 	 * Sets up PureClarity options with default values
@@ -86,6 +85,15 @@ class PureClarity_Settings {
 	 * @return string[]
 	 */
 	public function get_display_regions() {
+		if ( null === $this->display_regions ) {
+			$this->display_regions = array();
+			$region_class          = new Regions();
+			$pc_regions            = $region_class->getRegionLabels();
+			foreach ( $pc_regions as $region ) {
+				$this->display_regions[ (string) $region['value'] ] = $region['label'];
+			}
+		}
+
 		return $this->display_regions;
 	}
 
