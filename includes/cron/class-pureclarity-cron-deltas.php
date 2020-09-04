@@ -7,7 +7,7 @@
  */
 
 use PureClarity\Api\Delta\Type\Product;
-use PureClarity\Api\Delta\Type;
+use PureClarity\Api\Delta\Type\User;
 
 /**
  * Handles Delta related cron code
@@ -140,37 +140,28 @@ class PureClarity_Cron_Deltas {
 			$deltas = $this->deltas->get_user_deltas();
 			if ( count( $deltas ) > 0 ) {
 
-				$users         = array();
-				$deletes       = array();
-				$totalpacket   = 0;
-				$count         = 0;
 				$processed_ids = array();
+
+				$delta_handler = new User(
+					$this->settings->get_access_key(),
+					$this->settings->get_secret_key(),
+					(int) $this->settings->get_region()
+				);
 
 				foreach ( $deltas as $user ) {
 					$id = $user['id'];
 
-					if ( $totalpacket >= 250000 || $count > 100 ) {
-						break;
-					}
-
 					$user_data = $this->feed->parse_user( $id );
 					if ( ! empty( $user_data ) ) {
-						$json         = wp_json_encode( $user_data );
-						$totalpacket += strlen( $json );
-						$users[]      = $user_data;
+						$delta_handler->addData( $user_data );
 					} else {
-						$totalpacket += strlen( $id );
-						$deletes[]    = (string) $id;
+						$delta_handler->addDelete( (string) $id );
 					}
 
 					$processed_ids[] = $id;
-					$count++;
 				}
 
-				if ( count( $users ) > 0 || count( $deletes ) > 0 ) {
-					$this->feed->send_user_delta( $users, $deletes );
-				}
-
+				$delta_handler->send();
 				$this->deltas->remove_user_deltas( $processed_ids );
 			}
 		} catch ( \Exception $exception ) {
