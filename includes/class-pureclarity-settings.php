@@ -44,50 +44,6 @@ class PureClarity_Settings {
 	);
 
 	/**
-	 * PureClarity region urls
-	 *
-	 * @var array $regions
-	 */
-	private $regions = array(
-		'1'  => 'https://api-eu-w-1.pureclarity.net',
-		'2'  => 'https://api-eu-w-2.pureclarity.net',
-		'3'  => 'https://api-eu-c-1.pureclarity.net',
-		'4'  => 'https://api-us-e-1.pureclarity.net',
-		'5'  => 'https://api-us-e-2.pureclarity.net',
-		'6'  => 'https://api-us-w-1.pureclarity.net',
-		'7'  => 'https://api-us-w-2.pureclarity.net',
-		'8'  => 'https://api-ap-s-1.pureclarity.net',
-		'9'  => 'https://api-ap-ne-1.pureclarity.net',
-		'10' => 'https://api-ap-ne-2.pureclarity.net',
-		'11' => 'https://api-ap-se-1.pureclarity.net',
-		'12' => 'https://api-ap-se-2.pureclarity.net',
-		'13' => 'https://api-ca-c-1.pureclarity.net',
-		'14' => 'https://api-sa-e-1.pureclarity.net',
-	);
-
-	/**
-	 * PureClarity sftp region urls
-	 *
-	 * @var array $sftp_regions
-	 */
-	private $sftp_regions = array(
-		'1'  => 'https://sftp-eu-w-1.pureclarity.net',
-		'2'  => 'https://sftp-eu-w-2.pureclarity.net',
-		'3'  => 'https://sftp-eu-c-1.pureclarity.net',
-		'4'  => 'https://sftp-us-e-1.pureclarity.net',
-		'5'  => 'https://sftp-us-e-2.pureclarity.net',
-		'6'  => 'https://sftp-us-w-1.pureclarity.net',
-		'7'  => 'https://sftp-us-w-2.pureclarity.net',
-		'8'  => 'https://sftp-ap-s-1.pureclarity.net',
-		'9'  => 'https://sftp-ap-ne-1.pureclarity.net',
-		'10' => 'https://sftp-ap-ne-2.pureclarity.net',
-		'11' => 'https://sftp-ap-se-1.pureclarity.net',
-		'12' => 'https://sftp-ap-se-2.pureclarity.net',
-		'13' => 'https://sftp-ca-c-1.pureclarity.net',
-		'14' => 'https://sftp-sa-e-1.pureclarity.net',
-	);
-
-	/**
 	 * Sets up PureClarity options with default values
 	 */
 	public function __construct() {
@@ -131,15 +87,6 @@ class PureClarity_Settings {
 	 */
 	public function get_display_regions() {
 		return $this->display_regions;
-	}
-
-	/**
-	 * Gets region urls
-	 *
-	 * @return string[]
-	 */
-	public function get_regions() {
-		return $this->regions;
 	}
 
 	/**
@@ -224,36 +171,6 @@ class PureClarity_Settings {
 			$url .= $this->get_access_key() . '/cs.js';
 		}
 		return $url;
-	}
-
-	/**
-	 * Gets PureClarity feed url
-	 *
-	 * @return string
-	 */
-	public function get_feed_baseurl() {
-		$url  = getenv( 'PURECLARITY_FEED_HOST' );
-		$port = getenv( 'PURECLARITY_FEED_PORT' );
-		if ( empty( $url ) ) {
-			$url = $this->sftp_regions[ $this->get_region() ];
-		} else {
-			$url = 'http://' . $url;
-		}
-		if ( ! empty( $port ) ) {
-			$url = $url . ':' . $port;
-		}
-		return $url . '/';
-	}
-
-	/**
-	 * Gets PureClarity Delta feed url
-	 */
-	public function get_delta_url() {
-		$url  = getenv( 'PURECLARITY_HOST' );
-		if ( empty( $url ) ) {
-			$url = $this->regions[ $this->get_region() ];
-		}
-		return $url . '/api/delta';
 	}
 
 	/**
