@@ -99,9 +99,11 @@ class PureClarity_Feeds {
 				$error = __( 'Please choose one or more feeds to send to PureClarity', 'pureclarity' );
 			} else {
 				$this->state_manager->set_state_value( 'requested_feeds', wp_json_encode( $feed_types ) );
+				$this->state_manager->set_state_value( 'requested_feeds_running', '0' );
 
 				foreach ( $feed_types as $feed ) {
 					$this->state_manager->set_state_value( $feed . '_feed_error', '' );
+					$this->state_manager->set_state_value( $feed . '_feed_progress', '0' );
 				}
 			}
 		} catch ( \Exception $exception ) {
