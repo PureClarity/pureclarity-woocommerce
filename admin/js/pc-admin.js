@@ -393,7 +393,7 @@
 			checkStatus();
 		}
 
-		if( $('#pc-current-state').val() === 'configured' && $('#pc-feeds-in-progress').val() === '1') {
+		if( $('#pc-current-state').val() === 'configured' && $('#pc-feeds-in-progress').val() === 'true') {
 			pcFeedProgressCheck();
 		}
 
