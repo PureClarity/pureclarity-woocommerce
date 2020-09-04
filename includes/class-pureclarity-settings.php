@@ -15,11 +15,6 @@ class PureClarity_Settings {
 	const OPTION_SECRETKEY              = 'pureclarity_secretkey';
 	const OPTION_REGION                 = 'pureclarity_region';
 	const OPTION_MODE                   = 'pureclarity_mode';
-	const OPTION_PRODFEED_RUN           = 'pureclarity_prodfeed_run';
-	const OPTION_CATEGORYFEED_RUN       = 'pureclarity_catfeed_run';
-	const OPTION_BRANDFEED_RUN          = 'pureclarity_brandfeed_run';
-	const OPTION_USERFEED_RUN           = 'pureclarity_userfeed_run';
-	const OPTION_ORDERFEED_RUN          = 'pureclarity_orderfeed_run';
 	const OPTION_ZONE_DEBUG             = 'pureclarity_bmz_debug';
 	const OPTION_DELTAS_ENABLED         = 'pureclarity_deltas_enabled';
 	const OPTION_NIGHTLY_FEED_ENABLED   = 'pureclarity_nightly_feed_enabled';
@@ -29,9 +24,7 @@ class PureClarity_Settings {
 	const OPTION_ZONE_PRODUCTPAGE       = 'pureclarity_add_bmz_productpage';
 	const OPTION_ZONE_BASKETPAGE        = 'pureclarity_add_bmz_basketpage';
 	const OPTION_ZONE_CHECKOUTPAGE      = 'pureclarity_add_bmz_checkoutpage';
-	const OPTION_PRODUCT_DELTAS         = 'pureclarity_product_deltas';
 	const OPTION_CATEGORY_FEED_REQUIRED = 'pureclarity_category_feed_required';
-	const OPTION_USER_DELTAS            = 'pureclarity_user_deltas';
 
 	/**
 	 * PureClarity script url
@@ -102,11 +95,6 @@ class PureClarity_Settings {
 		add_option( 'pureclarity_secretkey', '' );
 		add_option( 'pureclarity_region', '1' );
 		add_option( 'pureclarity_mode', 'off' );
-		add_option( 'pureclarity_prodfeed_run', '0' );
-		add_option( 'pureclarity_catfeed_run', '0' );
-		add_option( 'pureclarity_brandfeed_run', '0' );
-		add_option( 'pureclarity_userfeed_run', '0' );
-		add_option( 'pureclarity_orderfeed_run', '0' );
 		add_option( 'pureclarity_bmz_debug', 'no' );
 		add_option( 'pureclarity_deltas_enabled', 'no' );
 		add_option( 'pureclarity_add_bmz_homepage', 'on' );
@@ -115,9 +103,7 @@ class PureClarity_Settings {
 		add_option( 'pureclarity_add_bmz_productpage', 'on' );
 		add_option( 'pureclarity_add_bmz_basketpage', 'on' );
 		add_option( 'pureclarity_add_bmz_checkoutpage', 'on' );
-		add_option( 'pureclarity_product_deltas', '{}' );
 		add_option( 'pureclarity_category_feed_required', '' );
-		add_option( 'pureclarity_user_deltas', '{}' );
 	}
 
 	/**
@@ -260,107 +246,6 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Gets product list dom selector config value
-	 *
-	 * @return string
-	 */
-	public function get_prodlist_result_element() {
-		return (string) get_option( 'pureclarity_prodlist_selector', '#main' );
-	}
-
-	/**
-	 * Gets whether product feed has been sent already
-	 *
-	 * @return string
-	 */
-	public function is_product_feed_sent() {
-		return ( get_option( 'pureclarity_prodfeed_run', '0' ) === '1' );
-	}
-
-	/**
-	 * Gets whether category feed has been sent already
-	 *
-	 * @return string
-	 */
-	public function is_category_feed_sent() {
-		return ( get_option( 'pureclarity_catfeed_run', '0' ) === '1' );
-	}
-
-	/**
-	 * Gets whether brand feed has been sent already
-	 *
-	 * @return string
-	 */
-	public function is_brand_feed_sent() {
-		return ( get_option( 'pureclarity_brandfeed_run', '0' ) === '1' );
-	}
-
-	/**
-	 * Gets whether user feed has been sent already
-	 *
-	 * @return string
-	 */
-	public function is_user_feed_sent() {
-		return ( get_option( 'pureclarity_userfeed_run', '0' ) === '1' );
-	}
-
-	/**
-	 * Gets whether order feed has been sent already
-	 *
-	 * @return string
-	 */
-	public function is_order_feed_sent() {
-		return ( get_option( 'pureclarity_orderfeed_run', '0' ) === '1' );
-	}
-
-	/**
-	 * Gets whether the delta process is running already
-	 *
-	 * @return boolean
-	 */
-	public function is_delta_running() {
-		return ( get_option( 'pureclarity_delta_running', '0' ) === '1' );
-	}
-
-	/**
-	 * Sets whether the delta process is running already
-	 *
-	 * @param string $running - new value for option ("1" or "0").
-	 */
-	public function set_is_delta_running( $running ) {
-		update_option( 'pureclarity_delta_running', $running );
-	}
-
-	/**
-	 * Saves config to say that a feed has been sent
-	 *
-	 * @param string $type - type of feed sent.
-	 */
-	public function set_feed_type_sent( $type ) {
-		$option = '';
-		switch ( $type ) {
-			case 'product':
-				$option = 'pureclarity_prodfeed_run';
-				break;
-			case 'category':
-				$option = 'pureclarity_catfeed_run';
-				break;
-			case 'brand':
-				$option = 'pureclarity_brandfeed_run';
-				break;
-			case 'user':
-				$option = 'pureclarity_userfeed_run';
-				break;
-			case 'order':
-				$option = 'pureclarity_orderfeed_run';
-				break;
-		}
-		if ( ! empty( $option ) ) {
-			update_option( $option, '1' );
-		}
-	}
-
-	/**
 	 * Gets PureClarity Delta feed url
 	 */
 	public function get_delta_url() {
@@ -426,51 +311,6 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Adds a product to the delta
-	 *
-	 * @param integer $id - product id.
-	 */
-	public function add_product_delta( $id ) {
-		$deltas = $this->get_product_deltas();
-		if ( empty( $deltas ) ) {
-			$deltas = array();
-		}
-		$deltas[ $id ] = true;
-		update_option( 'pureclarity_product_deltas', wp_json_encode( $deltas, true ) );
-	}
-
-	/**
-	 * Removes products from the delta
-	 *
-	 * @param integer[] $ids - product ids to remove from delta array.
-	 */
-	public function remove_product_deltas( $ids ) {
-		$deltas = $this->get_product_deltas();
-		if ( ! empty( $deltas ) ) {
-			foreach ( $ids as $id ) {
-				if ( isset( $deltas[ $id ] ) ) {
-					unset( $deltas[ $id ] );
-				}
-			}
-
-			update_option( 'pureclarity_product_deltas', wp_json_encode( $deltas, true ) );
-		}
-	}
-
-	/**
-	 * Returns product delta array
-	 *
-	 * @return array
-	 */
-	public function get_product_deltas() {
-		$deltastring = get_option( 'pureclarity_product_deltas', '{}' );
-		if ( ! empty( $deltastring ) ) {
-			return json_decode( $deltastring, true );
-		}
-		return array();
-	}
-
-	/**
 	 * Updates pureclarity_category_feed_required option to time now
 	 */
 	public function set_category_feed_required() {
@@ -490,61 +330,4 @@ class PureClarity_Settings {
 	public function get_category_feed_required() {
 		return get_option( 'pureclarity_category_feed_required', '' );
 	}
-
-	/**
-	 * Updates pureclarity_user_feed_required option to time now
-	 */
-	public function set_user_feed_required() {
-		update_option( 'pureclarity_user_feed_required', time() );
-	}
-
-	/**
-	 * Updates pureclarity_user_feed_required option to time empty
-	 */
-	public function clear_user_feed_required() {
-		update_option( 'pureclarity_user_feed_required', '' );
-	}
-
-	/**
-	 * Adds a user to the delta
-	 *
-	 * @param integer $id - user id.
-	 */
-	public function add_user_delta( $id ) {
-		$deltas = $this->get_user_deltas();
-		if ( empty( $deltas ) ) {
-			$deltas = array();
-		}
-		$deltas[ $id ] = true;
-		update_option( 'pureclarity_user_deltas', wp_json_encode( $deltas, true ) );
-	}
-
-	/**
-	 * Removes a user from the delta
-	 *
-	 * @param integer[] $ids - user ids to remove from deltas.
-	 */
-	public function remove_user_deltas( $ids ) {
-		$deltas = $this->get_user_deltas();
-
-		if ( ! empty( $deltas ) ) {
-			foreach ( $ids as $id ) {
-				if ( isset( $deltas[ $id ] ) ) {
-					unset( $deltas[ $id ] );
-				}
-			}
-			update_option( 'pureclarity_user_deltas', wp_json_encode( $deltas, true ) );
-		}
-	}
-
-	/**
-	 * Returns all user deltas
-	 *
-	 * @return array
-	 */
-	public function get_user_deltas() {
-		$deltastring = get_option( 'pureclarity_user_deltas', '{}' );
-		return ( ! empty( $deltastring ) ? json_decode( $deltastring, true ) : array() );
-	}
-
 }
