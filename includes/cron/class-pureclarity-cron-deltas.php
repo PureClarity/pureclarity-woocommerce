@@ -6,6 +6,9 @@
  * @since 3.0.0
  */
 
+use PureClarity\Api\Delta\Type\Product;
+use PureClarity\Api\Delta\Type;
+
 /**
  * Handles Delta related cron code
  */
@@ -72,48 +75,35 @@ class PureClarity_Cron_Deltas {
 			$product_deltas = $this->deltas->get_product_deltas();
 			if ( count( $product_deltas ) > 0 ) {
 
-				$products           = array();
-				$products_to_delete = array();
-
-				$totalpacket = 0;
-				$count       = 0;
-
 				$this->feed->load_product_tags_map();
 
 				$processed_ids = array();
+				$delta_handler = new Product(
+					$this->settings->get_access_key(),
+					$this->settings->get_secret_key(),
+					(int) $this->settings->get_region()
+				);
 
 				foreach ( $product_deltas as $product ) {
-					$id = $product['id'];
-					if ( $totalpacket >= 250000 || $count > 100 ) {
-						break;
-					}
-
+					$id      = $product['id'];
 					$product = wc_get_product( $id );
 					$post    = get_post( $id );
 
 					if ( 'publish' === $post->post_status && false !== $product ) {
 						$data = $this->feed->get_product_data( $product );
 						if ( ! empty( $data ) ) {
-							$products[]   = $data;
-							$json         = wp_json_encode( $data );
-							$totalpacket += strlen( $json );
+							$delta_handler->addData( $data );
 						} else {
-							$totalpacket         += strlen( $id );
-							$products_to_delete[] = (string) $id;
+							$delta_handler->addDelete( (string) $id );
 						}
 					} elseif ( 'importing' !== $post->post_status ) {
-						$totalpacket         += strlen( $id );
-						$products_to_delete[] = (string) $id;
+						$delta_handler->addDelete( (string) $id );
 					}
 
 					$processed_ids[] = $id;
-					$count++;
 				}
 
-				if ( count( $products ) > 0 || count( $products_to_delete ) > 0 ) {
-					$this->feed->send_product_delta( $products, $products_to_delete );
-				}
-
+				$delta_handler->send();
 				$this->deltas->remove_product_deltas( $processed_ids );
 			}
 		} catch ( \Exception $exception ) {
