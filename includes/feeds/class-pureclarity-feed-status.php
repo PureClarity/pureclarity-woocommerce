@@ -149,9 +149,9 @@ class PureClarity_Feed_Status {
 					$status['class']   = 'pc-feed-in-progress';
 					$status['label']   = sprintf(
 						/* translators: %d is replaced with progress number */
-						__( 'In progress: %d%', 'pureclarity' ),
+						__( 'In progress: %d', 'pureclarity' ),
 						$progress
-					);
+					) . '%';
 				}
 			}
 
