@@ -110,7 +110,7 @@ class PureClarity_Feed {
 					foreach ( $data as $row ) {
 						$feed_class->append( $row );
 					}
-					$this->state_manager->set_state_value( $type . '_feed_progress', round( ( $total_pages_count / $current_page * 100 ) ) );
+					$this->state_manager->set_state_value( $type . '_feed_progress', round( ( $current_page / $total_pages_count ) * 100 ) );
 				}
 				$feed_class->end();
 			}
