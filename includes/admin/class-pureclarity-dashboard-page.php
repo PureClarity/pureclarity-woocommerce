@@ -309,26 +309,6 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Returns the class to use for the Brand feed status display
-	 *
-	 * @return string
-	 */
-	public function get_brand_feed_status_class() {
-		$feed = $this->feed_status->get_feed_status( Feed::FEED_TYPE_BRAND );
-		return $feed['class'];
-	}
-
-	/**
-	 * Returns the label to use for the Brand feed status display
-	 *
-	 * @return string
-	 */
-	public function get_brand_feed_status_label() {
-		$feed = $this->feed_status->get_feed_status( Feed::FEED_TYPE_BRAND );
-		return $feed['label'];
-	}
-
-	/**
 	 * Returns the class to use for the User feed status display
 	 *
 	 * @return string
@@ -379,7 +359,6 @@ class PureClarity_Dashboard_Page {
 				Feed::FEED_TYPE_PRODUCT,
 				Feed::FEED_TYPE_CATEGORY,
 				Feed::FEED_TYPE_USER,
-				Feed::FEED_TYPE_BRAND,
 				Feed::FEED_TYPE_ORDER,
 			)
 		);

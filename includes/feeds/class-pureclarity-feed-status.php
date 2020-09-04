@@ -109,17 +109,6 @@ class PureClarity_Feed_Status {
 				$status['class']   = 'pc-feed-disabled';
 			}*/
 
-			$send_brand_feed = get_option( 'pureclarity_brand_feed_enabled' );
-
-			if ( Feed::FEED_TYPE_BRAND === $type &&
-				true === $status['enabled'] &&
-				empty( $send_brand_feed )
-			) {
-				$status['enabled'] = false;
-				$status['label']   = __( 'Not Enabled', 'pureclarity' );
-				$status['class']   = 'pc-feed-disabled';
-			}
-
 			if ( false === $status['enabled'] ) {
 				$this->feed_status_data[ $type ] = $status;
 

@@ -14,17 +14,14 @@
 		messageContainer: $('#pc-statusMessage'),
 		chkProducts: $('#pc-chkProducts'),
 		chkCategories: $('#pc-chkCategories'),
-		chkBrands: $('#pc-chkBrands'),
 		chkUsers: $('#pc-chkUsers'),
 		chkOrders: $('#pc-chkOrders'),
 		statusLabelProducts: $('#pc-productFeedStatusLabel'),
 		statusLabelCategories: $('#pc-categoryFeedStatusLabel'),
-		statusLabelBrands: $('#pc-brandFeedStatusLabel'),
 		statusLabelUsers: $('#pc-userFeedStatusLabel'),
 		statusLabelOrders: $('#pc-ordersFeedStatusLabel'),
 		statusClassProducts: $('#pc-productFeedStatusClass'),
 		statusClassCategories: $('#pc-categoryFeedStatusClass'),
-		statusClassBrands: $('#pc-brandFeedStatusClass'),
 		statusClassUsers: $('#pc-userFeedStatusClass'),
 		statusClassOrders: $('#pc-ordersFeedStatusClass'),
 		progressCheckRunning: 0,
@@ -269,7 +266,6 @@
 	{
 		if (!feedRunObject.chkProducts.is(':checked') &&
 			!feedRunObject.chkCategories.is(':checked') &&
-			(feedRunObject.chkBrands.length === 0 || !feedRunObject.chkBrands.is(':checked')) &&
 			!feedRunObject.chkUsers.is(':checked') &&
 			!feedRunObject.chkOrders.is(':checked')
 		) {
@@ -278,11 +274,6 @@
 
 		feedRunObject.chkProducts.prop("disabled", true);
 		feedRunObject.chkCategories.prop("disabled", true);
-
-		if (feedRunObject.chkBrands.length) {
-			feedRunObject.chkBrands.prop("disabled", true);
-		}
-
 		feedRunObject.chkUsers.prop("disabled", true);
 		feedRunObject.chkOrders.prop("disabled", true);
 		feedRunObject.isComplete = false;
@@ -293,7 +284,6 @@
 			data: {
 				product: feedRunObject.chkProducts.is(':checked'),
 				category: feedRunObject.chkCategories.is(':checked'),
-				brand: feedRunObject.chkBrands.length && feedRunObject.chkBrands.is(':checked'),
 				user: feedRunObject.chkUsers.is(':checked'),
 				orders: feedRunObject.chkOrders.is(':checked'),
 				action: 'pureclarity_request_feeds',
@@ -318,11 +308,6 @@
 		if (feedRunObject.chkCategories.is(':checked')) {
 			feedRunObject.statusLabelCategories.html('Waiting for feed run to start');
 			feedRunObject.statusClassCategories.attr('class', 'pc-feed-status-icon pc-feed-waiting');
-		}
-
-		if (feedRunObject.chkBrands.length && feedRunObject.chkBrands.is(':checked')) {
-			feedRunObject.statusLabelBrands.html('Waiting for feed run to start');
-			feedRunObject.statusClassBrands.attr('class', 'pc-feed-status-icon pc-feed-waiting');
 		}
 
 		if (feedRunObject.chkUsers.is(':checked')) {
@@ -355,25 +340,21 @@
 				} else {
 					feedRunObject.statusLabelProducts.html(response.product.label);
 					feedRunObject.statusLabelCategories.html(response.category.label);
-					feedRunObject.statusLabelBrands.html(response.brand.label);
 					feedRunObject.statusLabelUsers.html(response.user.label);
 					feedRunObject.statusLabelOrders.html(response.orders.label);
 					feedRunObject.statusClassProducts.attr('class', 'pc-feed-status-icon ' + response.product.class);
 					feedRunObject.statusClassCategories.attr('class', 'pc-feed-status-icon ' + response.category.class);
-					feedRunObject.statusClassBrands.attr('class', 'pc-feed-status-icon ' + response.brand.class);
 					feedRunObject.statusClassUsers.attr('class', 'pc-feed-status-icon ' + response.user.class);
 					feedRunObject.statusClassOrders.attr('class', 'pc-feed-status-icon ' + response.orders.class);
 
 					if (response.product.running ||
 						response.category.running ||
-						response.brand.running ||
 						response.user.running ||
 						response.orders.running
 					) {
 						setTimeout(pcFeedProgressCheck, 1000);
 					} else if (response.product.enabled === false &&
 						response.category.enabled === false &&
-						response.brand.enabled === false &&
 						response.user.enabled === false &&
 						response.orders.enabled === false
 					) {
@@ -398,9 +379,6 @@
 		feedRunObject.isComplete = true;
 		feedRunObject.chkProducts.prop("disabled", false);
 		feedRunObject.chkCategories.prop("disabled", false);
-		if (feedRunObject.chkBrands.length) {
-			feedRunObject.chkBrands.prop("disabled", false);
-		}
 		feedRunObject.chkUsers.prop("disabled", false);
 		feedRunObject.chkOrders.prop("disabled", false);
 	}

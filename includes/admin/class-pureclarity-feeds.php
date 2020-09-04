@@ -54,14 +54,12 @@ class PureClarity_Feeds {
 			Feed::FEED_TYPE_PRODUCT  => $this->feed_status->get_feed_status( Feed::FEED_TYPE_PRODUCT ),
 			Feed::FEED_TYPE_CATEGORY => $this->feed_status->get_feed_status( Feed::FEED_TYPE_CATEGORY ),
 			Feed::FEED_TYPE_USER     => $this->feed_status->get_feed_status( Feed::FEED_TYPE_USER ),
-			Feed::FEED_TYPE_BRAND    => $this->feed_status->get_feed_status( Feed::FEED_TYPE_BRAND ),
 			Feed::FEED_TYPE_ORDER    => $this->feed_status->get_feed_status( Feed::FEED_TYPE_ORDER ),
 			'in_progress'            => $this->feed_status->get_are_feeds_in_progress(
 				array(
 					Feed::FEED_TYPE_PRODUCT,
 					Feed::FEED_TYPE_CATEGORY,
 					Feed::FEED_TYPE_USER,
-					Feed::FEED_TYPE_BRAND,
 					Feed::FEED_TYPE_ORDER,
 				)
 			),
@@ -81,23 +79,19 @@ class PureClarity_Feeds {
 			check_ajax_referer( 'pureclarity_request_feeds', 'security' );
 			$feed_types = array();
 
-			if ( isset( $_POST['product'] ) ) {
+			if ( isset( $_POST[ Feed::FEED_TYPE_PRODUCT ] ) ) {
 				$feed_types[] = Feed::FEED_TYPE_PRODUCT;
 			}
 
-			if ( isset( $_POST['product'] ) ) {
+			if ( isset( $_POST[ Feed::FEED_TYPE_CATEGORY ] ) ) {
 				$feed_types[] = Feed::FEED_TYPE_CATEGORY;
 			}
 
-			if ( isset( $_POST['product'] ) ) {
+			if ( isset( $_POST[ Feed::FEED_TYPE_USER ] ) ) {
 				$feed_types[] = Feed::FEED_TYPE_USER;
 			}
 
-			if ( isset( $_POST['product'] ) ) {
-				$feed_types[] = Feed::FEED_TYPE_BRAND;
-			}
-
-			if ( isset( $_POST['product'] ) ) {
+			if ( isset( $_POST[ Feed::FEED_TYPE_ORDER ] ) ) {
 				$feed_types[] = Feed::FEED_TYPE_ORDER;
 			}
 

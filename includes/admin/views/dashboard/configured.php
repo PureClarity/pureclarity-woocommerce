@@ -74,11 +74,6 @@
 				<span id="pc-ordersFeedStatusClass" class="pc-feed-status-icon <?php echo esc_attr( $this->get_orders_feed_status_class() ); ?>"></span>
 				<span id="pc-ordersFeedStatusLabel" class="pc-feedStatus"><?php echo esc_html( $this->get_orders_feed_status_label() ); ?></span>
 			</p>
-			<p class="pc-feed">
-				<span class="pc-feedName"><?php esc_html_e( 'Brands', 'pureclarity' ); ?>:</span>
-				<span id="pc-brandFeedStatusClass" class="pc-feed-status-icon <?php echo esc_attr( $this->get_brand_feed_status_class() ); ?>"></span>
-				<span id="pc-brandFeedStatusLabel" class="pc-feedStatus"><?php echo esc_html( $this->get_brand_feed_status_label() ); ?></span>
-			</p>
 			<div id="pc-feeds-button" class="pc-feeds-button">
 				<a href="#TB_inline?&width=600&height=500&inlineId=pc-feeds-modal-popup" id="pc-feeds-popup-button" class="thickbox" title="<?php esc_attr_e( 'Run Feeds Manually', 'pureclarity' ); ?>"><?php esc_html_e( 'Run Feeds Manually', 'pureclarity' ); ?></a>
 			</div>
@@ -96,12 +91,6 @@
 						<label for="pc-chkCategories"><?php esc_html_e( 'Categories', 'pureclarity' ); ?></label>
 						<input id="pc-chkCategories" type="checkbox" checked="checked" />
 					</div>
-					<!-- if ($this->is_feed_enabled('brand')) : -->
-						<div class="pc-feed-field">
-							<label for="pc-chkBrands"><?php esc_html_e( 'Brands', 'pureclarity' ); ?></label>
-							<input id="pc-chkBrands" type="checkbox" checked="checked" />
-						</div>
-					<!-- endif; -->
 					<div class="pc-feed-field">
 						<label for="pc-chkUsers"><?php esc_html_e( 'Users', 'pureclarity' ); ?></label>
 						<input id="pc-chkUsers" type="checkbox" checked="checked" />
@@ -128,7 +117,7 @@
 	<div id="pc-configuration" class="pc-box">
 		<div class="pc-box-title-bar"><h3><?php esc_html_e( 'Advanced Configuration', 'pureclarity' ); ?></h3></div>
 		<div class="pc-box-content">
-			<p><?php esc_html_e( 'You can enable brand feeds, enable admin only mode and more in the PureClarity plugin configuration', 'pureclarity' ); ?></p>
+			<p><?php esc_html_e( 'You can enable admin only mode and more in the PureClarity plugin configuration', 'pureclarity' ); ?></p>
 			<p class="pc-button">
 				<a class="regular-button" href="<?php echo esc_url( admin_url( 'pureclarity-settings' ) ); ?>" title="<?php esc_html_e( 'Configure', 'pureclarity' ); ?>"><?php esc_html_e( 'Configure', 'pureclarity' ); ?></a>
 			</p>

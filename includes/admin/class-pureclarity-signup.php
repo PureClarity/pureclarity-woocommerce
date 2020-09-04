@@ -254,7 +254,7 @@ class PureClarity_Signup {
 	 */
 	protected function trigger_feeds() {
 		$feeds = array(
-			'brand',
+			'user',
 			'category',
 			'product',
 			'orders',
