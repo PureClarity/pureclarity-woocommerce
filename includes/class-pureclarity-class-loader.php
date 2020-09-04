@@ -213,7 +213,8 @@ class PureClarity_Class_Loader {
 		if ( is_null( $this->feed ) ) {
 			$this->require_feeds_class( 'feed' );
 			$this->feed = new PureClarity_Feed(
-				$this->get_settings()
+				$this->get_settings(),
+				$this->get_state_manager()
 			);
 		}
 		return $this->feed;

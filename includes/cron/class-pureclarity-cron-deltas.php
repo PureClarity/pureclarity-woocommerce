@@ -118,13 +118,7 @@ class PureClarity_Cron_Deltas {
 		try {
 			if ( ! empty( $this->settings->get_category_feed_required() ) ) {
 				$this->settings->clear_category_feed_required();
-
-				$data = $this->feed->build_items( 'category', 1 );
-				if ( ! empty( $data ) ) {
-					$this->feed->start_feed( 'category' );
-					$this->feed->send_data( 'category', $data );
-					$this->feed->end_feed( 'category' );
-				}
+				$this->feed->run_feed( 'category' );
 			}
 		} catch ( \Exception $exception ) {
 			error_log( 'PureClarity: An error occurred updating categories: ' . $exception->getMessage() );

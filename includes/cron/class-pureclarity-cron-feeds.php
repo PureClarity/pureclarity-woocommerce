@@ -68,7 +68,7 @@ class PureClarity_Cron_Feeds {
 				$this->state_manager->set_state_value( 'requested_feeds_running', '1' );
 
 				foreach ( $requested_feeds as $type ) {
-					$this->run_feed( $type );
+					$this->feed->run_feed( $type );
 				}
 			} catch ( \Exception $exception ) {
 				error_log( "PureClarity: An error occurred generating the {$type} feed: " . $exception->getMessage() );
@@ -92,7 +92,6 @@ class PureClarity_Cron_Feeds {
 			try {
 				$requested_feeds = array(
 					Feed::FEED_TYPE_PRODUCT,
-					Feed::FEED_TYPE_BRAND,
 					Feed::FEED_TYPE_CATEGORY,
 					Feed::FEED_TYPE_USER,
 				);
@@ -100,7 +99,7 @@ class PureClarity_Cron_Feeds {
 				$this->state_manager->set_state_value( 'nightly_feeds_running', '1' );
 
 				foreach ( $requested_feeds as $type ) {
-					$this->run_feed( $type );
+					$this->feed->run_feed( $type );
 				}
 			} catch ( \Exception $exception ) {
 				error_log( "PureClarity: An error occurred generating the {$type} feed: " . $exception->getMessage() );
@@ -108,38 +107,6 @@ class PureClarity_Cron_Feeds {
 			}
 
 			$this->state_manager->set_state_value( 'nightly_feeds_running', '0' );
-		}
-	}
-
-	/**
-	 * Runs an individual feed.
-	 *
-	 * @param string $type - Type of feed to run.
-	 */
-	private function run_feed( $type ) {
-		try {
-			$total_pages_count = $this->feed->get_total_pages( $type );
-			for ( $current_page = 1; $current_page <= $total_pages_count; $current_page++ ) {
-				if ( 1 === $current_page && $total_pages_count > 0 ) {
-					$this->feed->start_feed( $type );
-				}
-
-				if ( $current_page <= $total_pages_count ) {
-					$data = $this->feed->build_items( $type, $current_page );
-					$this->feed->send_data( $type, $data );
-				}
-
-				$is_finished = ( $current_page >= $total_pages_count );
-
-				if ( $is_finished && $total_pages_count > 0 ) {
-					$this->feed->end_feed( $type );
-				}
-
-				$this->state_manager->set_state_value( $type . '_feed_progress', round( ( $total_pages_count / $current_page * 100 ) ) );
-			}
-			$this->state_manager->set_state_value( $type . '_feed_last_run', time() );
-		} catch ( \Exception $e ) {
-			$this->state_manager->set_state_value( $type . '_feed_error', $e->getMessage() );
 		}
 	}
 }
