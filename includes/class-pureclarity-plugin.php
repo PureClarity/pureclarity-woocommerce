@@ -104,7 +104,7 @@ class PureClarity_Plugin {
 	public function init() {
 		if ( is_admin() ) {
 			new PureClarity_Admin( $this );
-		} else {
+		} else if ( ! $this->is_rest_api_request() ) {
 			if ( $this->settings->is_pureclarity_enabled() ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
 			}
@@ -114,6 +114,23 @@ class PureClarity_Plugin {
 		}
 		new PureClarity_Products_Watcher( $this );
 		new PureClarity_Cron( $this );
+	}
+
+	/**
+	 * Detects if this is a WordPress API request, repurposed from WooCommerce's own version of this function.
+	 * See https://wordpress.stackexchange.com/a/356946
+	 *
+	 * @return false|mixed|void
+	 */
+	public function is_rest_api_request() {
+		if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+			return false;
+		}
+
+		$rest_prefix         = trailingslashit( rest_get_url_prefix() );
+		$is_rest_api_request = ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix ) );
+
+		return apply_filters( 'pureclarity_is_rest_api_request', $is_rest_api_request );
 	}
 
 }
