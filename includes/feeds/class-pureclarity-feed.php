@@ -86,7 +86,7 @@ class PureClarity_Feed {
 				return 1;
 			case 'user':
 				return $this->get_users_count();
-			case 'order':
+			case 'orders':
 				return $this->get_order_count();
 		}
 		return 0;
@@ -155,7 +155,7 @@ class PureClarity_Feed {
 					$region
 				);
 				break;
-			case 'order':
+			case 'orders':
 				$feed_class = new Order(
 					$access_key,
 					$secret_key,
@@ -191,7 +191,7 @@ class PureClarity_Feed {
 			case 'user':
 				$data = $this->get_users( $current_page, self::PAGE_SIZE );
 				break;
-			case 'order':
+			case 'orders':
 				$data = $this->get_orders( $current_page, self::PAGE_SIZE );
 				break;
 			default:
@@ -693,11 +693,14 @@ class PureClarity_Feed {
 		$orders     = new WC_Order_Query( $args );
 		$order_data = array();
 		foreach ( $orders->get_orders() as $order ) {
+			/** @var WC_Order $order */
+			$order_lines = array();
 			foreach ( $order->get_items() as $item_id => $item ) {
+				/** @var WC_Order_Item $item */
 				$product = $order->get_product_from_item( $item );
 				if ( is_object( $product ) ) {
 					$customer_data = get_userdata( $order->get_user_id() );
-					$order_data[]  = array(
+					$order_lines[] = array(
 						'OrderID'   => $order->get_id(),
 						'UserId'    => $order->get_user_id() ? $order->get_user_id() : '',
 						'Email'     => $order->get_user_id() ? $customer_data->user_email : $order->get_billing_email(),
@@ -705,8 +708,12 @@ class PureClarity_Feed {
 						'ProdCode'  => $item->get_product_id(),
 						'Quantity'  => $item['qty'],
 						'UnitPrice' => wc_format_decimal( $order->get_item_total( $item, false, false ) ),
+						'LinePrice' => wc_format_decimal( $order->get_item_subtotal( $item, true, false ) ),
 					);
 				}
+			}
+			if ( ! empty( $order_lines ) ) {
+				$order_data[] = $order_lines;
 			}
 		}
 
