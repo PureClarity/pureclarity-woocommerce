@@ -27,6 +27,13 @@ class PureClarity_Dashboard_Page {
 	private $new_version;
 
 	/**
+	 * Dashboard info from PureClarity
+	 *
+	 * @var mixed[] $dashboard_info
+	 */
+	private $dashboard_info;
+
+	/**
 	 * Flag to denote if the plugin is configured or not.
 	 *
 	 * @var bool $is_not_configured
@@ -81,8 +88,118 @@ class PureClarity_Dashboard_Page {
 	/**
 	 * Renders settings page
 	 */
+	public function get_next_steps_content() {
+		try {
+			$dashboard = $this->get_dasboard_info();
+			if ( isset( $dashboard['NextSteps'] ) ) {
+				$nr = new \PureClarity\Api\Info\Render\NextSteps();
+				echo $nr->render( $dashboard['NextSteps'] );
+			}
+		} catch ( \Exception $e ) {
+			error_log( $e->getMessage() );
+		}
+
+	}
+
+	/**
+	 * Renders settings page
+	 */
+	public function get_stats_content() {
+		try {
+			$dashboard = $this->get_dasboard_info();
+			if ( isset( $dashboard['Stats'] ) ) {
+				$nr = new \PureClarity\Api\Info\Render\HeadlineStats();
+				echo $nr->render( $dashboard['Stats'] );
+			}
+		} catch ( \Exception $e ) {
+			error_log( $e->getMessage() );
+		}
+	}
+
+	/**
+	 * Renders settings page
+	 */
+	public function get_account_status_content() {
+		try {
+			$dashboard = $this->get_dasboard_info();
+			if ( isset( $dashboard['Account'] ) ) {
+				$nr = new \PureClarity\Api\Info\Render\Account();
+				echo $nr->render( $dashboard['Account'] );
+			}
+		} catch ( \Exception $e ) {
+			error_log( $e->getMessage() );
+		}
+	}
+
+	/**
+	 * Renders settings page
+	 */
+	public function get_dasboard_info() {
+		if ( null === $this->dashboard_info ) {
+			try {
+				$dashboard = new \PureClarity\Api\Info\Dashboard(
+					$this->settings->get_access_key(),
+					$this->settings->get_secret_key(),
+					(int) $this->settings->get_region()
+				);
+
+				$r                    = $dashboard->request();
+				$this->dashboard_info = json_decode( $r['body'], true );
+			} catch ( \Exception $e ) {
+				error_log( $e->getMessage() );
+			}
+		}
+
+		return $this->dashboard_info;
+
+	}
+
+	/**
+	 * Renders settings page
+	 */
 	public function dashboard_render() {
 		include_once 'views/dashboard-page.php';
+	}
+
+	/**
+	 * Runs before admin notices action and hides them.
+	 */
+	public static function inject_before_notices() {
+
+		$whitelist_admin_pages = array(
+			'toplevel_page_pureclarity-dashboard',
+			'pureclarity_page_pureclarity-settings',
+		);
+		$admin_page = get_current_screen();
+
+		if ( in_array( $admin_page->base, $whitelist_admin_pages, true ) ) {
+			// Wrap the notices in a hidden div to prevent flickering before
+			// they are moved elsewhere in the page by WordPress Core.
+			echo '<div style="display:none" id="wp__notice-list">';
+
+			// Capture all notices and hide them. WordPress Core looks for
+			// `.wp-header-end` and appends notices after it if found.
+			// https://github.com/WordPress/WordPress/blob/f6a37e7d39e2534d05b9e542045174498edfe536/wp-admin/js/common.js#L737 .
+			echo '<div class="wp-header-end" id="woocommerce-layout__notice-catcher"></div>';
+		}
+	}
+
+	/**
+	 * Runs after admin notices and closes div.
+	 */
+	public static function inject_after_notices() {
+
+		$admin_page            = get_current_screen();
+		$whitelist_admin_pages = array(
+			'toplevel_page_pureclarity-dashboard',
+			'pureclarity_page_pureclarity-settings',
+		);
+
+		if ( in_array( $admin_page->base, $whitelist_admin_pages, true ) ) {
+			// Close the hidden div used to prevent notices from flickering before
+			// they are inserted elsewhere in the page.
+			echo '</div>';
+		}
 	}
 
 	/**
@@ -178,13 +295,6 @@ class PureClarity_Dashboard_Page {
 	 */
 	public function get_signup_content() {
 		include 'views/dashboard/signup.php';
-	}
-
-	/**
-	 * Includes the waiting dashboard view file
-	 */
-	public function get_waiting_content() {
-		include 'views/dashboard/waiting.php';
 	}
 
 	/**

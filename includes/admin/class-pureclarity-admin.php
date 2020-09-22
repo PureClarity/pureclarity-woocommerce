@@ -63,6 +63,8 @@ class PureClarity_Admin {
 	}
 
 	public function init() {
+		add_action( 'admin_notices', array( $this->dashboard_page, 'inject_before_notices' ), -9999 );
+		add_action( 'admin_notices', array( $this->dashboard_page, 'inject_after_notices' ), PHP_INT_MAX );
 		add_action( 'admin_notices', array( $this, 'display_dependency_notices' ) );
 		add_action( 'admin_menu', array( $this, 'add_menus' ) );
 		add_action( 'admin_init', array( $this->settings_page, 'add_settings' ) );
@@ -86,23 +88,58 @@ class PureClarity_Admin {
 
 		if ( strpos( $hook, 'pureclarity' ) !== false ) {
 
+			$state = $this->dashboard_page->get_state_name();
+
+			if ( PureClarity_Dashboard_Page::STATE_CONFIGURED !== $state ) {
+				wp_enqueue_style(
+					'pureclarity-admin-slick',
+					PURECLARITY_BASE_URL . 'admin/css/slick.css',
+					array(),
+					PURECLARITY_VERSION
+				);
+
+				wp_enqueue_style(
+					'pureclarity-admin-slick-theme',
+					PURECLARITY_BASE_URL . 'admin/css/slick-theme.css',
+					array(),
+					PURECLARITY_VERSION
+				);
+
+				wp_register_script(
+					'pureclarity-signup-js',
+					PURECLARITY_BASE_URL . 'admin/js/pc-signup.js',
+					array( 'jquery' ),
+					PURECLARITY_VERSION,
+					true
+				);
+
+				wp_register_script(
+					'pureclarity-slick',
+					PURECLARITY_BASE_URL . 'admin/js/slick.min.js',
+					array( 'jquery' ),
+					PURECLARITY_VERSION,
+					true
+				);
+
+				wp_enqueue_script( 'pureclarity-signup-js' );
+				wp_enqueue_script( 'pureclarity-slick' );
+			} else {
+				wp_register_script(
+					'pureclarity-feeds-js',
+					PURECLARITY_BASE_URL . 'admin/js/pc-feeds.js',
+					array( 'jquery' ),
+					PURECLARITY_VERSION,
+					true
+				);
+				wp_enqueue_script( 'pureclarity-feeds-js' );
+			}
+
 			wp_enqueue_style(
 				'pureclarity-admin-styles',
 				PURECLARITY_BASE_URL . 'admin/css/pc-admin.css',
 				array(),
 				PURECLARITY_VERSION
 			);
-
-			wp_register_script(
-				'pureclarity-adminjs',
-				PURECLARITY_BASE_URL . 'admin/js/pc-admin.js',
-				array( 'jquery' ),
-				PURECLARITY_VERSION,
-				true
-			);
-
-			wp_enqueue_script( 'pureclarity-adminjs' );
-
 			add_thickbox();
 		}
 	}

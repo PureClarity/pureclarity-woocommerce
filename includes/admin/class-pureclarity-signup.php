@@ -116,7 +116,7 @@ class PureClarity_Signup {
 
 		try {
 			$signup_data = $this->get_signup_data();
-			if ( ! empty( $signup_data ) && 'complete' !== $signup_data ) {
+			if ( ! empty( $signup_data ) ) {
 				$status = new Status();
 				$result = $status->request( $signup_data );
 			}
@@ -220,7 +220,7 @@ class PureClarity_Signup {
 
 			if ( ! empty( $signup_data ) ) {
 				$this->save_config( $request_data['AccessKey'], $request_data['SecretKey'], $signup_data['region'] );
-				$this->update_pureclarity_state( 'signup_request', 'complete' );
+				$this->delete_pureclarity_state( 'signup_request' );
 				$this->trigger_feeds();
 			} else {
 				$result['errors'][] = 'Error processing request';
@@ -273,7 +273,7 @@ class PureClarity_Signup {
 		$request_data = $this->get_pureclarity_state( 'signup_request' );
 		$request      = array();
 
-		if ( ! empty( $request_data ) && 'complete' !== $request_data ) {
+		if ( ! empty( $request_data ) ) {
 			$request = json_decode( $request_data, true );
 		}
 		return $request;
@@ -314,5 +314,14 @@ class PureClarity_Signup {
 	 */
 	protected function update_pureclarity_state( $key, $value ) {
 		$this->state_manager->set_state_value( $key, $value );
+	}
+
+	/**
+	 * Removes data from the state table
+	 *
+	 * @param string $key - Key to set value against in the state table.
+	 */
+	protected function delete_pureclarity_state( $key ) {
+		$this->state_manager->delete_state_value( $key );
 	}
 }

@@ -79,19 +79,19 @@ class PureClarity_Feeds {
 			check_ajax_referer( 'pureclarity_request_feeds', 'security' );
 			$feed_types = array();
 
-			if ( isset( $_POST[ Feed::FEED_TYPE_PRODUCT ] ) ) {
+			if ( isset( $_POST[ Feed::FEED_TYPE_PRODUCT ] ) && 'true' === $_POST[ Feed::FEED_TYPE_PRODUCT ] ) {
 				$feed_types[] = Feed::FEED_TYPE_PRODUCT;
 			}
 
-			if ( isset( $_POST[ Feed::FEED_TYPE_CATEGORY ] ) ) {
+			if ( isset( $_POST[ Feed::FEED_TYPE_CATEGORY ] ) && 'true' === $_POST[ Feed::FEED_TYPE_CATEGORY ] ) {
 				$feed_types[] = Feed::FEED_TYPE_CATEGORY;
 			}
 
-			if ( isset( $_POST[ Feed::FEED_TYPE_USER ] ) ) {
+			if ( isset( $_POST[ Feed::FEED_TYPE_USER ] ) && 'true' === $_POST[ Feed::FEED_TYPE_USER ] ) {
 				$feed_types[] = Feed::FEED_TYPE_USER;
 			}
 
-			if ( isset( $_POST[ Feed::FEED_TYPE_ORDER ] ) ) {
+			if ( isset( $_POST[ Feed::FEED_TYPE_ORDER ] ) && 'true' === $_POST[ Feed::FEED_TYPE_ORDER ] ) {
 				$feed_types[] = Feed::FEED_TYPE_ORDER;
 			}
 

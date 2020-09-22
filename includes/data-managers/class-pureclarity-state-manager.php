@@ -76,4 +76,18 @@ class PureClarity_State_Manager {
 		);
 	}
 
+	/**
+	 * Gets the value for the given state name key
+	 *
+	 * @param string $name_key
+	 */
+	public function delete_state_value( $name_key ) {
+		$this->wpdb->delete(
+			$this->table_name,
+			array(
+				'name' => $name_key
+			)
+		);
+	}
+
 }

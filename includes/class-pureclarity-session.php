@@ -69,7 +69,7 @@ class PureClarity_Session {
 		$this->order = $order;
 		// if not on the login page, check for the logout cookie, in order to see if we need to trigger customer_logout event.
 		// cannot check on login page as our js isn't on it.
-		// TODO: move this
+		// TODO: move this to an init function
 		if ( 'wp-login.php' !== $GLOBALS['pagenow'] ) {
 			$this->is_logout();
 		}
@@ -209,10 +209,9 @@ class PureClarity_Session {
 	 */
 	public function set_cart() {
 
+
 		$items      = array();
-		//if(!WC()->cart) {
-			//return;
-		//}
+
 		$cart_items = WC()->cart->get_cart();
 		$cart_id    = time();
 

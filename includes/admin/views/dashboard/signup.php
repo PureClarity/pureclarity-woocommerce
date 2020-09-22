@@ -11,49 +11,134 @@
  *
  * @var Pureclarity_Dashboard_Page $this
  */
-?>
-<div id="pc-welcome">
-	<div id="pc-marketing-info" class="pc-box">
+
+if ( self::STATE_WAITING !== $this->get_state_name() ) : ?>
+	<div id="pc-marketing-info" class="pc-box pc-signup-boxes">
 		<div class="pc-box-content">
 			<h2><?php esc_html_e( 'Welcome to PureClarity', 'pureclarity' ); ?></h2>
-			<p><?php esc_html_e( 'PureClarity is the leading AI-based eCommerce personalization platform proven to:' ); ?></p>
-			<ul>
-				<li><?php esc_html_e( 'Increase online revenue by 27%', 'pureclarity' ); ?></li>
-				<li><?php esc_html_e( 'Increase online conversion by 72%', 'pureclarity' ); ?></li>
-				<li><?php esc_html_e( 'Increase average order value by 16%', 'pureclarity' ); ?></li>
-			</ul>
-			<p>
-				<?php
-				esc_html_e(
-					'Features include Personalized real-time AI Recommenders, Personalized Marketing Merchandising and Campaigns, Personalization within Email and Personalization within Search',
-					'pureclarity'
-				);
-				?>
-			</p>
+			<p><?php esc_html_e( 'With our leading eCommerce personalisation platform, you can enjoy:' ); ?></p>
+			<div class="pc_stat_donuts">
+				<div class="pc_stat_donut">
+					<svg class="pc_donut" width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+						<g>
+							<title>26.6% Increase in revenue</title>
+							<circle class="pc_donut_base" r="50" cy="75" cx="75" stroke-width="30" stroke="#e9f1f4" fill="transparent" stroke-dasharray="0" />
+							<circle class="pc_donut_animation" r="50" cy="75" cx="75" stroke-width="30" stroke="#c4d95a" fill="transparent" stroke-dasharray="82.46,314" />
+							<text class="pc_donut_text" x="75" y="-75" alignment-baseline="central" text-anchor="middle" font-size="21" font-weight="bold">26.6%</text>
+						</g>
+					</svg>
+					<span><?php esc_html_e( 'Increase in revenue', 'pureclarity' ); ?></span>
+				</div>
+				<div class="pc_stat_donut">
+					<svg class="pc_donut" width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+						<g>
+							<title>71.5% Increase in conversion</title>
+							<circle class="pc_donut_base" r="50" cy="75" cx="75" stroke-width="30" stroke="#e9f1f4" fill="transparent" stroke-dasharray="0" />
+							<circle class="pc_donut_animation" r="50" cy="75" cx="75" stroke-width="30" stroke="#68b8db" fill="transparent" stroke-dasharray="224.51,314" />
+							<text class="pc_donut_text" x="75" y="-75" alignment-baseline="central" text-anchor="middle" font-size="21" font-weight="bold">71.5%</text>
+						</g>
+					</svg>
+					<span><?php esc_html_e( 'Increase in conversion', 'pureclarity' ); ?></span>
+				</div>
+				<div class="pc_stat_donut">
+					<svg class="pc_donut" width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+						<g>
+							<title>15.6% Increase in average order value</title>
+							<circle class="pc_donut_base" r="50" cy="75" cx="75" stroke-width="30" stroke="#e9f1f4" fill="transparent" stroke-dasharray="0" />
+							<circle class="pc_donut_animation" r="50" cy="75" cx="75" stroke-width="30" stroke="#e3d246" fill="transparent" stroke-dasharray="48.984,314" />
+							<text class="pc_donut_text" x="75" y="-75" alignment-baseline="central" text-anchor="middle" font-size="21" font-weight="bold">15.6%</text>
+						</g>
+					</svg>
+					<span><?php esc_html_e( 'Increase in average order value', 'pureclarity' ); ?></span>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div id="pc-sign-up" class="pc-box">
-		<div class="pc-box-title-bar"><h3><?php esc_html_e( 'Sign up for a free trial', 'pureclarity' ); ?></h3></div>
+<?php endif; ?>
+<div id="pc-waiting" <?php if ( self::STATE_WAITING !== $this->get_state_name() ) : ?>
+	style="display:none"
+<?php endif; ?>>
+	<div id="pc-sign-up-waiting" class="pc-box">
+		<div class="pc-box-title-bar"><h3><?php esc_html_e( 'Setting up account', 'pureclarity' ); ?></h3></div>
 		<div class="pc-box-content">
-			<p><?php esc_html_e( 'Try for Free today and increase your online revenue by 27%', 'pureclarity' ); ?></p>
+			<div class="pc-loader">
+				<div class="pc-loader-outer"></div>
+				<div class="pc-loader-middle"></div>
+				<div class="pc-loader-inner"></div>
+			</div>
+			<p><?php esc_html_e( 'We\'ll have you up and running', 'pureclarity' ); ?></p>
+			<p><?php esc_html_e( 'before you can say increased revenue', 'pureclarity' ); ?></p>
+		</div>
+	</div>
+</div>
+<div id="pc-features" class="pc-box">
+	<div class="pc-box-content">
+		<div id="pc-features-list">
+			<div class="pc-feature">
+				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_Personalized_content-1.jpg" style="width: 250px;"/>
+				<h3>Personalised content</h3>
+				<p>Display personalised banners, images & text to engage with visitors, turn them into buyers and incentivise returning customers.</p>
+			</div>
+			<div class="pc-feature">
+				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_Intelligent_Recs-1.jpg" />
+				<h3>Intelligent recommendations</h3>
+				<p>Use powerful personalised recommendations to upsell and cross-sell products at the right time.</p>
+			</div>
+			<div class="pc-feature">
+				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_search-1.jpg" />
+				<h3>Personalisation within search</h3>
+				<p>Help customers find what they’re looking for by displaying relevant products as they search.</p>
+			</div>
+			<div class="pc-feature">
+				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_email-1.jpg" />
+				<h3>Personalisation within email</h3>
+				<p>Use personalised email campaigns to entice customers back based on products they’ve viewed and bought in the past. </p>
+			</div>
+			<div class="pc-feature">
+				<img src="https://www.pureclarity.com/wp-content/uploads/2020/07/550_Pop-ups_Simple-1-1.jpg" />
+				<h3>Personalised pop-ups</h3>
+				<p>Keep your customers informed of your latest products, news and offers with personalised email capture pop-ups.</p>
+			</div>
+			<div class="pc-feature">
+				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_Audience-1.jpg" />
+				<h3>Audience segmentation</h3>
+				<p>Use pre-built and custom made conditions to target visitors using powerful, goal orientated marketing campaigns.</p>
+			</div>
+			<div class="pc-feature">
+				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_Analytics-1.jpg" />
+				<h3>Insights & analytics</h3>
+				<p>Gain deeper insights into visitor behaviour and learn how to maximise your web stores potential in order to increase revenue.</p>
+			</div>
+		</div>
+	</div>
+</div>
+<?php if ( self::STATE_WAITING !== $this->get_state_name() ) : ?>
+	<div id="pc-sign-up" class="pc-box pc-signup-boxes">
+		<div class="pc-box-title-bar">
+			<h3><?php esc_html_e( 'Sign up for a 30-day free trial', 'pureclarity' ); ?></h3>
+		</div>
+		<div class="pc-box-content">
+			<p class="sign-up-subheading"><strong><?php esc_html_e( 'Try for Free today:', 'pureclarity' ); ?></strong></p>
 			<ul>
+				<li><?php esc_html_e( 'Get up and running in minutes', 'pureclarity' ); ?></li>
+				<li><?php esc_html_e( 'No credit card or contract required', 'pureclarity' ); ?></li>
 				<li><?php esc_html_e( 'Access to all PureClarity features', 'pureclarity' ); ?></li>
-				<li><?php esc_html_e( 'Access to PureClarity Academy', 'pureclarity' ); ?></li>
-				<li><?php esc_html_e( 'Step by Step implementation guide', 'pureclarity' ); ?></li>
-				<li><?php esc_html_e( 'Full support if needed', 'pureclarity' ); ?></li>
-				<li><?php esc_html_e( 'No credit card required', 'pureclarity' ); ?></li>
+				<li><?php esc_html_e( 'Full support from our dedicated team', 'pureclarity' ); ?></li>
 			</ul>
 			<p class="pc-button-holder">
 				<a id="pc-sign-up-button" href="#TB_inline?&width=1000&height=600&inlineId=pc-sign-up-form-holder" class="pc-button thickbox" ><?php esc_html_e( 'Sign up', 'pureclarity' ); ?></a>
+				<a id="pc-link-account-button" href="#TB_inline?&width=500&height=450&inlineId=pc-link-account-form-holder" class="thickbox" ><?php esc_html_e( 'Already have an account?', 'pureclarity' ); ?></a>
 			</p>
 		</div>
 	</div>
-	<div id="pc-existing-account" class="pc-box">
-		<form id="pc-save-details-form" method="post" action="">
-			<?php wp_nonce_field( 'pureclarity_link_account' ); ?>
-			<input type="hidden" name="action" value="pureclarity_link_account" />
-			<div class="pc-box-title-bar"><h3><?php esc_html_e( 'Already have an account?', 'pureclarity' ); ?></h3></div>
-			<div class="pc-box-content">
+	<div id="pc-link-account-form-holder">
+		<div id="pc-link-account-form-header">
+			<h2><?php esc_html_e( 'Account Setup', 'pureclarity' ); ?></h2>
+		</div>
+		<div id="pc-link-account-form-content">
+			<form id="pc-link-account-form" method="post" action="">
+				<?php wp_nonce_field( 'pureclarity_link_account' ); ?>
+				<input type="hidden" name="action" value="pureclarity_link_account" />
 				<p><?php esc_html_e( 'Enter your account details to get started', 'pureclarity' ); ?></p>
 				<div id="pc-account-details">
 					<p class="pc-field">
@@ -75,17 +160,15 @@
 						</select>
 					</p>
 				</div>
-				<div id="pc-clearfix"></div>
-				<div class="pc-button-holder">
-					<button id="pc-save-details-button" type="button"
-							title="<?php esc_html_e( 'Save Details', 'pureclarity' ); ?>"
-							class="pc-button">
-						<?php esc_html_e( 'Save Details', 'pureclarity' ); ?>
+				<div id="pc-link-account-response-holder">&nbsp;</div>
+				<div class="pc-link-account-submit-button">
+					<button id="pc-link-account-submit-button" type="button" title="<?php esc_html_e( 'Sign up', 'pureclarity' ); ?>"
+							class="thickbox">
+						<?php esc_html_e( 'Sign up', 'pureclarity' ); ?>
 					</button>
-					<div id="pc-details-error"><?php esc_html_e( 'Please fill in all fields', 'pureclarity' ); ?></div>
 				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
 	<div id="pc-sign-up-form-holder">
 		<div id="pc-sign-up-form-header">
@@ -184,4 +267,5 @@
 			</form>
 		</div>
 	</div>
-</div>
+	<?php
+endif;
