@@ -86,6 +86,24 @@ class PureClarity_Admin {
 			PURECLARITY_VERSION
 		);
 
+		wp_register_script(
+			'pureclarity-deactivate-js',
+			PURECLARITY_BASE_URL . 'admin/js/pc-deactivate.js',
+			array( 'jquery' ),
+			PURECLARITY_VERSION,
+			true
+		);
+
+		wp_enqueue_script( 'pureclarity-deactivate-js' );
+
+		wp_enqueue_style(
+			'pureclarity-admin-deactivate-styles',
+			PURECLARITY_BASE_URL . 'admin/css/pc-deactivate.css',
+			array(),
+			PURECLARITY_VERSION
+		);
+
+
 		if ( strpos( $hook, 'pureclarity' ) !== false ) {
 
 			$state = $this->dashboard_page->get_state_name();
@@ -190,6 +208,22 @@ class PureClarity_Admin {
 				'link_account_action',
 			)
 		);
+
+		add_action(
+			'wp_ajax_pureclarity_deactivate_feedback',
+			array(
+				$this,
+				'feedback_action',
+			)
+		);
+	}
+
+	/**
+	 * Adds PureClarity menus
+	 */
+	public function feedback_action() {
+var_dump($_POST);
+die('??');
 	}
 
 	/**
@@ -256,16 +290,25 @@ class PureClarity_Admin {
 
 		$updated = isset( $_GET['settings-updated'] ) ? sanitize_text_field( wp_unslash( $_GET['settings-updated'] ) ) : false;
 
-		if ( in_array( $admin_page->base, $whitelist_admin_pages, true ) && $updated ) :
+		if ( in_array( $admin_page->base, $whitelist_admin_pages, true ) && $updated ) {
 
 			?>
-
-			<div class="notice notice-success is-dismissible"> 
+			<div class="notice notice-success is-dismissible">
 				<p><strong><?php esc_html_e( 'Settings saved.', 'pureclarity' ); ?></strong></p>
 			</div>
-
 			<?php
 
-		endif;
+		}
+
+
+
+
+		if ( PureClarity_Dashboard_Page::STATE_CONFIGURED !== $state ) {
+			?>
+			<div class="notice notice-success is-dismissible">
+				<p><?php _e( 'Done!', 'sample-text-domain' ); ?></p>
+			</div>
+			<?php
+		}
 	}
 }
