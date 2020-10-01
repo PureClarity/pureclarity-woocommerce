@@ -20,6 +20,31 @@ class PureClarity_Dashboard_Page {
 	public const STATE_CONFIGURED     = 'configured';
 
 	/**
+	 * Stats to show array.
+	 *
+	 * @var string[] - array of stat keys to show in performance box.
+	 */
+	private $stats_to_show = array(
+		'Impressions'                    => 'Impressions',
+		'Sessions'                       => 'Sessions',
+		'ConvertedSessions'              => 'Converted Sessions',
+		'ConversionRate'                 => 'Conversion Rate',
+		'SalesTotalDisplay'              => 'Sales Total',
+		'OrderCount'                     => 'Orders',
+		'RecommenderProductTotalDisplay' => 'Recommender Product Total',
+	);
+
+	/**
+	 * Stats that should be shown as percentages.
+	 *
+	 * @var string[] - array of stats that should be shown as percentages.
+	 */
+	private $stat_percentage = array(
+		'ConvertedSessions',
+		'ConversionRate',
+	);
+
+	/**
 	 * Cache of "new version"
 	 *
 	 * @var string $new_version
@@ -92,8 +117,7 @@ class PureClarity_Dashboard_Page {
 		try {
 			$dashboard = $this->get_dasboard_info();
 			if ( isset( $dashboard['NextSteps'] ) ) {
-				$nr = new \PureClarity\Api\Info\Render\NextSteps();
-				echo $nr->render( $dashboard['NextSteps'] );
+				include_once 'views/dashboard/next-steps.php';
 			}
 		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() );
@@ -101,19 +125,35 @@ class PureClarity_Dashboard_Page {
 
 	}
 
-	/**
-	 * Renders settings page
-	 */
 	public function get_stats_content() {
 		try {
 			$dashboard = $this->get_dasboard_info();
 			if ( isset( $dashboard['Stats'] ) ) {
-				$nr = new \PureClarity\Api\Info\Render\HeadlineStats();
-				echo $nr->render( $dashboard['Stats'] );
+				include_once 'views/dashboard/stats.php';
 			}
 		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() );
 		}
+	}
+
+	public function get_stat_display( $key, $value ) {
+		if (in_array( $key, $this->stat_percentage )) {
+			$value .= '%';
+		}
+		return $value;
+	}
+
+	private function get_stat_title( $type ) {
+		$title = '';
+		switch ( $type ) {
+			case 'today':
+				$title = 'Today';
+				break;
+			case 'last30days':
+				$title = 'Last 30 days';
+				break;
+		}
+		return $title;
 	}
 
 	/**
@@ -123,8 +163,7 @@ class PureClarity_Dashboard_Page {
 		try {
 			$dashboard = $this->get_dasboard_info();
 			if ( isset( $dashboard['Account'] ) ) {
-				$nr = new \PureClarity\Api\Info\Render\Account();
-				echo $nr->render( $dashboard['Account'] );
+				include_once 'views/dashboard/account-info.php';
 			}
 		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() );
@@ -283,8 +322,8 @@ class PureClarity_Dashboard_Page {
 	 */
 	public function get_woocommerce_version() {
 		$version = 'N/A';
-		if ( function_exists( 'is_woocommerce_active' ) && is_woocommerce_active() ) {
-			global $woocommerce;
+		global $woocommerce;
+		if ( $woocommerce && $woocommerce->version ) {
 			$version = $woocommerce->version;
 		}
 		return $version;

@@ -141,7 +141,7 @@
 					$('#pc-sign-up-response-holder').html(data.error).addClass('pc-error-response');
 				}
 			}).fail(function(jqXHR, status, err) {
-				$('#pc-sign-up-response-holder').html('Error: Please reload the page and try again').addClass('pc-error-response');
+				$('#pc-sign-up-response-holder').html('Error: Please reload the page and try again  E3').addClass('pc-error-response');
 			});
 		}
 	}
@@ -210,7 +210,7 @@
 				}
 			}
 		).fail(function(jqXHR, status, err) {
-			alert('Error: Please reload the page and try again');
+			alert('Error: Please reload the page and try again E4');
 		});
 	}
 	

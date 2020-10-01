@@ -64,34 +64,34 @@
 				setTimeout(pcFeedProgressCheck, 1000);
 			}
 		}).fail(function(jqXHR, status, err) {
-			$('#pc-sign-up-response-holder').html('Error: Please reload the page and try again').addClass('pc-error-response');
+			$('#pc-sign-up-response-holder').html('Error: Please reload the page and try again E2').addClass('pc-error-response');
 		});
 	}
 
 	function pcInitProgress() {
 		if (feedRunObject.chkProducts.is(':checked')) {
-			feedRunObject.statusLabelProducts.html(feedRunObject.statusLabelDefault);
+			feedRunObject.statusLabelProducts.html(feedRunObject.statusLabelDefault.val());
 			feedRunObject.statusClassProducts.attr('class', 'pc-feed-status-icon pc-feed-waiting');
 		}
 
 		if (feedRunObject.chkCategories.is(':checked')) {
-			feedRunObject.statusLabelCategories.html(feedRunObject.statusLabelDefault);
+			feedRunObject.statusLabelCategories.html(feedRunObject.statusLabelDefault.val());
 			feedRunObject.statusClassCategories.attr('class', 'pc-feed-status-icon pc-feed-waiting');
 		}
 
 		if (feedRunObject.chkUsers.is(':checked')) {
-			feedRunObject.statusLabelUsers.html(feedRunObject.statusLabelDefault);
+			feedRunObject.statusLabelUsers.html(feedRunObject.statusLabelDefault.val());
 			feedRunObject.statusClassUsers.attr('class', 'pc-feed-status-icon pc-feed-waiting');
 		}
 
 		if (feedRunObject.chkOrders.is(':checked')) {
-			feedRunObject.statusLabelOrders.html(feedRunObject.statusLabelDefault);
+			feedRunObject.statusLabelOrders.html(feedRunObject.statusLabelDefault.val());
 			feedRunObject.statusClassOrders.attr('class', 'pc-feed-status-icon pc-feed-waiting');
 		}
 
 		feedPopupButton.addClass('pc-disabled');
-		feedPopupButton.attr('title', feedRunObject.feedButtonProgress);
-		feedPopupButton.html(feedRunObject.feedButtonProgress);
+		feedPopupButton.attr('title', feedRunObject.feedButtonProgress.val());
+		feedPopupButton.html(feedRunObject.feedButtonProgress.val());
 	}
 
 	function pcFeedProgressCheck() {
@@ -130,20 +130,20 @@
 						feedRunObject.progressCheckRunning = 0;
 						pcFeedResetState();
 						feedPopupButton.addClass('pc-disabled');
-						feedPopupButton.attr('title', feedRunObject.feedButtonNotEnabled);
-						feedPopupButton.html(feedRunObject.feedButtonNotEnabled);
+						feedPopupButton.attr('title', feedRunObject.feedButtonNotEnabled.val());
+						feedPopupButton.html(feedRunObject.feedButtonNotEnabled.val());
 					} else {
 						feedRunObject.progressCheckRunning = 0;
 						pcFeedResetState();
-						feedPopupButton.attr('title', feedRunObject.feedButtonManually);
-						feedPopupButton.html(feedRunObject.feedButtonManually);
+						feedPopupButton.attr('title', feedRunObject.feedButtonManually.val());
+						feedPopupButton.html(feedRunObject.feedButtonManually.val());
 						feedPopupButton.removeClass('pc-disabled');
 					}
 				}
 			}
 		).fail(function(jqXHR, status, err) {
 			feedRunObject.progressCheckRunning = 0;
-			alert('Error: Please reload the page and try again');
+			alert('Error: Please reload the page and try again E1');
 		});
 	}
 

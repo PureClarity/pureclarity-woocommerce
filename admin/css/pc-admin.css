@@ -148,10 +148,11 @@
     line-height: 2.0em;
 }
 
-#pc-dashboard .pc-button {
-    background-color: #fea23b;
+#pc-dashboard .pc-button,
+#pc-feeds-modal-content .pc-button {
+    background-color: #c4d95a;
     border:0;
-    color: white !important;
+    color: #3c4858 !important;
     font-size: 0.90em;
     border-radius: 3px;
     text-transform: uppercase;
@@ -187,6 +188,70 @@
     font-weight: 400;
     font-size: 20px;
     margin-bottom: 28px;
+}
+
+/* stat donuts */
+
+.pc_stat_donut {
+    margin-bottom: 2.3rem;
+}
+
+.pc_stat_donut {
+    display: block;
+    float:left;
+    text-align: center;
+    width: 150px;
+}
+
+.pc_stat_donut span {
+    font-weight: bold;
+}
+
+svg.pc_donut {
+    display: block;
+    margin: auto;
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    stroke-dasharray: 0, 510;
+}
+
+svg .pc_donut_text {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.pc_donut_animation {
+    animation: pc_donut 2s;
+}
+
+.pc_donuts p {
+    font-size: 2.3rem;
+    line-height: 3.3rem;
+}
+
+.pc_donut_base {
+    stroke-dasharray: 0;
+    stroke-dashoffset: 0;
+}
+
+@keyframes pc_donut {
+
+    0% {
+        stroke-dasharray: 0, 510;
+    }
+
+    100% {
+    }
+}
+
+/** WELCOME PAGE - FEATURES BOX **/
+
+.pc-feature {
+    text-align: center;
+}
+.pc-feature img {
+    width: 250px;
+    margin: 0 auto;
 }
 
 /** WELCOME PAGE - SIGNUP BOX **/
@@ -377,9 +442,9 @@
 
 #pc-sign-up-form-content #pc-sign-up-submit-button,
 #pc-link-account-form-content #pc-link-account-submit-button {
-    background-color: #fea23b;
+    background-color: #c4d95a;
     border:0;
-    color: white !important;
+    color: #3c4858 !important;
     font-weight: 600;
     font-size: 12.5px;
     border-radius: 3px;
@@ -465,26 +530,6 @@
 
 /** DASHBOARD PAGE **/
 
-#pc-dashboard #pc-thanks {
-    padding-top: 24px;
-    font-size: 1.4em;
-    font-weight: 300;
-    padding-lefT: 24px;
-}
-
-#pc-dashboard #pc-layer1 {
-    height: 185px;
-}
-
-#pc-dashboard #pc-layer2 {
-    clear: both;
-    margin-top: 50px;
-}
-
-#pc-dashboard #pc-layer2 .pc-box .pc-box-content {
-    height: 311px;
-}
-
 #pc-dashboard .pc-feedName {
     width: 90px;
     text-align: right;
@@ -539,7 +584,12 @@
     padding-bottom:5px;
 }
 
-/** THANKYOU PAGE - FEEDS MODAL **/
+#pc-feeds-button {
+    clear:both;
+    margin-top: 10px;
+}
+
+/** DASHBOARD PAGE - FEEDS MODAL **/
 
 #pc-feed-outputContainer {
     margin:20px 0;
@@ -617,39 +667,26 @@
         float:none;
         width:100%;
     }
-
-    #pc-sign-up-form-content label.mage-error {
-        width: 100%;
-        margin: 0;
-        text-align: center;
-    }
-
-
-    #pc-sign-up-form-content .right label.mage-error {
-        margin: 0;
-    }
-
 }
 
 @media only screen and (max-width: 1000px) {
     #pc-dashboard {
         margin: 0;
     }
+}
 
-    .pc-sign-up-modal .modal-inner-wrap {
-        width: 556px;
+@media only screen and (min-width: 1501px) {
+    #pc-col1 {
+        width: 60%;
+        float:left;
+    }
+
+    #pc-col2 {
+        width: 40%;
+        float:left;
     }
 }
 
-#pc-col1 {
-    width: 60%;
-    float:left;
-}
-
-#pc-col2 {
-    width: 40%;
-    float:left;
-}
 
 .pc-col-box {
     border: 1px solid #ccc;
@@ -665,64 +702,61 @@
     width: 50%;
 }
 
-/* stat donuts */
+/**
+ ### CONFIGURED DASHBOARD INFO BOXES ###
+ */
 
-.pc_stat_donut {
-    margin-bottom: 2.3rem;
+.pureclarity-info-box {
+    border: 1px solid #ccc;
+    border-top: 5px solid #68b9d6;
+    border-radius: 5px;
+    background: white;
+    padding: 0;
+    margin: 30px;
 }
 
-.pc_stat_donut {
-    display: block;
-    float:left;
-    text-align: center;
-    width: 150px;
+.pureclarity-info-box .pureclarity-info-title {
+    border-bottom: 1px solid #ccc;
+    padding: 15px 30px;
+    margin:0;
 }
 
-.pc_stat_donut span {
-    font-weight: bold;
+.pureclarity-info-box .pureclarity-info-title h2 {
+    padding: 0;
+    margin:0;
+    color: #23282d;
+    font-size: 1.3rem;
+    font-weight: 500;
 }
 
-svg.pc_donut {
-    display: block;
-    margin: auto;
-    -webkit-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-    stroke-dasharray: 0, 510;
+.pureclarity-info-box .pureclarity-info-content {
+    padding: 15px 30px;
+    margin:0;
 }
 
-svg .pc_donut_text {
-    -webkit-transform: rotate(90deg);
-    transform: rotate(90deg);
+.pureclarity-info-box .pureclarity-info-content p {
+    font-size:0.85rem;
 }
 
-.pc_donut_animation {
-    animation: pc_donut 2s;
+#pureclarity-headline-stats .pureclarity-headline-stats-content {
+    padding: 15px 30px;
+    margin:0;
 }
 
-.pc_donuts p {
-    font-size: 2.3rem;
-    line-height: 3.3rem;
+.pureclarity-headline-stat {
+    width: 50%;
+    float: left;
 }
-
-.pc_donut_base {
-    stroke-dasharray: 0;
-    stroke-dashoffset: 0;
+.pureclarity-headline-stat-row {
+    margin: 0;
+    padding: 2px 0;
+    clear:both;
 }
-
-@keyframes pc_donut {
-
-    0% {
-        stroke-dasharray: 0, 510;
-    }
-
-    100% {
-    }
-}
-
-.pc-feature {
-    text-align: center;
-}
-.pc-feature img {
-    width: 250px;
-    margin: 0 auto;
+.pureclarity-stat-label {
+    font-weight: 500;
+    width: 65%;
+    display:block;
+    float: left;
+    text-align: right;
+    font-size:0.85rem;
 }
