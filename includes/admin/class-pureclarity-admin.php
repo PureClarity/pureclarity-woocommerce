@@ -57,6 +57,7 @@ class PureClarity_Admin {
 	 * @param PureClarity_Feeds $feeds
 	 * @param PureClarity_Signup $signup
 	 * @param PureClarity_Feedback $feedback
+	 * @param PureClarity_Settings $settings
 	 */
 	public function __construct(
 		$dashboard_page,
@@ -153,13 +154,13 @@ class PureClarity_Admin {
 				wp_enqueue_script( 'pureclarity-slick' );
 			} else {
 				wp_register_script(
-					'pureclarity-feeds-js',
-					PURECLARITY_BASE_URL . 'admin/js/pc-feeds.js',
+					'pureclarity-admin-js',
+					PURECLARITY_BASE_URL . 'admin/js/pc-admin.js',
 					array( 'jquery' ),
 					PURECLARITY_VERSION,
 					true
 				);
-				wp_enqueue_script( 'pureclarity-feeds-js' );
+				wp_enqueue_script( 'pureclarity-admin-js' );
 			}
 
 			wp_enqueue_style(
