@@ -348,7 +348,10 @@ class PureClarity_Admin {
 		if ( PureClarity_Dashboard_Page::STATE_CONFIGURED !== $state ) {
 			?>
 			<div class="notice notice-success is-dismissible">
-				<p><?php _e( 'Done!', 'sample-text-domain' ); ?></p>
+				<p>
+					<?php _e( 'Thanks for installing PureClarity for WooCommerce.', 'pureclarity' ); ?>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=pureclarity-dashboard' ) ); ?>" title="<?php esc_html_e( 'Click here to begin the setup process', 'pureclarity' ); ?>"><?php esc_html_e( 'Click here to begin the setup process', 'pureclarity' ); ?></a>
+				</p>
 			</div>
 			<?php
 		}
