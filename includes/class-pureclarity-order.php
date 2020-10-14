@@ -29,7 +29,7 @@ class PureClarity_Order {
 						'orderid'    => $order->get_id(),
 						'firstname'  => $order->get_user_id() ? $customer->get_first_name() : $order->get_billing_first_name(),
 						'lastname'   => $order->get_user_id() ? $customer->get_last_name() : $order->get_billing_last_name(),
-						'userid'     => $order->get_user_id() ?: '',
+						'userid'     => $order->get_user_id() ? $order->get_user_id() : '',
 						'ordertotal' => $order->get_total(),
 						'email'      => $order->get_user_id() ? $customer->get_email() : $order->get_billing_email(),
 					);
