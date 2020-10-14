@@ -43,23 +43,33 @@ class PureClarity_Admin {
 	private $signup;
 
 	/**
+	 * PureClarity Feedback class
+	 *
+	 * @var PureClarity_Feedback $feedback
+	 */
+	private $feedback;
+
+	/**
 	 * Builds class dependencies
 	 *
 	 * @param PureClarity_Dashboard_Page $dashboard_page
 	 * @param PureClarity_Settings_Page $settings_page
 	 * @param PureClarity_Feeds $feeds
 	 * @param PureClarity_Signup $signup
+	 * @param PureClarity_Feedback $feedback
 	 */
 	public function __construct(
 		$dashboard_page,
 		$settings_page,
 		$feeds,
-		$signup
+		$signup,
+		$feedback
 	) {
 		$this->dashboard_page = $dashboard_page;
 		$this->feeds          = $feeds;
 		$this->signup         = $signup;
 		$this->settings_page  = $settings_page;
+		$this->feedback       = $feedback;
 	}
 
 	public function init() {
@@ -212,18 +222,10 @@ class PureClarity_Admin {
 		add_action(
 			'wp_ajax_pureclarity_deactivate_feedback',
 			array(
-				$this,
+				$this->feedback,
 				'feedback_action',
 			)
 		);
-	}
-
-	/**
-	 * Adds PureClarity menus
-	 */
-	public function feedback_action() {
-var_dump($_POST);
-die('??');
 	}
 
 	/**

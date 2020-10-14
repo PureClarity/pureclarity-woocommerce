@@ -7,6 +7,7 @@
 
 	$(document).ready(function() {
 		$("#deactivate-pureclarity-for-woocommerce").click(function(){
+			var linkUrl = $(this).attr('href');
 			$.post(
 				ajaxurl,
 				{
@@ -16,18 +17,14 @@
 					security: $('input[name=pureclarity_deactivate_feedback_nonce]').val()
 				},
 				function(data) {
-					if (data.success) {
-						tb_remove();
-						$('.pc-signup-boxes').fadeOut(200, function () {
-							$('#pc-waiting').fadeIn(200);
-						});
-						currentState = 'waiting';
-						setTimeout(checkStatus, 5000);
-					} else {
-						$('#pc-sign-up-response-holder').html(data.error).addClass('pc-error-response');
-					}
+					window.location.href = linkUrl;
 				}
-			);
+			).error(function() {
+				window.location.href = linkUrl;
+			}).fail(function() {
+				window.location.href = linkUrl;
+			});
+			return false;
 		});
 		$("#cancel-deactivate-pureclarity-for-woocommerce").click(function(){
 			tb_remove();

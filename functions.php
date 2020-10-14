@@ -43,10 +43,18 @@ if ( false === function_exists( 'pureclarity_db_check' ) ) {
 }
 
 if ( false === function_exists( 'pureclarity_action_link' ) ) {
+	/**
+	 * Update the plugin deactivate link to show a popup with a survey before deactivation of this plugin.
+	 *
+	 * @param mixed[] $plugin_actions - actions for this plugin.
+	 * @param string  $plugin_file - plugin name.
+	 *
+	 * @return mixed[]
+	 */
 	function pureclarity_action_link( $plugin_actions, $plugin_file ) {
 		if ( isset( $plugin_actions['deactivate'] ) && basename( plugin_dir_path( __FILE__ ) ) . '/pureclarity.php' === $plugin_file ) {
 			$orig                          = $plugin_actions['deactivate'];
-			$plugin_actions['deactivate']  = '<a href="#TB_inline?&width=600&height=600&inlineId=pureclarity_deactivate_feedback" class="thickbox" title="' . __( 'Deactivate PureClarity for WooCommerce', 'pureclarity' ) .'"> ' . __( 'Deactivate', 'pureclarity' ) . '</a>';
+			$plugin_actions['deactivate']  = '<a href="#TB_inline?&width=600&height=600&inlineId=pureclarity_deactivate_feedback" class="thickbox" title="' . __( 'Deactivate PureClarity for WooCommerce', 'pureclarity' ) . '"> ' . __( 'Deactivate', 'pureclarity' ) . '</a>';
 			$plugin_actions['deactivate'] .= '<div id="pureclarity_deactivate_feedback" style="display:none" xmlns="http://www.w3.org/1999/html">
 			<div id="pureclarity_deactivate_feedback_form">
 				' . wp_nonce_field( 'pureclarity_deactivate_feedback', 'pureclarity_deactivate_feedback_nonce' ) . '
