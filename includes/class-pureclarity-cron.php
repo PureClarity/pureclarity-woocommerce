@@ -50,6 +50,7 @@ class PureClarity_Cron {
 	}
 
 	/**
+	 * Initializes the class - adding the interval & schedule.
 	 */
 	public function init() {
 		add_filter(
