@@ -206,6 +206,37 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
+	 * Gets a formatted date.
+	 *
+	 * @param string $date - date to format.
+	 *
+	 * @return string
+	 */
+	public function get_date( $date ) {
+		$time = strtotime( $date );
+		return date_i18n( get_option( 'date_format' ), $time );
+	}
+
+	/**
+	 * Gets the class for the free trial box based on days remaining.
+	 *
+	 * @param string $days_left - number of days left of the trial.
+	 *
+	 * @return string
+	 */
+	public function get_free_trial_class( $days_left ) {
+		$class = '';
+
+		if ( $days_left <= 4 && $days_left > 1 ) {
+			$class = 'pc-ft-warning';
+		} elseif ( $days_left <= 1 ) {
+			$class = 'pc-ft-error';
+		}
+
+		return $class;
+	}
+
+	/**
 	 * Renders settings page
 	 */
 	public function get_dasboard_info() {
