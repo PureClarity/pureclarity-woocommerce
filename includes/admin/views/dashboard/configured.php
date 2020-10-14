@@ -26,15 +26,15 @@
 	<?php if ( $this->get_are_feeds_in_progress() ) : ?>
 		<?php $this->get_feeds_content(); ?>
 	<?php endif; ?>
-	<?php $this->get_stats_content(); ?>
 	<?php $this->get_account_status_content(); ?>
-	<div id="pc-step2" class="pureclarity-info-box ">
+	<?php $this->get_stats_content(); ?>
+	<div class="pureclarity-info-box">
 		<div class="pureclarity-info-title">
 			<h2><?php esc_html_e( 'Review', 'pureclarity' ); ?></h2>
 		</div>
 		<div class="pureclarity-info-content">
 			<p>
-				Enjoying PureClarity? Give us a review on the <a href="https://wordpress.org/support/plugin/pureclarity-for-woocommerce/reviews/#new-post">WordPress plugin directory</a>
+				<?php esc_html_e( 'Enjoying PureClarity? Give us a review on the ', 'pureclarity' ); ?><a href="https://wordpress.org/support/plugin/pureclarity-for-woocommerce/reviews/#new-post"><?php esc_html_e( 'WordPress plugin directory', 'pureclarity' ); ?></a>
 			</p>
 		</div>
 	</div>
