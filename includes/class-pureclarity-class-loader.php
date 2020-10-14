@@ -117,6 +117,13 @@ class PureClarity_Class_Loader {
 	private $admin_signup;
 
 	/**
+	 * PureClarity Admin Feedback class
+	 *
+	 * @var PureClarity_Feedback $admin_feedback
+	 */
+	private $admin_feedback;
+
+	/**
 	 * PureClarity Admin Feeds class
 	 *
 	 * @var PureClarity_Feeds $admin_feeds
@@ -343,7 +350,8 @@ class PureClarity_Class_Loader {
 				$this->get_admin_dashboard_page(),
 				$this->get_admin_settings_page(),
 				$this->get_admin_feeds(),
-				$this->get_admin_signup()
+				$this->get_admin_signup(),
+				$this->get_admin_feedback()
 			);
 		}
 		return $this->admin;
@@ -427,6 +435,21 @@ class PureClarity_Class_Loader {
 			);
 		}
 		return $this->admin_signup;
+	}
+
+	/**
+	 * Returns the PureClarity_Feedback class
+	 *
+	 * @return PureClarity_Feedback
+	 */
+	public function get_admin_feedback() {
+		if ( is_null( $this->admin_feedback ) ) {
+			$this->require_admin_class( 'feedback' );
+			$this->admin_feedback = new PureClarity_Feedback(
+				$this->get_settings()
+			);
+		}
+		return $this->admin_feedback;
 	}
 
 	/**
