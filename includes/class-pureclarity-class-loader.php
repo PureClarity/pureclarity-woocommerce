@@ -351,7 +351,8 @@ class PureClarity_Class_Loader {
 				$this->get_admin_settings_page(),
 				$this->get_admin_feeds(),
 				$this->get_admin_signup(),
-				$this->get_admin_feedback()
+				$this->get_admin_feedback(),
+				$this->get_settings()
 			);
 		}
 		return $this->admin;
