@@ -16,7 +16,6 @@
 		chkCategories: $('#pc-chkCategories'),
 		chkUsers: $('#pc-chkUsers'),
 		chkOrders: $('#pc-chkOrders'),
-		feedButtonProgress: $('#pc-feeds-button-progress'),
 		feedButtonNotEnabled: $('#pc-feeds-button-not-enabled'),
 		feedButtonManually: $('#pc-feeds-button-manually'),
 		statusLabelDefault: $('#pc-feeds-label-base'),
@@ -90,8 +89,6 @@
 		}
 
 		feedPopupButton.addClass('pc-disabled');
-		feedPopupButton.attr('title', feedRunObject.feedButtonProgress.val());
-		feedPopupButton.html(feedRunObject.feedButtonProgress.val());
 	}
 
 	function pcFeedProgressCheck() {
