@@ -154,7 +154,7 @@ class PureClarity_Feed_Status {
 					$status['label'] = sprintf(
 						/* translators: %s is replaced with feeds last run date */
 						__( 'Last sent: %s', 'pureclarity' ),
-						date_i18n( get_option( 'date_format' ), $last_feed_date )
+						date_i18n( 'd F, H:i:s', $last_feed_date )
 					);
 					$status['class'] = 'pc-feed-complete';
 				}
