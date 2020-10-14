@@ -111,6 +111,13 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
+	 * Renders feeds box content.
+	 */
+	public function get_feeds_content() {
+		include_once 'views/dashboard/feeds.php';
+	}
+
+	/**
 	 * Renders settings page
 	 */
 	public function get_next_steps_content() {
