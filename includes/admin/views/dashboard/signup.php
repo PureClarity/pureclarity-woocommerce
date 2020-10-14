@@ -59,7 +59,7 @@ if ( self::STATE_WAITING !== $this->get_state_name() ) : ?>
 	style="display:none"
 <?php endif; ?>>
 	<div id="pc-sign-up-waiting" class="pc-box">
-		<div class="pc-box-title-bar"><h3><?php esc_html_e( 'Setting up account', 'pureclarity' ); ?></h3></div>
+		<div class="pc-box-title-bar"><h3><?php esc_html_e( 'Setting up your PureClarity account', 'pureclarity' ); ?></h3></div>
 		<div class="pc-box-content">
 			<div class="pc-loader">
 				<div class="pc-loader-outer"></div>
@@ -71,46 +71,46 @@ if ( self::STATE_WAITING !== $this->get_state_name() ) : ?>
 		</div>
 	</div>
 </div>
-<div id="pc-features" class="pc-box">
+<div id="pc-features" class="pc-box" style="overflow: hidden">
 	<div class="pc-box-content">
 		<div id="pc-features-list">
 			<div class="pc-feature">
-				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_Personalized_content-1.jpg" alt="<?php esc_attr_e( 'Personalised content', 'pureclarity' ); ?>"/>
+				<img src="<?php echo esc_attr( PURECLARITY_BASE_URL . '/admin/images/features-personalised-content.jpg' ); ?>" alt="<?php esc_attr_e( 'Personalised content', 'pureclarity' ); ?>"/>
 				<h3><?php esc_html_e( 'Personalised content', 'pureclarity' ); ?></h3>
 				<p><?php esc_html_e( 'Display personalised banners, images & text to engage with visitors, turn them into buyers and incentivise returning customers.', 'pureclarity' ); ?></p>
 			</div>
 			<div class="pc-feature">
-				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_Intelligent_Recs-1.jpg" alt="<?php esc_attr_e( 'Intelligent recommendations', 'pureclarity' ); ?>"/>
+				<img src="<?php echo esc_attr( PURECLARITY_BASE_URL . '/admin/images/features-intelligent-recs.jpg' ); ?>" alt="<?php esc_attr_e( 'Intelligent recommendations', 'pureclarity' ); ?>"/>
 				<h3><?php esc_html_e( 'Intelligent recommendations', 'pureclarity' ); ?></h3>
 				<p><?php esc_html_e( 'Use powerful personalised recommendations to upsell and cross-sell products at the right time.', 'pureclarity' ); ?></p>
 			</div>
 			<div class="pc-feature">
-				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_search-1.jpg" alt="<?php esc_attr_e( 'Personalisation within search', 'pureclarity' ); ?>"/>
+				<img src="<?php echo esc_attr( PURECLARITY_BASE_URL . '/admin/images/features-search.jpg' ); ?>" alt="<?php esc_attr_e( 'Personalisation within search', 'pureclarity' ); ?>"/>
 				<h3><?php esc_html_e( 'Personalisation within search', 'pureclarity' ); ?></h3>
 				<p><?php esc_html_e( 'Help customers find what they’re looking for by displaying relevant products as they search.', 'pureclarity' ); ?></p>
 			</div>
 			<div class="pc-feature">
-				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_email-1.jpg" alt="<?php esc_attr_e( 'Personalisation within email', 'pureclarity' ); ?>"/>
+				<img src="<?php echo esc_attr( PURECLARITY_BASE_URL . '/admin/images/features-email.jpg' ); ?>" alt="<?php esc_attr_e( 'Personalisation within email', 'pureclarity' ); ?>"/>
 				<h3><?php esc_html_e( 'Personalisation within email', 'pureclarity' ); ?></h3>
 				<p><?php esc_html_e( 'Use personalised email campaigns to entice customers back based on products they’ve viewed and bought in the past.', 'pureclarity' ); ?></p>
 			</div>
 			<div class="pc-feature">
-				<img src="https://www.pureclarity.com/wp-content/uploads/2020/09/Live_Chat_AI_Recs_550.jpg" alt="<?php esc_attr_e( 'Live chat', 'pureclarity' ); ?>"/>
+				<img src="<?php echo esc_attr( PURECLARITY_BASE_URL . '/admin/images/features-chat.jpg' ); ?>" alt="<?php esc_attr_e( 'Live chat', 'pureclarity' ); ?>"/>
 				<h3><?php esc_html_e( 'Live chat', 'pureclarity' ); ?></h3>
 				<p><?php esc_html_e( 'Use a combination of real-time information about the customers current behaviours so you can help them find exactly what they want.', 'pureclarity' ); ?></p>
 			</div>
 			<div class="pc-feature">
-				<img src="https://www.pureclarity.com/wp-content/uploads/2020/07/550_Pop-ups_Simple-1-1.jpg" alt="<?php esc_attr_e( 'Personalised pop-ups', 'pureclarity' ); ?>"/>
+				<img src="<?php echo esc_attr( PURECLARITY_BASE_URL . '/admin/images/features-popups.jpg' ); ?>" alt="<?php esc_attr_e( 'Personalised pop-ups', 'pureclarity' ); ?>"/>
 				<h3><?php esc_html_e( 'Personalised pop-ups', 'pureclarity' ); ?></h3>
 				<p><?php esc_html_e( 'Keep your customers informed of your latest products, news and offers with personalised email capture pop-ups.', 'pureclarity' ); ?></p>
 			</div>
 			<div class="pc-feature">
-				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_Audience-1.jpg" alt="<?php esc_attr_e( 'Audience segmentation', 'pureclarity' ); ?>"/>
+				<img src="<?php echo esc_attr( PURECLARITY_BASE_URL . '/admin/images/features-segmentation.jpg' ); ?>" alt="<?php esc_attr_e( 'Audience segmentation', 'pureclarity' ); ?>"/>
 				<h3><?php esc_html_e( 'Audience segmentation', 'pureclarity' ); ?></h3>
 				<p><?php esc_html_e( 'Use pre-built and custom made conditions to target visitors using powerful, goal orientated marketing campaigns.', 'pureclarity' ); ?></p>
 			</div>
 			<div class="pc-feature">
-				<img src="https://www.pureclarity.com/wp-content/uploads/2020/03/550_Analytics-1.jpg" alt="<?php esc_attr_e( 'Insights & analytics', 'pureclarity' ); ?>"/>
+				<img src="<?php echo esc_attr( PURECLARITY_BASE_URL . '/admin/images/features-analytics.jpg' ); ?>" alt="<?php esc_attr_e( 'Insights & analytics', 'pureclarity' ); ?>"/>
 				<h3><?php esc_html_e( 'Insights & analytics', 'pureclarity' ); ?></h3>
 				<p><?php esc_html_e( 'Gain deeper insights into visitor behaviour and learn how to maximise your web stores potential in order to increase revenue.', 'pureclarity' ); ?></p>
 			</div>
