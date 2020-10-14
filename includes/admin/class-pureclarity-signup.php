@@ -168,8 +168,8 @@ class PureClarity_Signup {
 
 		if ( empty( $result['errors'] ) ) {
 			try {
-
 				$this->save_config( $request_data['access_key'], $request_data['secret_key'], $request_data['region'] );
+				$this->update_pureclarity_state( 'show_welcome_banner', '1' );
 				$this->trigger_feeds();
 			} catch ( \Exception $e ) {
 				$result['errors'][] = 'Error processing request ' . $e->getMessage();
@@ -221,6 +221,7 @@ class PureClarity_Signup {
 			if ( ! empty( $signup_data ) ) {
 				$this->save_config( $request_data['AccessKey'], $request_data['SecretKey'], $signup_data['region'] );
 				$this->delete_pureclarity_state( 'signup_request' );
+				$this->update_pureclarity_state( 'show_welcome_banner', '1' );
 				$this->trigger_feeds();
 			} else {
 				$result['errors'][] = 'Error processing request';
@@ -239,7 +240,6 @@ class PureClarity_Signup {
 	 * @param string $secret_key - Secret Key for the PureClarity Account.
 	 * @param string $region - Region the signup request was made for.
 	 */
-
 	protected function save_config( $access_key, $secret_key, $region ) {
 		update_option( 'pureclarity_mode', 'admin' );
 		update_option( 'pureclarity_accesskey', $access_key );

@@ -130,6 +130,12 @@
 						feedPopupButton.attr('title', feedRunObject.feedButtonNotEnabled.val());
 						feedPopupButton.html(feedRunObject.feedButtonNotEnabled.val());
 					} else {
+						var welcomeBanner = $('#pc-banner-welcome');
+						if (welcomeBanner) {
+							welcomeBanner.hide(1000, function (){
+								$('#pc-banner-getting-started').show(1000);
+							});
+						}
 						feedRunObject.progressCheckRunning = 0;
 						pcFeedResetState();
 						feedPopupButton.attr('title', feedRunObject.feedButtonManually.val());

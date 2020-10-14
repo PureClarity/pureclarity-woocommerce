@@ -52,6 +52,13 @@ class PureClarity_Dashboard_Page {
 	);
 
 	/**
+	 * Flag whether to show welcome banner.
+	 *
+	 * @var boolean $show_welcome_banner
+	 */
+	private $show_welcome_banner;
+
+	/**
 	 * Dashboard info from PureClarity
 	 *
 	 * @var mixed[] $dashboard_info
@@ -322,13 +329,26 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Returns whether the PureClarity module is up to date
+	 * Returns whether to show the welcome banner.
 	 *
-	 * @return boolean
+	 * @return string
 	 */
-	public function is_up_to_date() {
-		$new_version = $this->get_new_version();
-		return ( '' === $new_version || version_compare( $new_version, PURECLARITY_VERSION, '<=' ) );
+	public function show_welcome_banner() {
+		if ( null === $this->show_welcome_banner ) {
+			$show                      = $this->state_manager->get_state_value( 'show_welcome_banner' );
+			$this->show_welcome_banner = ( false === empty( $show ) ) && $this->get_state_name() === self::STATE_CONFIGURED;
+		}
+		return $this->show_welcome_banner;
+	}
+
+	/**
+	 * Returns whether to show the post-welcome banner.
+	 *
+	 * @return string
+	 */
+	public function show_getting_started_banner() {
+		$show = $this->state_manager->get_state_value( 'show_getting_started_banner' );
+		return $this->get_state_name() === self::STATE_CONFIGURED && false === $this->show_welcome_banner() && ( false === empty( $show ) ) && time() < $show;
 	}
 
 	/**
