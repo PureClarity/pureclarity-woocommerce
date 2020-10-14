@@ -84,7 +84,7 @@
 #pc-dashboard {
     border-radius: 3px;
     padding: 0 0 24px 0;
-    font-family: Roboto, sans-serif;
+    font-family: Lato, sans-serif;
 }
 
 .pc-clearfix {
@@ -127,9 +127,8 @@
     margin:0;
     padding:0;
     color: #fff;
-    text-transform: uppercase;
-    font-weight: 400;
-    font-size: 20px;
+    font-weight: 600;
+    font-size: 23px;
 }
 
 #pc-dashboard .pc-box .pc-box-content {
@@ -137,7 +136,7 @@
     background: #fff;
     padding: 28px 33px;
     font-size: 1.15em;
-    font-weight: 300;
+    font-weight: 400;
     position: relative;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
@@ -153,14 +152,22 @@
     background-color: #c4d95a;
     border:0;
     color: #3c4858 !important;
-    font-size: 0.90em;
+    font-size: 0.9rem;
     border-radius: 3px;
-    text-transform: uppercase;
     cursor: pointer;
     text-shadow: none;
     padding: 6px 12px;
-    font-weight: 500;
+    font-weight: 600;
     text-decoration: none;
+}
+
+#pc-dashboard #pc-mode-admin-only-button.pc-button {
+    background-color: #fea23b;
+}
+
+#pc-dashboard #pc-mode-disabled-button.pc-button {
+    background-color: #f44336;
+    color: #fff !important;
 }
 
 #pc-dashboard .action-default:hover,
@@ -183,10 +190,9 @@
 }
 
 #pc-dashboard #pc-marketing-info h2 {
-    text-transform: uppercase;
     margin-top: 0;
-    font-weight: 400;
-    font-size: 20px;
+    font-weight: 600;
+    font-size: 23px;
     margin-bottom: 28px;
 }
 
@@ -285,6 +291,7 @@ svg .pc_donut_text {
 
 #pc-dashboard #pc-link-account-button {
     font-size: 0.9em;
+    margin-left: 0.5rem;
 }
 
 /** WELCOME PAGE - SIGNUP & LINK ACCOUNT FORMS **/
@@ -296,28 +303,26 @@ svg .pc_donut_text {
 
 #pc-sign-up-form-header,
 #pc-link-account-form-header {
-    font-family: Roboto, sans-serif;
+    font-family: Lato, sans-serif;
     text-align: center;
     vertical-align: middle;
     font-size:1.4em;
     margin:0;
-    font-weight: 300;
-    text-transform: uppercase;
+    font-weight: 500;
 }
 
 #pc-sign-up-form-content h3,
 #pc-link-account-form-content h3 {
-    text-transform: uppercase;
-    font-weight: 300;
+    font-weight: 600;
 }
 
 #pc-sign-up-form-content p,
 #pc-link-account-form-content p {
-    font-weight: 300;
+    font-weight: 400;
 }
 #pc-sign-up-form-content,
 #pc-link-account-form-content {
-    font-family: Roboto, sans-serif;
+    font-family: Lato, sans-serif;
 }
 
 #pc-sign-up-form-content .left {
@@ -349,7 +354,7 @@ svg .pc_donut_text {
     float: left;
     clear: left;
     text-align: right;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 #pc-sign-up-form-content label.label:after,
@@ -446,9 +451,8 @@ svg .pc_donut_text {
     border:0;
     color: #3c4858 !important;
     font-weight: 600;
-    font-size: 12.5px;
+    font-size: 0.9rem;
     border-radius: 3px;
-    text-transform: uppercase;
     cursor: pointer;
     text-shadow: none;
     width:139px;
@@ -463,17 +467,16 @@ svg .pc_donut_text {
 }
 
 #pc-dashboard #pc-waiting .pc-box .pc-box-content {
-    height: 338px;
+    height: 310px;
     background-image: url('images/setting-up-account.jpg');
     background-repeat: no-repeat;
-    background-size: 1074px 339px;
-    padding:0;
+    background-size: 1083px 339px;
+    padding:23px 0 0 0;
 }
 
 #pc-dashboard #pc-waiting .pc-box .pc-box-content p {
     color:#fff;
     font-size: 1.4em;
-    text-transform: uppercase;
     line-height: 1.4em;
     font-weight: 400;
     margin: -2px 0 0 0;
@@ -530,12 +533,20 @@ svg .pc_donut_text {
 
 /** DASHBOARD PAGE **/
 
+.pc-banner {
+    margin: 30px 30px 0 30px;
+    background: white;
+    padding: 5px 30px;
+    border-radius: 5px;
+    border-top: 5px solid #c4d95a;
+}
+
 #pc-dashboard .pc-feedName {
     width: 90px;
     text-align: right;
     display: inline-block;
     margin-right: 5px;
-    font-weight: 400;
+    font-weight: 600;
 }
 
 #pc-dashboard .pc-feed-status-icon {
@@ -549,7 +560,7 @@ svg .pc_donut_text {
 }
 
 #pc-dashboard p.pc-feed {
-    margin: 0;
+    margin: 10px 0;
 }
 
 #pc-dashboard .pc-feed-status-icon.pc-feed-in-progress {
@@ -586,7 +597,7 @@ svg .pc_donut_text {
 
 #pc-feeds-button {
     clear:both;
-    margin-top: 10px;
+    margin: 25px 0 10px;
 }
 
 /** DASHBOARD PAGE - FEEDS MODAL **/
@@ -597,7 +608,7 @@ svg .pc_donut_text {
 
 .pc-run-feeds .modal-inner-wrap {
     width:450px;
-    font-family: Roboto, sans-serif;
+    font-family: Lato, sans-serif;
 }
 
 #pc-feeds-modal-content h4 {
@@ -716,10 +727,29 @@ svg .pc_donut_text {
 }
 
 .pureclarity-info-box .pureclarity-info-title {
+    border-radius: 5px 5px 0 0;
     border-bottom: 1px solid #ccc;
     padding: 15px 30px;
     margin:0;
 }
+
+.pureclarity-info-box.pc-ft-warning,
+.pureclarity-info-box.pc-ft-error {
+    border-top: 1px solid #ccc;
+}
+
+.pureclarity-info-box.pc-ft-warning .pureclarity-info-title {
+    background: #e3d246;
+}
+
+.pureclarity-info-box.pc-ft-error .pureclarity-info-title {
+    background: #f44336;
+}
+
+.pureclarity-info-box.pc-ft-error .pureclarity-info-title h2 {
+    color: #fff;
+}
+
 
 .pureclarity-info-box .pureclarity-info-title h2 {
     padding: 0;
@@ -736,11 +766,35 @@ svg .pc_donut_text {
 
 .pureclarity-info-box .pureclarity-info-content p {
     font-size:0.85rem;
+    color: #23282d;
 }
+
+.pureclarity-info-box .pureclarity-info-content ul {
+    list-style: none;
+}
+
+.pureclarity-info-box .pureclarity-info-content ul li::before {
+    content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+    color: #68b9d6; /* Change the color */
+    font-weight: bold; /* If you want it to be bold */
+    display: inline-block; /* Needed to add space between the bullet and the text */
+    width: 1.0rem; /* Also needed for space (tweak if needed) */
+    margin-left: 1.0rem; /* Also needed for space (tweak if needed) */
+}
+
+.pureclarity-info-box .pureclarity-info-content li {
+    color: #23282d;
+}
+
 
 #pureclarity-headline-stats .pureclarity-headline-stats-content {
     padding: 15px 30px;
     margin:0;
+}
+
+#pureclarity-headline-stats .pureclarity-stats-button {
+    clear:both;
+    padding-top:20px;
 }
 
 .pureclarity-headline-stat {

@@ -9,7 +9,7 @@
 /** @var PureClarity_Dashboard_Page $this */
 
 ?>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700" rel="stylesheet" type="text/css" media="not print" />
+<link href="https://fonts.googleapis.com/css?family=Lato:200,300,400,500,600,700,900" rel="stylesheet" />
 <div id="pc-dashboard">
 	<?php if ( $this->show_welcome_banner() ) : ?>
 		<div id="pc-banner-welcome" class="pc-banner">
