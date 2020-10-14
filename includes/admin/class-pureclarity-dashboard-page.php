@@ -11,10 +11,13 @@ use PureClarity\Api\Resource\Regions;
 use PureClarity\Api\Resource\Timezones;
 
 /**
- * Handles admin display & actions code
+ * Handles admin dashboard page display & actions code
  */
 class PureClarity_Dashboard_Page {
 
+	/**
+	 * Plugin states.
+	 */
 	public const STATE_NOT_CONFIGURED = 'not_configured';
 	public const STATE_WAITING        = 'waiting';
 	public const STATE_CONFIGURED     = 'configured';
@@ -87,14 +90,14 @@ class PureClarity_Dashboard_Page {
 	private $state_manager;
 
 	/**
-	 * State manager class - deals with information around feed statuses
+	 * Feed status class - deals with information around feed statuses
 	 *
 	 * @var PureClarity_Feed_Status $feed_status
 	 */
 	private $feed_status;
 
 	/**
-	 * PureClarity Settings class.
+	 * PureClarity Settings class - can get PureClarity settings.
 	 *
 	 * @var PureClarity_Settings $settings
 	 */
@@ -132,7 +135,7 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Renders settings page
+	 * Renders next steps content.
 	 */
 	public function get_next_steps_content() {
 		try {
@@ -143,9 +146,11 @@ class PureClarity_Dashboard_Page {
 		} catch ( \Exception $e ) {
 			error_log( $e->getMessage() );
 		}
-
 	}
 
+	/**
+	 * Renders the stats box content.
+	 */
 	public function get_stats_content() {
 		try {
 			$dashboard = $this->get_dasboard_info();
@@ -157,13 +162,28 @@ class PureClarity_Dashboard_Page {
 		}
 	}
 
+	/**
+	 * Formats a stats value for display.
+	 *
+	 * @param string $key - key of stat being displayed.
+	 * @param string $value - value to be displayed.
+	 *
+	 * @return string
+	 */
 	public function get_stat_display( $key, $value ) {
-		if (in_array( $key, $this->stat_percentage )) {
+		if ( in_array( $key, $this->stat_percentage, true ) ) {
 			$value .= '%';
 		}
 		return $value;
 	}
 
+	/**
+	 * Gets the column title for a given stat type.
+	 *
+	 * @param string $type - Stat type (date range).
+	 *
+	 * @return string
+	 */
 	private function get_stat_title( $type ) {
 		$title = '';
 		switch ( $type ) {
@@ -178,7 +198,7 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Renders settings page
+	 * Renders the Account status box content.
 	 */
 	public function get_account_status_content() {
 		try {
@@ -237,7 +257,7 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Renders settings page
+	 * Gets dashboard information from PureClarity.
 	 */
 	public function get_dasboard_info() {
 		if ( null === $this->dashboard_info ) {
@@ -268,7 +288,7 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Runs before admin notices action and hides them.
+	 * Runs before admin notices action and hides them on our page.
 	 */
 	public static function inject_before_notices() {
 
@@ -276,7 +296,7 @@ class PureClarity_Dashboard_Page {
 			'toplevel_page_pureclarity-dashboard',
 			'pureclarity_page_pureclarity-settings',
 		);
-		$admin_page = get_current_screen();
+		$admin_page            = get_current_screen();
 
 		if ( in_array( $admin_page->base, $whitelist_admin_pages, true ) ) {
 			// Wrap the notices in a hidden div to prevent flickering before
@@ -294,7 +314,6 @@ class PureClarity_Dashboard_Page {
 	 * Runs after admin notices and closes div.
 	 */
 	public static function inject_after_notices() {
-
 		$admin_page            = get_current_screen();
 		$whitelist_admin_pages = array(
 			'toplevel_page_pureclarity-dashboard',
@@ -327,9 +346,9 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Returns whether the dashboard should show the not configured state
+	 * Returns the current configuration state.
 	 *
-	 * @return boolean
+	 * @return string
 	 */
 	public function get_state_name() {
 		if ( $this->is_not_configured() ) {
@@ -342,7 +361,7 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Returns whether the dashboard should show the not configured state
+	 * Returns whether the plugin is not configured.
 	 *
 	 * @return boolean
 	 */
@@ -351,7 +370,7 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Returns whether the dashboard should show the waiting for sign up to finish state
+	 * Returns whether the plugin is waiting for a signup to finish.
 	 *
 	 * @return boolean
 	 */
@@ -401,7 +420,7 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Returns the current Woocommerce version
+	 * Returns the current WooCommerce version
 	 *
 	 * @return string
 	 */
@@ -474,7 +493,7 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Gets the stores' currency
+	 * Gets the store currency
 	 *
 	 * @return string
 	 */
