@@ -194,9 +194,10 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
-	 * Renders settings page
+	 * Renders the Dashboard page content.
 	 */
 	public function dashboard_render() {
+		include_once 'views/header.php';
 		include_once 'views/dashboard-page.php';
 	}
 

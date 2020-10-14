@@ -35,6 +35,7 @@ class PureClarity_Settings_Page {
 	 * Renders settings page
 	 */
 	public function settings_render() {
+		include_once 'views/header.php';
 		include_once 'views/settings-page.php';
 	}
 
@@ -303,5 +304,37 @@ class PureClarity_Settings_Page {
 			),
 			esc_url( $url )
 		);
+	}
+
+	/**
+	 * Returns the current plugin version
+	 *
+	 * @return string
+	 */
+	public function get_plugin_version() {
+		return PURECLARITY_VERSION;
+	}
+
+	/**
+	 * Returns the current Woocommerce version
+	 *
+	 * @return string
+	 */
+	public function get_woocommerce_version() {
+		$version = 'N/A';
+		global $woocommerce;
+		if ( $woocommerce && $woocommerce->version ) {
+			$version = $woocommerce->version;
+		}
+		return $version;
+	}
+
+	/**
+	 * Returns the current WordPress version
+	 *
+	 * @return string
+	 */
+	public function get_wordpress_version() {
+		return get_bloginfo( 'version' );
 	}
 }
