@@ -238,12 +238,39 @@ class PureClarity_Admin {
 		);
 
 		add_action(
+			'wp_ajax_pureclarity_switch_mode',
+			array(
+				$this,
+				'switch_mode_action',
+			)
+		);
+
+		add_action(
 			'wp_ajax_pureclarity_complete_next_step',
 			array(
 				$this,
 				'complete_next_step_action',
 			)
 		);
+	}
+
+
+	/**
+	 * Switches mode
+	 */
+	public function switch_mode_action() {
+
+		check_admin_referer( 'pureclarity_switch_mode', 'security' );
+
+		$mode = isset( $_POST['mode'] ) ? sanitize_text_field( wp_unslash( $_POST['mode'] ) ) : '';
+
+		if ( 'live' === $mode ) {
+			update_option( 'pureclarity_mode', 'on' );
+		} elseif ( 'admin' === $mode ) {
+			update_option( 'pureclarity_mode', 'admin' );
+		} elseif ( 'disabled' === $mode ) {
+			update_option( 'pureclarity_mode', 'off' );
+		}
 	}
 
 

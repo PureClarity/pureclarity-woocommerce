@@ -20,6 +20,13 @@ class PureClarity_Dashboard_Page {
 	public const STATE_CONFIGURED     = 'configured';
 
 	/**
+	 * Display modes.
+	 */
+	public const MODE_LIVE       = 'live';
+	public const MODE_ADMIN_ONLY = 'admin_only';
+	public const MODE_DISABLED   = 'disabled';
+
+	/**
 	 * Stats to show array.
 	 *
 	 * @var string[] - array of stat keys to show in performance box.
@@ -101,6 +108,13 @@ class PureClarity_Dashboard_Page {
 		$this->settings      = $settings;
 		$this->state_manager = $state_manager;
 		$this->feed_status   = $feed_status;
+	}
+
+	/**
+	 * Renders display mode content.
+	 */
+	public function get_mode_content() {
+		include_once 'views/dashboard/mode.php';
 	}
 
 	/**
@@ -254,6 +268,24 @@ class PureClarity_Dashboard_Page {
 			// they are inserted elsewhere in the page.
 			echo '</div>';
 		}
+	}
+
+	/**
+	 * Returns the current PureClarity display mode.
+	 *
+	 * @return string
+	 */
+	public function get_mode() {
+		$mode = $this->settings->get_pureclarity_mode();
+		if ( 'on' === $mode ) {
+			return self::MODE_LIVE;
+		}
+
+		if ( 'admin' === $mode ) {
+			return self::MODE_ADMIN_ONLY;
+		}
+
+		return self::MODE_DISABLED;
 	}
 
 	/**

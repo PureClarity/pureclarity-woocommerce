@@ -14,7 +14,13 @@
 
 ?>
 <div id="pc-col1">
+	<?php if ( $this->get_mode() !== self::MODE_LIVE ) : ?>
+		<?php $this->get_mode_content(); ?>
+	<?php endif; ?>
 	<?php $this->get_next_steps_content(); ?>
+	<?php if ( $this->get_mode() === self::MODE_LIVE ) : ?>
+		<?php $this->get_mode_content(); ?>
+	<?php endif; ?>
 </div>
 <div id="pc-col2">
 	<?php if ( $this->get_are_feeds_in_progress() ) : ?>

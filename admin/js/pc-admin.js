@@ -152,6 +152,26 @@
 		feedRunObject.chkOrders.prop("disabled", false);
 	}
 
+	function pcSwitchMode(mode) {
+		$.ajax({
+			url: ajaxurl,
+			method: 'POST',
+			data: {
+				mode: mode,
+				action: 'pureclarity_switch_mode',
+				security: $('#pureclarity-switch-mode-nonce').val()
+			},
+		}).done(function(response) {
+			location.reload();
+		}).fail(function(jqXHR, status, err) {
+			location.reload();
+		});
+	}
+
+	let modeChangeButtonLive = $('#pc-mode-go-live-button');
+	let modeChangeButtonAdmin = $('#pc-mode-admin-only-button');
+	let modeChangeButtonDisabled = $('#pc-mode-disabled-button');
+
 	function pcNextStepsAction(action) {
 		var linkUrl = action.attr('href');
 		var linkId = action.attr('id');
@@ -186,6 +206,24 @@
 				tb_remove();
 				pcFeedResetState();
 				pcFeedRun();
+			});
+		}
+
+		if (modeChangeButtonLive.length) {
+			modeChangeButtonLive.on('click', function () {
+				pcSwitchMode('live');
+			});
+		}
+
+		if (modeChangeButtonAdmin.length) {
+			modeChangeButtonAdmin.on('click', function () {
+				pcSwitchMode('admin');
+			});
+		}
+
+		if (modeChangeButtonDisabled.length) {
+			modeChangeButtonDisabled.on('click', function () {
+				pcSwitchMode('disabled');
 			});
 		}
 
