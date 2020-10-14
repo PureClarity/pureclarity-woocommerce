@@ -237,6 +237,19 @@
 			pcNextStepsAction($(this));
 		});
 
+		$('#pureclarity-headline-stat-today').addClass('pureclarity-headline-stat-active');
+
+
+		$('.pureclarity-headline-stat-tab').on('click', function () {
+			$('.pureclarity-headline-stat-tab').each(function(){
+				$(this).removeClass('pureclarity-headline-stat-active');
+			})
+			$(this).addClass('pureclarity-headline-stat-active');
+			var pcStatContentId = $(this).attr('id');
+			$('.pureclarity-headline-stat').hide();
+			$('#' + pcStatContentId + '-content').show();
+		});
+
 	});
 
 })(jQuery);
