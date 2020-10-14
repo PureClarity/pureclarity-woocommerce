@@ -152,8 +152,34 @@
 		feedRunObject.chkOrders.prop("disabled", false);
 	}
 
+	function pcNextStepsAction(action) {
+		var linkUrl = action.attr('href');
+		var linkId = action.attr('id');
+		$.post(
+			ajaxurl,
+			{
+				action: 'pureclarity_complete_next_step',
+				action_id: linkId,
+				security: $('input[name=pureclarity-complete-next-step-nonce]').val()
+			},
+			function(data) {
+				window.open(linkUrl);
+			}
+		).error(function() {
+			window.open(linkUrl);
+		}).fail(function() {
+			window.open(linkUrl);
+		});
+		return false;
+	}
+
+
 	$(document).ready(function() {
-		pcFeedProgressCheck();
+
+		feedsInProgress = $('#pc-feeds-in-progress');
+		if ( feedsInProgress && feedsInProgress.val() === 'true' ) {
+			pcFeedProgressCheck();
+		}
 
 		if (feedRunButton.length) {
 			feedRunButton.on('click', function () {
@@ -162,6 +188,10 @@
 				pcFeedRun();
 			});
 		}
+
+		$('.pc-action').on('click', function () {
+			pcNextStepsAction($(this));
+		});
 
 	});
 

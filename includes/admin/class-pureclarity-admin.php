@@ -50,6 +50,13 @@ class PureClarity_Admin {
 	private $feedback;
 
 	/**
+	 * PureClarity Settings class
+	 *
+	 * @var PureClarity_Settings $settings
+	 */
+	private $settings;
+
+	/**
 	 * Builds class dependencies
 	 *
 	 * @param PureClarity_Dashboard_Page $dashboard_page
@@ -64,13 +71,15 @@ class PureClarity_Admin {
 		$settings_page,
 		$feeds,
 		$signup,
-		$feedback
+		$feedback,
+		$settings
 	) {
 		$this->dashboard_page = $dashboard_page;
 		$this->feeds          = $feeds;
 		$this->signup         = $signup;
 		$this->settings_page  = $settings_page;
 		$this->feedback       = $feedback;
+		$this->settings       = $settings;
 	}
 
 	public function init() {
@@ -227,6 +236,39 @@ class PureClarity_Admin {
 				'feedback_action',
 			)
 		);
+
+		add_action(
+			'wp_ajax_pureclarity_complete_next_step',
+			array(
+				$this,
+				'complete_next_step_action',
+			)
+		);
+	}
+
+
+	/**
+	 * Completes a next step
+	 */
+	public function complete_next_step_action() {
+
+		check_admin_referer( 'pureclarity_complete_next_step', 'security' );
+
+		$action_id = isset( $_POST['action_id'] ) ? sanitize_text_field( wp_unslash( $_POST['action_id'] ) ) : '';
+
+		if ( $action_id ) {
+			try {
+				$feedback = new \PureClarity\Api\NextSteps\Complete(
+					$this->settings->get_access_key(),
+					$this->settings->get_secret_key(),
+					(int) $this->settings->get_region()
+				);
+
+				$feedback->request();
+			} catch ( \Exception $e ) {
+				error_log( 'PureClarity error: ' . $e->getMessage() );
+			}
+		}
 	}
 
 	/**
@@ -302,9 +344,6 @@ class PureClarity_Admin {
 			<?php
 
 		}
-
-
-
 
 		if ( PureClarity_Dashboard_Page::STATE_CONFIGURED !== $state ) {
 			?>

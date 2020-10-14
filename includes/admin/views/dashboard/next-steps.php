@@ -14,18 +14,17 @@
 
 ?>
 <div id="pureclarity-next-steps">
+	<?php wp_nonce_field( 'pureclarity_complete_next_step', 'pureclarity-complete-next-step-nonce' ); ?>
 	<?php foreach ( $dashboard['NextSteps'] as $step ) : ?>
 		<div id="<?php echo esc_attr( $step['id'] ); ?>" class="pureclarity-info-box">
 			<?php if ( isset( $step['title'] ) ) : ?>
 				<div id="<?php echo esc_attr( $step['id'] ); ?>-title" class="pureclarity-info-title">
-					<h2><?php esc_html_e( $step['title'], 'pureclarity' ); ?></h2>
+					<h2><?php echo esc_html( $step['title'] ); ?></h2>
 				</div>
 			<?php endif; ?>
-
 			<div class="pureclarity-info-content">
-
 				<?php if ( isset( $step['description'] ) ) : ?>
-					<p id="<?php echo esc_attr( $step['id'] ); ?>-description" class="pureclarity-next-step-description"><?php esc_html_e( $step['description'], 'pureclarity' ); ?></p>
+					<p id="<?php echo esc_attr( $step['id'] ); ?>-description" class="pureclarity-next-step-description"><?php echo $step['description']; ?></p>
 				<?php endif; ?>
 
 				<?php if ( isset( $step['vimeoLink'] ) ) : ?>
@@ -37,18 +36,17 @@
 				<?php endif; ?>
 				<?php if ( isset( $step['actions'] ) ) : ?>
 					<div class="pureclarity-next-step-actions">
-						<?php foreach ( $step['actions'] as $action ) : ?>
+						<?php foreach ( $step['actions'] as $step_action ) : ?>
 							<p class="pureclarity-next-step-action">
-								<?php if ( isset( $step['actionLinkIsAdmin'] ) && $action['actionLinkIsAdmin'] ) : ?>
-									<a href="http://localhost:3014/<?php echo esc_attr($action['actionLink']); ?>" target="_blank" class="pc-button"><?php esc_html_e( $action['actionText'], 'pureclarity' ); ?></a>
-								<?php else: ?>
-									<a href="<?php echo esc_attr($action['actionLink']); ?>" target="_blank" class="pc-button"><?php esc_html_e( $action['actionText'], 'pureclarity' ); ?></a>
+								<?php if ( isset( $step_action['actionLinkIsAdmin'] ) && $step_action['actionLinkIsAdmin'] ) : ?>
+									<a href="<?php echo esc_attr( $this->get_admin_url() ); ?><?php echo esc_attr( $step_action['actionLink'] ); ?>" target="_blank" class="pc-button pc-action" id="<?php echo esc_attr( $step['id'] ); ?>"><?php echo esc_html( $step_action['actionText'] ); ?></a>
+								<?php else : ?>
+									<a href="<?php echo esc_attr( $step_action['actionLink'] ); ?>" target="_blank" class="pc-button pc-action" id="<?php echo esc_attr( $step['id'] ); ?>"><?php echo esc_html( $step_action['actionText'] ); ?></a>
 								<?php endif; ?>
 							</p>
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
-
 			</div>
 		</div>
 	<?php endforeach; ?>
