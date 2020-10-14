@@ -45,13 +45,6 @@ class PureClarity_Dashboard_Page {
 	);
 
 	/**
-	 * Cache of "new version"
-	 *
-	 * @var string $new_version
-	 */
-	private $new_version;
-
-	/**
 	 * Dashboard info from PureClarity
 	 *
 	 * @var mixed[] $dashboard_info
@@ -313,19 +306,6 @@ class PureClarity_Dashboard_Page {
 	 */
 	public function get_plugin_version() {
 		return PURECLARITY_VERSION;
-	}
-
-	/**
-	 * Returns the latest version of the plugin available
-	 *
-	 * @return bool
-	 */
-	public function get_new_version() {
-		if ( null === $this->new_version ) {
-			$this->new_version = $this->state_manager->get_state_value( 'new_version' );
-		}
-
-		return $this->new_version;
 	}
 
 	/**
