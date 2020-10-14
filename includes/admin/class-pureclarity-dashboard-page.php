@@ -178,6 +178,20 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
+	 * Gets the PureClarity Admin page URL.
+	 */
+	public function get_admin_url() {
+		$url = 'https://admin.pureclarity.com/';
+
+		$admin = getenv( 'PURECLARITY_ADMIN' );
+		if ( $admin ) {
+			$url = $admin;
+		}
+
+		return $url;
+	}
+
+	/**
 	 * Renders settings page
 	 */
 	public function get_dasboard_info() {
