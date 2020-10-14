@@ -11,8 +11,6 @@
  * See LICENSE for license details.
  */
 
-use PureClarity\Api\Feed\Feed;
-
 /**
  * Class FeedStatus
  *
@@ -103,15 +101,8 @@ class PureClarity_Feed_Status {
 				'label'   => __( 'Not Sent', 'pureclarity' ),
 			);
 
-			/*if ( $pc->isActive() === false ) {
-				$status['enabled'] = false;
-				$status['label']   = __( 'Not Enabled' );
-				$status['class']   = 'pc-feed-disabled';
-			}*/
-
 			if ( false === $status['enabled'] ) {
 				$this->feed_status_data[ $type ] = $status;
-
 				return $this->feed_status_data[ $type ];
 			}
 
@@ -157,13 +148,13 @@ class PureClarity_Feed_Status {
 
 			if ( true !== $status['running'] ) {
 				// check it's last run date.
-				$last_product_feed_date = $this->get_pureclarity_state( $type . '_feed_last_run' );
+				$last_feed_date = $this->get_pureclarity_state( $type . '_feed_last_run' );
 
-				if ( $last_product_feed_date ) {
+				if ( $last_feed_date ) {
 					$status['label'] = sprintf(
 						/* translators: %s is replaced with feeds last run date */
 						__( 'Last sent: %s', 'pureclarity' ),
-						gmdate( 'Y-m-d H:i:s', $last_product_feed_date )
+						date_i18n( get_option( 'date_format' ), $last_feed_date )
 					);
 					$status['class'] = 'pc-feed-complete';
 				}
