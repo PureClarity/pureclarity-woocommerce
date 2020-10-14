@@ -209,9 +209,7 @@ class PureClarity_Session {
 	 */
 	public function set_cart() {
 
-
 		$items      = array();
-
 		$cart_items = WC()->cart->get_cart();
 		$cart_id    = time();
 
@@ -257,13 +255,13 @@ class PureClarity_Session {
 			return $this->cart;
 		}
 
-		//if (WC()->session) {
-		$cart = WC()->session->get( 'pureclarity-cart' );
-		if ( isset( $cart ) ) {
-			$this->cart = $cart;
-			return $this->cart;
+		if ( WC()->session ) {
+			$cart = WC()->session->get( 'pureclarity-cart' );
+			if ( isset( $cart ) ) {
+				$this->cart = $cart;
+				return $this->cart;
+			}
 		}
-		//}
 
 		// must be new session.
 		return $this->set_cart();
@@ -288,7 +286,7 @@ class PureClarity_Session {
 		$order_id = absint( $wp->query_vars['order-received'] );
 
 		if ( $order_id ) {
-			$order_data = $this->order->get_order_info( $order_id );
+			$order_data       = $this->order->get_order_info( $order_id );
 			$this->order_data = $order_data;
 		}
 
@@ -341,7 +339,7 @@ class PureClarity_Session {
 	 * @return array
 	 */
 	protected function get_page_context( $page_type ) {
-		$context = [];
+		$context = array();
 
 		if ( $page_type ) {
 			$context['page_type'] = $page_type;
