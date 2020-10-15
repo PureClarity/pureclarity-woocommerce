@@ -37,7 +37,6 @@ class PureClarity_Dashboard_Page {
 	private $stats_to_show = array(
 		'Impressions'                    => 'Impressions',
 		'Sessions'                       => 'Sessions',
-		'ConvertedSessions'              => 'Converted Sessions',
 		'ConversionRate'                 => 'Conversion Rate',
 		'SalesTotalDisplay'              => 'Sales Total',
 		'OrderCount'                     => 'Orders',
