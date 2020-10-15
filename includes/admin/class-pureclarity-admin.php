@@ -88,7 +88,7 @@ class PureClarity_Admin {
 	public function init() {
 		add_action( 'admin_notices', array( $this->dashboard_page, 'inject_before_notices' ), -9999 );
 		add_action( 'admin_notices', array( $this->dashboard_page, 'inject_after_notices' ), PHP_INT_MAX );
-		add_action( 'admin_notices', array( $this, 'display_dependency_notices' ) );
+		add_action( 'admin_notices', array( $this, 'display_notices' ) );
 		add_action( 'admin_menu', array( $this, 'add_menus' ) );
 		add_action( 'admin_init', array( $this->settings_page, 'add_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'add_js_and_css' ) );
@@ -130,7 +130,9 @@ class PureClarity_Admin {
 
 			wp_enqueue_style(
 				'pureclarity-font',
-				'https://fonts.googleapis.com/css?family=Lato:200,300,400,500,600,700,900'
+				'https://fonts.googleapis.com/css?family=Lato:200,300,400,500,600,700,900',
+				array(),
+				PURECLARITY_VERSION
 			);
 
 			$state = $this->dashboard_page->get_state_name();
@@ -349,9 +351,9 @@ class PureClarity_Admin {
 	}
 
 	/**
-	 * Generates html for dependency notices
+	 * Generates html for notices
 	 */
-	public function display_dependency_notices() {
+	public function display_notices() {
 		if ( ! extension_loaded( 'curl' ) ) {
 			echo '<div class="error notice">
                     <p>';
@@ -360,24 +362,6 @@ class PureClarity_Admin {
 
 			echo '</p>
 				</div>';
-		}
-
-		$whitelist_admin_pages = array(
-			'pureclarity_page_pureclarity-settings',
-			'pureclarity_page_pureclarity-advanced',
-		);
-		$admin_page            = get_current_screen();
-
-		$updated = isset( $_GET['settings-updated'] ) ? sanitize_text_field( wp_unslash( $_GET['settings-updated'] ) ) : false;
-
-		if ( in_array( $admin_page->base, $whitelist_admin_pages, true ) && $updated ) {
-
-			?>
-			<div class="notice notice-success is-dismissible">
-				<p><strong><?php esc_html_e( 'Settings saved.', 'pureclarity' ); ?></strong></p>
-			</div>
-			<?php
-
 		}
 
 		if ( PureClarity_Dashboard_Page::STATE_CONFIGURED !== $this->dashboard_page->get_state_name() ) {
