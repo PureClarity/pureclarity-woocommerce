@@ -23,14 +23,18 @@ try {
 
 	require_once PURECLARITY_INCLUDES_PATH . 'php-sdk' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-	$delete = new PureClarity\Api\Delete\Submit(
-		get_option( 'pureclarity_accesskey' ),
-		get_option( 'pureclarity_secretkey' ),
-		get_option( 'pureclarity_region' )
-	);
+	$access_key = get_option( 'pureclarity_accesskey' );
+	$secret_key = get_option( 'pureclarity_secretkey' );
 
-	$delete->request();
+	if ( $access_key && $secret_key ) {
+		$delete = new PureClarity\Api\Delete\Submit(
+			$access_key,
+			$secret_key,
+			get_option( 'pureclarity_region' )
+		);
 
+		$delete->request();
+	}
 } catch ( \Exception $e ) {
 	error_log( 'PureClarity uninstall error: ' . $e->getMessage() );
 }
