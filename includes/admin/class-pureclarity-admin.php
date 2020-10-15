@@ -128,6 +128,11 @@ class PureClarity_Admin {
 
 		if ( strpos( $hook, 'pureclarity' ) !== false ) {
 
+			wp_enqueue_style(
+				'pureclarity-font',
+				'https://fonts.googleapis.com/css?family=Lato:200,300,400,500,600,700,900'
+			);
+
 			$state = $this->dashboard_page->get_state_name();
 
 			if ( PureClarity_Dashboard_Page::STATE_CONFIGURED !== $state ) {

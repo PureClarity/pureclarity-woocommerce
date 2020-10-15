@@ -9,7 +9,6 @@
 /** Dashboard class containing functions used by this view. @var PureClarity_Dashboard_Page $this */
 
 ?>
-<link href="https://fonts.googleapis.com/css?family=Lato:200,300,400,500,600,700,900" rel="stylesheet" />
 <div id="pc-title-bar">
 	<div class="pureclarity-title-wrapper">
 		<img src="<?php echo esc_attr( PURECLARITY_BASE_URL . '/admin/images/logo.png' ); ?>" alt="PureClarity" />
