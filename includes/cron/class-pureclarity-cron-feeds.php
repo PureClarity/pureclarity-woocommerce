@@ -71,9 +71,11 @@ class PureClarity_Cron_Feeds {
 					$this->feed->run_feed( $type );
 				}
 
-				$show_banner = $this->state_manager->get_state_value( 'show_welcome_banner' );
-				if ( $show_banner ) {
+				$show_banner        = $this->state_manager->get_state_value( 'show_welcome_banner' );
+				$show_manual_banner = $this->state_manager->get_state_value( 'show_manual_welcome_banner' );
+				if ( $show_banner || $show_manual_banner ) {
 					$this->state_manager->set_state_value( 'show_welcome_banner', '0' );
+					$this->state_manager->set_state_value( 'show_manual_welcome_banner', '0' );
 					$this->state_manager->set_state_value( 'show_getting_started_banner', time() + 86400 );
 				}
 			} catch ( \Exception $exception ) {

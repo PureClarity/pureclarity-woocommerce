@@ -16,6 +16,11 @@
 			<h3><?php esc_html_e( 'Thanks for signing up for a free trial. Your site data is now being synced to PureClarity.', 'pureclarity' ); ?></h3>
 		</div>
 	<?php endif; ?>
+	<?php if ( $this->show_manual_welcome_banner() ) : ?>
+		<div id="pc-banner-welcome" class="pc-banner">
+			<h3><?php esc_html_e( 'Your PureClarity account is now linked to this store. Your site data is now being synced to PureClarity.', 'pureclarity' ); ?></h3>
+		</div>
+	<?php endif; ?>
 	<div id="pc-banner-getting-started" class="pc-banner"
 			<?php if ( ! $this->show_getting_started_banner() ) : ?>
 				style="display:none"

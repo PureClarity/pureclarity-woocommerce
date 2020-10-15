@@ -169,7 +169,7 @@ class PureClarity_Signup {
 		if ( empty( $result['errors'] ) ) {
 			try {
 				$this->save_config( $request_data['access_key'], $request_data['secret_key'], $request_data['region'] );
-				$this->update_pureclarity_state( 'show_welcome_banner', '1' );
+				$this->update_pureclarity_state( 'show_manual_welcome_banner', '1' );
 				$this->trigger_feeds();
 			} catch ( \Exception $e ) {
 				$result['errors'][] = 'Error processing request ' . $e->getMessage();

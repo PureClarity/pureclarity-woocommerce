@@ -62,6 +62,13 @@ class PureClarity_Dashboard_Page {
 	private $show_welcome_banner;
 
 	/**
+	 * Flag whether to show the manual configuration welcome banner.
+	 *
+	 * @var boolean $show_manual_welcome_banner
+	 */
+	private $show_manual_welcome_banner;
+
+	/**
 	 * Dashboard info from PureClarity
 	 *
 	 * @var mixed[] $dashboard_info
@@ -392,13 +399,30 @@ class PureClarity_Dashboard_Page {
 	}
 
 	/**
+	 * Returns whether to show the manual configuration welcome banner.
+	 *
+	 * @return string
+	 */
+	public function show_manual_welcome_banner() {
+		if ( null === $this->show_manual_welcome_banner ) {
+			$show                             = $this->state_manager->get_state_value( 'show_manual_welcome_banner' );
+			$this->show_manual_welcome_banner = ( false === empty( $show ) ) && $this->get_state_name() === self::STATE_CONFIGURED;
+		}
+		return $this->show_manual_welcome_banner;
+	}
+
+	/**
 	 * Returns whether to show the post-welcome banner.
 	 *
 	 * @return string
 	 */
 	public function show_getting_started_banner() {
 		$show = $this->state_manager->get_state_value( 'show_getting_started_banner' );
-		return $this->get_state_name() === self::STATE_CONFIGURED && false === $this->show_welcome_banner() && ( false === empty( $show ) ) && time() < $show;
+		return $this->get_state_name() === self::STATE_CONFIGURED
+				&& false === $this->show_welcome_banner()
+				&& false === $this->show_manual_welcome_banner()
+				&& ( false === empty( $show ) )
+				&& time() < $show;
 	}
 
 	/**
