@@ -187,69 +187,71 @@ class PureClarity_Admin {
 	 */
 	public function add_ajax_actions() {
 
-		// TODO: only enable this if plugin configured
-		add_action(
-			'wp_ajax_pureclarity_request_feeds',
-			array(
-				$this->feeds,
-				'request_feeds_action',
-			)
-		);
+		$state = $this->dashboard_page->get_state_name();
 
-		add_action(
-			'wp_ajax_pureclarity_feed_progress',
-			array(
-				$this->feeds,
-				'feed_progress_action',
-			)
-		);
+		if ( PureClarity_Dashboard_Page::STATE_CONFIGURED === $state ) {
+			add_action(
+				'wp_ajax_pureclarity_request_feeds',
+				array(
+					$this->feeds,
+					'request_feeds_action',
+				)
+			);
 
-		// TODO: only enable this if plugin not configured
-		add_action(
-			'wp_ajax_pureclarity_signup_submit',
-			array(
-				$this->signup,
-				'submit_signup_action',
-			)
-		);
+			add_action(
+				'wp_ajax_pureclarity_feed_progress',
+				array(
+					$this->feeds,
+					'feed_progress_action',
+				)
+			);
 
-		add_action(
-			'wp_ajax_pureclarity_signup_progress',
-			array(
-				$this->signup,
-				'signup_progress_action',
-			)
-		);
+			add_action(
+				'wp_ajax_pureclarity_switch_mode',
+				array(
+					$this,
+					'switch_mode_action',
+				)
+			);
 
-		add_action(
-			'wp_ajax_pureclarity_link_account',
-			array(
-				$this->signup,
-				'link_account_action',
-			)
-		);
+			add_action(
+				'wp_ajax_pureclarity_complete_next_step',
+				array(
+					$this,
+					'complete_next_step_action',
+				)
+			);
+		} else {
+			add_action(
+				'wp_ajax_pureclarity_signup_submit',
+				array(
+					$this->signup,
+					'submit_signup_action',
+				)
+			);
+
+			add_action(
+				'wp_ajax_pureclarity_signup_progress',
+				array(
+					$this->signup,
+					'signup_progress_action',
+				)
+			);
+
+			add_action(
+				'wp_ajax_pureclarity_link_account',
+				array(
+					$this->signup,
+					'link_account_action',
+				)
+			);
+		}
 
 		add_action(
 			'wp_ajax_pureclarity_deactivate_feedback',
 			array(
 				$this->feedback,
 				'feedback_action',
-			)
-		);
-
-		add_action(
-			'wp_ajax_pureclarity_switch_mode',
-			array(
-				$this,
-				'switch_mode_action',
-			)
-		);
-
-		add_action(
-			'wp_ajax_pureclarity_complete_next_step',
-			array(
-				$this,
-				'complete_next_step_action',
 			)
 		);
 	}
