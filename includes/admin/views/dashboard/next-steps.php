@@ -1,17 +1,12 @@
 <?php
 /**
- * Settings Feed page html
+ * Next Steps HTML
  *
  * @package PureClarity for WooCommerce
  * @since 3.0.0
  */
 
-/**
- * Dashboard class containing functions used by this view.
- *
- * @var Pureclarity_Dashboard_Page $this
- */
-
+/** Dashboard class containing functions used by this view. @var PureClarity_Dashboard_Page $this */
 ?>
 <div id="pureclarity-next-steps">
 	<?php wp_nonce_field( 'pureclarity_complete_next_step', 'pureclarity-complete-next-step-nonce' ); ?>

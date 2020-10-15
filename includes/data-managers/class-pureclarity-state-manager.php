@@ -1,6 +1,6 @@
 <?php
 /**
- * PureClarity_Database class
+ * PureClarity_State_Manager class
  *
  * @package PureClarity for WooCommerce
  * @since 3.0.0
@@ -37,10 +37,11 @@ class PureClarity_State_Manager {
 		$this->table_name = $wpdb->prefix . 'pureclarity_state';
 
 	}
+
 	/**
 	 * Gets the value for the given state name key
 	 *
-	 * @param string $name_key
+	 * @param string $name_key - key of value to get.
 	 * @return string
 	 */
 	public function get_state_value( $name_key ) {
@@ -61,31 +62,31 @@ class PureClarity_State_Manager {
 	}
 
 	/**
-	 * Gets the value for the given state name key
+	 * Sets the value for the given state name key
 	 *
-	 * @param string $name_key
-	 * @param string $value
+	 * @param string $name_key - key of value to set.
+	 * @param string $value - value to set.
 	 */
 	public function set_state_value( $name_key, $value ) {
 		$this->wpdb->replace(
 			$this->table_name,
 			array(
-				'name'       => $name_key,
-				'value'      => $value
+				'name'  => $name_key,
+				'value' => $value,
 			)
 		);
 	}
 
 	/**
-	 * Gets the value for the given state name key
+	 * Deletes the value for the given state name key
 	 *
-	 * @param string $name_key
+	 * @param string $name_key - key of value to delete.
 	 */
 	public function delete_state_value( $name_key ) {
 		$this->wpdb->delete(
 			$this->table_name,
 			array(
-				'name' => $name_key
+				'name' => $name_key,
 			)
 		);
 	}

@@ -1,16 +1,12 @@
 <?php
 /**
- * Settings Feed page html
+ * Signup content HTML
  *
  * @package PureClarity for WooCommerce
  * @since 3.0.0
  */
 
-/**
- * Dashboard class containing functions used by this view.
- *
- * @var Pureclarity_Dashboard_Page $this
- */
+/** Dashboard class containing functions used by this view. @var PureClarity_Dashboard_Page $this */
 
 if ( self::STATE_WAITING !== $this->get_state_name() ) : ?>
 	<div id="pc-marketing-info" class="pc-box pc-signup-boxes">

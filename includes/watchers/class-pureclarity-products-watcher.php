@@ -155,6 +155,7 @@ class PureClarity_Products_Watcher {
 	 * Triggers delta for product save
 	 *
 	 * @param integer $id - Id of product being updated.
+	 * @return mixed
 	 */
 	public function trigger_product_delta( $id ) {
 

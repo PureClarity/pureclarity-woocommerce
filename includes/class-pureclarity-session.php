@@ -69,7 +69,6 @@ class PureClarity_Session {
 		$this->order = $order;
 		// if not on the login page, check for the logout cookie, in order to see if we need to trigger customer_logout event.
 		// cannot check on login page as our js isn't on it.
-		// TODO: move this to an init function
 		if ( 'wp-login.php' !== $GLOBALS['pagenow'] ) {
 			$this->is_logout();
 		}
@@ -87,6 +86,9 @@ class PureClarity_Session {
 	 * Sets PureClarity customer data
 	 *
 	 * @param integer $user_id - customer id.
+	 *
+	 * @return null|array
+	 * @throws Exception - in WC_Customer if customer cannot be read/found and $data is set.
 	 */
 	public function set_customer( $user_id ) {
 		if ( ! empty( $user_id ) ) {
@@ -111,6 +113,9 @@ class PureClarity_Session {
 
 	/**
 	 * Gets PureClarity customer data
+	 *
+	 * @return array|string|null
+	 * @throws Exception - in set_customer.
 	 */
 	public function get_customer() {
 
@@ -131,6 +136,8 @@ class PureClarity_Session {
 
 	/**
 	 * Checks for logout cookie, and if present sets $this->islogout to true, for use later in config rendering
+	 *
+	 * @return bool
 	 */
 	public function is_logout() {
 		if ( ! isset( $this->islogout ) ) {
@@ -146,6 +153,8 @@ class PureClarity_Session {
 
 	/**
 	 * Gets PureClarity product data
+	 *
+	 * @return array|null
 	 */
 	public function get_product() {
 		if ( ! empty( $this->current_product ) ) {
@@ -170,6 +179,8 @@ class PureClarity_Session {
 
 	/**
 	 * Gets current product data
+	 *
+	 * @return false|WC_Product|null
 	 */
 	public function get_wc_product() {
 		if ( is_product() ) {
@@ -191,6 +202,8 @@ class PureClarity_Session {
 
 	/**
 	 * Gets current category id
+	 *
+	 * @return int|null
 	 */
 	public function get_category_id() {
 		if ( ! empty( $this->current_category_id ) ) {
@@ -206,6 +219,8 @@ class PureClarity_Session {
 
 	/**
 	 * Sets PureClarity cart data
+	 *
+	 * @return array
 	 */
 	public function set_cart() {
 
@@ -248,6 +263,8 @@ class PureClarity_Session {
 
 	/**
 	 * Gets PureClarity cart data
+	 *
+	 * @return array|string
 	 */
 	public function get_cart() {
 

@@ -53,7 +53,7 @@ class PureClarity_Cron_Deltas {
 	}
 
 	/**
-	 * Runs outstanding delta tasks
+	 * Runs deltas
 	 */
 	public function run_delta_schedule() {
 		if ( false === $this->deltas->is_delta_running() ) {

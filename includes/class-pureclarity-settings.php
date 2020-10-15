@@ -9,24 +9,9 @@
 use PureClarity\Api\Resource\Regions;
 
 /**
- * Handles config getting and setting
+ * Handles config getting pureclarity settings
  */
 class PureClarity_Settings {
-
-	const OPTION_ACCESSKEY              = 'pureclarity_accesskey';
-	const OPTION_SECRETKEY              = 'pureclarity_secretkey';
-	const OPTION_REGION                 = 'pureclarity_region';
-	const OPTION_MODE                   = 'pureclarity_mode';
-	const OPTION_ZONE_DEBUG             = 'pureclarity_bmz_debug';
-	const OPTION_DELTAS_ENABLED         = 'pureclarity_deltas_enabled';
-	const OPTION_NIGHTLY_FEED_ENABLED   = 'pureclarity_nightly_feed_enabled';
-	const OPTION_ZONE_HOMEPAGE          = 'pureclarity_add_bmz_homepage';
-	const OPTION_ZONE_SEARCHPAGE        = 'pureclarity_add_bmz_searchpage';
-	const OPTION_ZONE_CATEGORYPAGE      = 'pureclarity_add_bmz_categorypage';
-	const OPTION_ZONE_PRODUCTPAGE       = 'pureclarity_add_bmz_productpage';
-	const OPTION_ZONE_BASKETPAGE        = 'pureclarity_add_bmz_basketpage';
-	const OPTION_ZONE_CHECKOUTPAGE      = 'pureclarity_add_bmz_checkoutpage';
-	const OPTION_CATEGORY_FEED_REQUIRED = 'pureclarity_category_feed_required';
 
 	/**
 	 * PureClarity script url
@@ -145,7 +130,7 @@ class PureClarity_Settings {
 	 * @return string
 	 */
 	public function is_nightly_feed_enabled() {
-		return ( get_option( self::OPTION_NIGHTLY_FEED_ENABLED, '' ) === 'on' );
+		return ( get_option( 'pureclarity_nightly_feed_enabled', '' ) === 'on' );
 	}
 
 	/**
@@ -182,7 +167,7 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Returns whether BMZ should appear on homepage
+	 * Returns whether Zone should appear on homepage
 	 *
 	 * @return boolean
 	 */
@@ -191,7 +176,7 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Returns whether BMZ should appear on category page
+	 * Returns whether Zone should appear on category page
 	 *
 	 * @return boolean
 	 */
@@ -200,7 +185,7 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Returns whether BMZ should appear on search page
+	 * Returns whether Zone should appear on search page
 	 *
 	 * @return boolean
 	 */
@@ -209,7 +194,7 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Returns whether BMZ should appear on product page
+	 * Returns whether Zone should appear on product page
 	 *
 	 * @return boolean
 	 */
@@ -218,7 +203,7 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Returns whether BMZ should appear on basket page
+	 * Returns whether Zone should appear on basket page
 	 *
 	 * @return boolean
 	 */
@@ -227,7 +212,7 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Returns whether BMZ should appear on checkout page
+	 * Returns whether Zone should appear on checkout page
 	 *
 	 * @return boolean
 	 */

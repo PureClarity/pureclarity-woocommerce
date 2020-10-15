@@ -1,17 +1,12 @@
 <?php
 /**
- * Settings Feed page html
+ * Feeds box & run request HTML.
  *
  * @package PureClarity for WooCommerce
  * @since 3.0.0
  */
 
-/**
- * Dashboard class containing functions used by this view.
- *
- * @var Pureclarity_Dashboard_Page $this
- */
-
+/** Dashboard class containing functions used by this view. @var PureClarity_Dashboard_Page $this */
 ?>
 	<div id="pc-step2" class="pureclarity-info-box pc-col-box">
 		<div class="pureclarity-info-title">

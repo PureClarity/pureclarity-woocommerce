@@ -1,18 +1,14 @@
 <?php
 /**
- * Account status box html
+ * Account Status HTML.
  *
  * @package PureClarity for WooCommerce
  * @since 3.0.0
  */
 
-/**
- * Dashboard class containing functions used by this view.
- *
- * @var Pureclarity_Dashboard_Page $this
- */
+/** Dashboard class containing functions used by this view. @var PureClarity_Dashboard_Page $this */
 
-if ( 0 === $dashboard['Account']['IsSignedUp'] ) : ?>
+if ( isset( $dashboard['Account']['IsSignedUp'] ) && 0 === $dashboard['Account']['IsSignedUp'] ) : ?>
 	<div id="pureclarity-account-info" class="pureclarity-info-box <?php echo esc_attr( $this->get_free_trial_class( $dashboard['Account']['DaysLeft'] ) ); ?>">
 		<div class="pureclarity-info-title">
 			<h2>

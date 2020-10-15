@@ -59,12 +59,12 @@ class PureClarity_Admin {
 	/**
 	 * Builds class dependencies
 	 *
-	 * @param PureClarity_Dashboard_Page $dashboard_page
-	 * @param PureClarity_Settings_Page $settings_page
-	 * @param PureClarity_Feeds $feeds
-	 * @param PureClarity_Signup $signup
-	 * @param PureClarity_Feedback $feedback
-	 * @param PureClarity_Settings $settings
+	 * @param PureClarity_Dashboard_Page $dashboard_page - Dashboard page actions & rendering.
+	 * @param PureClarity_Settings_Page  $settings_page - Settings page actions & rendering.
+	 * @param PureClarity_Feeds          $feeds - Feeds actions class.
+	 * @param PureClarity_Signup         $signup - Signup actions class.
+	 * @param PureClarity_Feedback       $feedback - Feedback actions class.
+	 * @param PureClarity_Settings       $settings - Settings class.
 	 */
 	public function __construct(
 		$dashboard_page,
@@ -82,6 +82,9 @@ class PureClarity_Admin {
 		$this->settings       = $settings;
 	}
 
+	/**
+	 * Sets up all the default admin hooks.
+	 */
 	public function init() {
 		add_action( 'admin_notices', array( $this->dashboard_page, 'inject_before_notices' ), -9999 );
 		add_action( 'admin_notices', array( $this->dashboard_page, 'inject_after_notices' ), PHP_INT_MAX );
@@ -122,7 +125,6 @@ class PureClarity_Admin {
 			array(),
 			PURECLARITY_VERSION
 		);
-
 
 		if ( strpos( $hook, 'pureclarity' ) !== false ) {
 
@@ -274,7 +276,6 @@ class PureClarity_Admin {
 			update_option( 'pureclarity_mode', 'off' );
 		}
 	}
-
 
 	/**
 	 * Completes a next step

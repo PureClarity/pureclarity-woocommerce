@@ -65,7 +65,7 @@ class PureClarity_Cron {
 	}
 
 	/**
-	 * Schedules the delta task
+	 * Adds the PureClarity 1 minute interval
 	 *
 	 * @param array $schedules - existingt schedules.
 	 * @return array
@@ -80,7 +80,7 @@ class PureClarity_Cron {
 	}
 
 	/**
-	 * Schedules the delta task
+	 * Schedules the feeds & delta tasks
 	 */
 	private function create_schedule() {
 		$this->schedule_requested_feeds();

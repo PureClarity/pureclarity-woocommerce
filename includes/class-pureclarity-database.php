@@ -28,7 +28,7 @@ class PureClarity_Database {
 	}
 
 	/**
-	 * Upgrades to version1 of the PureClarity Database table structure, creating the delta & state tables
+	 * Upgrades to version 1 of the PureClarity Database table structure, creating the delta & state tables
 	 */
 	public function update_db_to_1() {
 		$this->create_state_table();

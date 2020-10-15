@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings Feed page html
+ * Settings page html
  *
  * @package PureClarity for WooCommerce
  * @since 2.0.0

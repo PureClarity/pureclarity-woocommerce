@@ -1,9 +1,9 @@
 <?php
 /**
- * PureClarity_Cron class
+ * PureClarity_Cron_Feeds class
  *
  * @package PureClarity for WooCommerce
- * @since 2.0.0
+ * @since 3.0.0
  */
 
 use PureClarity\Api\Feed\Feed;
@@ -16,7 +16,6 @@ class PureClarity_Cron_Feeds {
 	/**
 	 * PureClarity Settings class
 	 *
-	 * @since 2.0.0
 	 * @var PureClarity_Settings $settings
 	 */
 	private $settings;
@@ -24,7 +23,6 @@ class PureClarity_Cron_Feeds {
 	/**
 	 * PureClarity Feed class
 	 *
-	 * @since 2.0.0
 	 * @var PureClarity_Feed $feed
 	 */
 	private $feed;
@@ -32,7 +30,6 @@ class PureClarity_Cron_Feeds {
 	/**
 	 * PureClarity State Manager class
 	 *
-	 * @since 2.0.0
 	 * @var PureClarity_State_Manager $state_manager
 	 */
 	private $state_manager;
@@ -55,7 +52,7 @@ class PureClarity_Cron_Feeds {
 	}
 
 	/**
-	 * Runs outstanding delta tasks
+	 * Runs feeds that have been requested via admin.
 	 */
 	public function run_requested_feeds() {
 
@@ -89,7 +86,7 @@ class PureClarity_Cron_Feeds {
 	}
 
 	/**
-	 * Runs outstanding delta tasks
+	 * Runs the nightly feed.
 	 */
 	public function run_nightly_feeds() {
 

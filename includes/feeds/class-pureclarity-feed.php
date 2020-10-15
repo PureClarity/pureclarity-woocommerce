@@ -37,8 +37,10 @@ class PureClarity_Feed {
 	 */
 	private $state_manager;
 
-	const PAGE_SIZE       = 100;
-	const GATEWAY_TIMEOUT = 504;
+	/**
+	 * Default Page Size.
+	 */
+	const PAGE_SIZE = 100;
 
 	/**
 	 * Builds class dependencies & includes http class
@@ -58,6 +60,7 @@ class PureClarity_Feed {
 	 * Gets the total number of pages for the feed
 	 *
 	 * @param string $type - feed type.
+	 * @return int
 	 */
 	public function get_total_pages( $type ) {
 		$items = $this->get_total_items( $type );
@@ -425,6 +428,7 @@ class PureClarity_Feed {
 	 * Checks if product is visible
 	 *
 	 * @param WC_Product $product - product to process.
+	 * @return bool
 	 */
 	private function product_is_visible( $product ) {
 		return 'hidden' !== $product->get_catalog_visibility() && 'publish' === $product->get_status();
@@ -468,6 +472,7 @@ class PureClarity_Feed {
 	 * Checks if product is going to be on sale
 	 *
 	 * @param WC_Product $product - product to process.
+	 * @return bool
 	 */
 	private function product_has_future_sale( $product ) {
 		$sale_date = $product->get_date_on_sale_from();
@@ -559,6 +564,8 @@ class PureClarity_Feed {
 
 	/**
 	 * Gets count of all users
+	 *
+	 * @return int
 	 */
 	public function get_users_count() {
 		$args = array(
@@ -575,6 +582,9 @@ class PureClarity_Feed {
 	 *
 	 * @param integer $current_page - current page number.
 	 * @param integer $page_size - current page size.
+	 *
+	 * @return array
+	 * @throws Exception - in parse_user - If customer cannot be read/found and $data is set.
 	 */
 	public function get_users( $current_page, $page_size ) {
 
@@ -659,6 +669,8 @@ class PureClarity_Feed {
 
 	/**
 	 * Gets count of all orders in last 12 months
+	 *
+	 * @return mixed
 	 */
 	public function get_order_count() {
 		$args = array(
@@ -678,6 +690,9 @@ class PureClarity_Feed {
 	 *
 	 * @param integer $current_page - current page number.
 	 * @param integer $page_size - current page size.
+	 *
+	 * @return array
+	 * @throws Exception - When WC_Data_Store validation fails.
 	 */
 	public function get_orders( $current_page, $page_size ) {
 		$args = array(
@@ -693,10 +708,10 @@ class PureClarity_Feed {
 		$orders     = new WC_Order_Query( $args );
 		$order_data = array();
 		foreach ( $orders->get_orders() as $order ) {
-			/** @var WC_Order $order */
+			/** WooCommerce Order Class. @var WC_Order $order */
 			$order_lines = array();
 			foreach ( $order->get_items() as $item_id => $item ) {
-				/** @var WC_Order_Item $item */
+				/** WooCommerce Order Item Class. @var WC_Order_Item $item */
 				$product = $order->get_product_from_item( $item );
 				if ( is_object( $product ) ) {
 					$customer_data = get_userdata( $order->get_user_id() );
@@ -721,7 +736,7 @@ class PureClarity_Feed {
 	}
 
 	/**
-	 * Removes protocl from the provided url
+	 * Removes protocol from the provided url
 	 *
 	 * @param string $url - url to process.
 	 *

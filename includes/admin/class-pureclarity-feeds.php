@@ -1,6 +1,6 @@
 <?php
 /**
- * PureClarity_Signup class
+ * PureClarity_Feeds class
  *
  * @package PureClarity for WooCommerce
  * @since 3.0.0
@@ -9,7 +9,7 @@
 use PureClarity\Api\Feed\Feed;
 
 /**
- * Handles Feed Running
+ * Handles Feed run request and progress checking.
  */
 class PureClarity_Feeds {
 

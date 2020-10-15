@@ -6,9 +6,6 @@
  * @since 3.0.0
  */
 
-use PureClarity\Api\Signup\Submit;
-use PureClarity\Api\Signup\Status;
-
 /**
  * Handles PureClarity Feedback on deactivation
  */

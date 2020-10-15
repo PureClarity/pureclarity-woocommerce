@@ -1,20 +1,16 @@
 <?php
 /**
- * PureClarity_Feed class
+ * Copyright © PureClarity. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * PureClarity_Feed_Status class
  *
  * @package PureClarity for WooCommerce
  * @since 2.0.0
  */
 
 /**
- * Copyright © PureClarity. All rights reserved.
- * See LICENSE for license details.
- */
-
-/**
- * Class FeedStatus
- *
- * Feed status checker model
+ * Feed status checker model - works out feed status from state data.
  */
 class PureClarity_Feed_Status {
 
@@ -84,13 +80,13 @@ class PureClarity_Feed_Status {
 	}
 
 	/**
-	 * Returns the status of the product feed
+	 * Returns the status of the given feed
 	 *
 	 * @param string $type - Type of feed to check the status of.
 	 *
 	 * @return mixed[]
 	 */
-	public function get_feed_status( string $type ) {
+	public function get_feed_status( $type ) {
 		if ( ! isset( $this->feed_status_data[ $type ] ) ) {
 
 			$status = array(
@@ -167,13 +163,13 @@ class PureClarity_Feed_Status {
 	}
 
 	/**
-	 * Checks for the scheduled feed file and returns whether the given feed type is in it's data
+	 * Checks the scheduled feed data and returns whether the given feed type is in it's data
 	 *
 	 * @param string $feed_type - Feed type to check.
 	 *
 	 * @return bool
 	 */
-	protected function has_feed_been_requested( string $feed_type ): bool {
+	protected function has_feed_been_requested( $feed_type ) {
 		$requested     = false;
 		$schedule_data = $this->get_scheduled_feed_data();
 

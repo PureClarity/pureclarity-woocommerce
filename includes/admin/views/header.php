@@ -1,12 +1,12 @@
 <?php
 /**
- * Settings Feed page html
+ * Header bar HTML.
  *
  * @package PureClarity for WooCommerce
  * @since 3.0.0
  */
 
-/** @var PureClarity_Dashboard_Page $this */
+/** Dashboard class containing functions used by this view. @var PureClarity_Dashboard_Page $this */
 
 ?>
 <link href="https://fonts.googleapis.com/css?family=Lato:200,300,400,500,600,700,900" rel="stylesheet" />

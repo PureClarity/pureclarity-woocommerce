@@ -1,20 +1,16 @@
 <?php
 /**
- * Settings Feed page html
+ * Performance Stats HTML
  *
  * @package PureClarity for WooCommerce
  * @since 3.0.0
  */
 
-/**
- * Dashboard class containing functions used by this view.
- *
- * @var Pureclarity_Dashboard_Page $this
- */
+/** Dashboard class containing functions used by this view. @var PureClarity_Dashboard_Page $this */
 ?>
 <div id="pureclarity-headline-stats" class="pureclarity-info-box pc-col-box">
 	<div class="pureclarity-info-title">
-		<h2>Performance</h2>
+		<h2><?php esc_html_e( 'Performance', 'pureclarity' ); ?></h2>
 	</div>
 	<div class="pureclarity-info-content">
 		<p class="pureclarity-stats-text">

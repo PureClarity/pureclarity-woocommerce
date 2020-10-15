@@ -51,6 +51,9 @@ class PureClarity_Configuration_Display {
 		$this->session  = $session;
 	}
 
+	/**
+	 * Initializes class, adding hooks to to load data & display data.
+	 */
 	public function init() {
 		if ( ! is_ajax() ) {
 			add_filter(
@@ -89,7 +92,8 @@ class PureClarity_Configuration_Display {
 	/**
 	 * Gets PureClarity configuration
 	 *
-	 * @return array
+	 * @return array|mixed[]
+	 * @throws Exception - in session->get_customer.
 	 */
 	private function get_config() {
 		if ( empty( $this->config ) ) {
@@ -112,7 +116,7 @@ class PureClarity_Configuration_Display {
 	}
 
 	/**
-	 * Gets PureClarity configuration
+	 * Builds cart data configuration.
 	 */
 	public function build_cart_config() {
 		$this->cart_config = $this->session->get_cart();

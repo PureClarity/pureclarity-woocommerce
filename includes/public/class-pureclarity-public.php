@@ -3,7 +3,7 @@
  * PureClarity_Public class
  *
  * @package PureClarity for WooCommerce
- * @since 2.0.0
+ * @since 3.0.0
  */
 
 /**

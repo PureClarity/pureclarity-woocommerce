@@ -128,7 +128,7 @@ class PureClarity_Signup {
 	}
 
 	/**
-	 * Submit signup action, outputs a json encoded result
+	 * Submit link account details action, outputs a json encoded result
 	 */
 	public function link_account_action() {
 

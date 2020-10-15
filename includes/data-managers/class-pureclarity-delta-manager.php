@@ -41,7 +41,7 @@ class PureClarity_Delta_Manager {
 	/**
 	 * Gets the value for the given state name key
 	 *
-	 * @param string $type
+	 * @param string $type - delta type.
 	 * @return mixed[]
 	 */
 	public function get_deltas( $type ) {
@@ -58,34 +58,34 @@ class PureClarity_Delta_Manager {
 	}
 
 	/**
-	 * Gets the value for the given state name key
+	 * Adds a delta row for the given delta type and entity.
 	 *
-	 * @param string $type
-	 * @param string $id
+	 * @param string $type - delta type.
+	 * @param string $id - id of entity.
 	 */
 	public function add_delta( $type, $id ) {
 
 		$this->wpdb->replace(
 			$this->table_name,
 			array(
-				'type'       => $type,
-				'id'         => $id
+				'type' => $type,
+				'id'   => $id,
 			)
 		);
 	}
 
 	/**
-	 * Gets the value for the given state name key
+	 * Deletes a delta row for the given delta type and entity.
 	 *
-	 * @param string $type
-	 * @param string $id
+	 * @param string $type - delta type.
+	 * @param string $id - id of entity.
 	 */
 	public function delete_delta( $type, $id ) {
 		$this->wpdb->delete(
 			$this->table_name,
 			array(
-				'type'       => $type,
-				'id'         => $id
+				'type' => $type,
+				'id'   => $id,
 			)
 		);
 	}
