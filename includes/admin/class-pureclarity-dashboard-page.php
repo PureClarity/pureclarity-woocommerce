@@ -50,7 +50,6 @@ class PureClarity_Dashboard_Page {
 	 * @var string[] - array of stats that should be shown as percentages.
 	 */
 	private $stat_percentage = array(
-		'ConvertedSessions',
 		'ConversionRate',
 	);
 
