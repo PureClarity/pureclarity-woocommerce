@@ -18,16 +18,16 @@ class PureClarity_Dashboard_Page {
 	/**
 	 * Plugin states.
 	 */
-	public const STATE_NOT_CONFIGURED = 'not_configured';
-	public const STATE_WAITING        = 'waiting';
-	public const STATE_CONFIGURED     = 'configured';
+	const STATE_NOT_CONFIGURED = 'not_configured';
+	const STATE_WAITING        = 'waiting';
+	const STATE_CONFIGURED     = 'configured';
 
 	/**
 	 * Display modes.
 	 */
-	public const MODE_LIVE       = 'live';
-	public const MODE_ADMIN_ONLY = 'admin_only';
-	public const MODE_DISABLED   = 'disabled';
+	const MODE_LIVE       = 'live';
+	const MODE_ADMIN_ONLY = 'admin_only';
+	const MODE_DISABLED   = 'disabled';
 
 	/**
 	 * Stats to show array.
