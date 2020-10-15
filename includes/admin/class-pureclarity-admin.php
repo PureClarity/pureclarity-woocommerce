@@ -372,7 +372,7 @@ class PureClarity_Admin {
 
 		}
 
-		if ( PureClarity_Dashboard_Page::STATE_CONFIGURED !== $state ) {
+		if ( PureClarity_Dashboard_Page::STATE_CONFIGURED !== $this->dashboard_page->get_state_name() ) {
 			?>
 			<div class="notice notice-success is-dismissible">
 				<p>
