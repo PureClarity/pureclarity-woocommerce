@@ -68,13 +68,7 @@ class PureClarity_Cron_Feeds {
 					$this->feed->run_feed( $type );
 				}
 
-				$show_banner        = $this->state_manager->get_state_value( 'show_welcome_banner' );
-				$show_manual_banner = $this->state_manager->get_state_value( 'show_manual_welcome_banner' );
-				if ( $show_banner || $show_manual_banner ) {
-					$this->state_manager->set_state_value( 'show_welcome_banner', '0' );
-					$this->state_manager->set_state_value( 'show_manual_welcome_banner', '0' );
-					$this->state_manager->set_state_value( 'show_getting_started_banner', time() + 86400 );
-				}
+				$this->set_banner_display();
 			} catch ( \Exception $exception ) {
 				error_log( "PureClarity: An error occurred generating the {$type} feed: " . $exception->getMessage() );
 				wp_send_json( array( 'error' => "An error occurred generating the {$type} feed. See error logs for more information." ) );
@@ -106,12 +100,27 @@ class PureClarity_Cron_Feeds {
 				foreach ( $requested_feeds as $type ) {
 					$this->feed->run_feed( $type );
 				}
+
+				$this->set_banner_display();
 			} catch ( \Exception $exception ) {
 				error_log( "PureClarity: An error occurred generating the {$type} feed: " . $exception->getMessage() );
 				wp_send_json( array( 'error' => "An error occurred generating the {$type} feed. See error logs for more information." ) );
 			}
 
 			$this->state_manager->set_state_value( 'nightly_feeds_running', '0' );
+		}
+	}
+
+	/**
+	 * Sorts out the state for the banner display.
+	 */
+	private function set_banner_display() {
+		$show_banner        = $this->state_manager->get_state_value( 'show_welcome_banner' );
+		$show_manual_banner = $this->state_manager->get_state_value( 'show_manual_welcome_banner' );
+		if ( $show_banner || $show_manual_banner ) {
+			$this->state_manager->set_state_value( 'show_welcome_banner', '0' );
+			$this->state_manager->set_state_value( 'show_manual_welcome_banner', '0' );
+			$this->state_manager->set_state_value( 'show_getting_started_banner', time() + 86400 );
 		}
 	}
 }
