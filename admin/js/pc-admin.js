@@ -179,24 +179,28 @@
 	let modeChangeButtonDisabled = $('#pc-mode-disabled-button');
 
 	function pcNextStepsAction(action) {
-		var linkUrl = action.attr('href');
-		var linkId = action.attr('id');
-		$.post(
-			ajaxurl,
-			{
-				action: 'pureclarity_complete_next_step',
-				action_id: linkId,
-				security: $('input[name=pureclarity-complete-next-step-nonce]').val()
-			},
-			function(data) {
-				window.open(linkUrl);
-			}
-		).error(function() {
-			window.open(linkUrl);
-		}).fail(function() {
-			window.open(linkUrl);
-		});
-		return false;
+		if (action.hasClass('pureclarity-clicked') === false) {
+			var linkId = action.attr('id');
+			$.post(
+				ajaxurl,
+				{
+					action: 'pureclarity_complete_next_step',
+					action_id: linkId,
+					security: $('input[name=pureclarity-complete-next-step-nonce]').val()
+				},
+				function(data) {
+					action.addClass('pureclarity-clicked');
+					action.click();
+				}
+			).error(function() {
+				action.addClass('pureclarity-clicked');
+				action.click();
+			}).fail(function() {
+				action.addClass('pureclarity-clicked');
+				action.click();
+			});
+			return false;
+		}
 	}
 
 
