@@ -60,7 +60,7 @@ if ( false === function_exists( 'pureclarity_action_link' ) ) {
 				' . wp_nonce_field( 'pureclarity_deactivate_feedback', 'pureclarity_deactivate_feedback_nonce' ) . '
 				<p>' . __( 'We\'re sorry to see you go! If you have a moment, please could you let us know why you\'re deactivating PureClarity for WooCommerce?' ) . '</p>
 				<p>
-					<input type="radio" value="too_expensive" name="pureclarity_feedback_too_expensive" id="pureclarity_feedback_too_expensive"/>
+					<input type="radio" value="too_expensive" name="pureclarity_feedback_reason" id="pureclarity_feedback_too_expensive"/>
 					<label for="pureclarity_feedback_too_expensive">' . __( 'Too expensive' ) . '</label>
 				</p>
 				<p>
