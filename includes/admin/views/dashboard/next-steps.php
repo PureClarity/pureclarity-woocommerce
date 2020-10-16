@@ -35,6 +35,8 @@
 							<p class="pureclarity-next-step-action">
 								<?php if ( isset( $step_action['actionLinkIsAdmin'] ) && $step_action['actionLinkIsAdmin'] ) : ?>
 									<a href="<?php echo esc_attr( $this->get_admin_url() ); ?><?php echo esc_attr( $step_action['actionLink'] ); ?>" target="_blank" class="pc-button pc-action" id="<?php echo esc_attr( $step['id'] ); ?>"><?php echo esc_html( $step_action['actionText'] ); ?></a>
+								<?php elseif ( isset( $step_action['actionLinkIsPlugin'] ) && $step_action['actionLinkIsPlugin'] ) : ?>
+									<a href="<?php echo esc_url( admin_url( $step_action['actionLink'] ) ); ?>" target="_blank" class="pc-button pc-action" id="<?php echo esc_attr( $step['id'] ); ?>"><?php echo esc_html( $step_action['actionText'] ); ?></a>
 								<?php else : ?>
 									<a href="<?php echo esc_attr( $step_action['actionLink'] ); ?>" target="_blank" class="pc-button pc-action" id="<?php echo esc_attr( $step['id'] ); ?>"><?php echo esc_html( $step_action['actionText'] ); ?></a>
 								<?php endif; ?>
