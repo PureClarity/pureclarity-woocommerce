@@ -28,25 +28,6 @@ class PureClarity_Settings {
 	private $display_regions;
 
 	/**
-	 * Sets up PureClarity options with default values
-	 */
-	public function __construct() {
-		add_option( 'pureclarity_accesskey', '' );
-		add_option( 'pureclarity_secretkey', '' );
-		add_option( 'pureclarity_region', '1' );
-		add_option( 'pureclarity_mode', 'off' );
-		add_option( 'pureclarity_bmz_debug', 'no' );
-		add_option( 'pureclarity_deltas_enabled', 'no' );
-		add_option( 'pureclarity_add_bmz_homepage', 'on' );
-		add_option( 'pureclarity_add_bmz_searchpage', 'on' );
-		add_option( 'pureclarity_add_bmz_categorypage', 'on' );
-		add_option( 'pureclarity_add_bmz_productpage', 'on' );
-		add_option( 'pureclarity_add_bmz_basketpage', 'on' );
-		add_option( 'pureclarity_add_bmz_checkoutpage', 'on' );
-		add_option( 'pureclarity_category_feed_required', '' );
-	}
-
-	/**
 	 * Gets Access Key config value
 	 *
 	 * @return string
