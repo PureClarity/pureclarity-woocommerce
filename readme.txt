@@ -140,3 +140,8 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/?utm_source=mar
 
 = 2.3.1 =
 * Improvements to page view event to send page type and context
+
+= 3.0.0 =
+* Added Signup from within plugin to make setup easy
+* Added new dashboard page to get tips, stats and data direct from PureClarity
+* Overhaul of plugin architecture to improve performance and organisation
