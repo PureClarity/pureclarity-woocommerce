@@ -165,6 +165,9 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/).
 = 2.3.1 =
 * Improvements to page view event to send page type and context
 
+= 2.3.2 =
+* Fix to prevent our public code affecting API calls
+
 = 3.0.0 =
 * Added Signup from within plugin to make setup easy
 * Added new dashboard page to get tips, stats and data direct from PureClarity
