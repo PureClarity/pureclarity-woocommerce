@@ -674,7 +674,7 @@ class PureClarity_Feed {
 	 */
 	public function get_order_count() {
 		$args = array(
-			'status'       => 'completed',
+			'status'       => array( 'processing', 'completed' ),
 			'type'         => 'shop_order',
 			'date_created' => '>' . date( 'Y-m-d', strtotime( '-12 month' ) ),
 			'paginate'     => true,
@@ -700,7 +700,7 @@ class PureClarity_Feed {
 			'offset'       => $page_size * ( $current_page - 1 ),
 			'orderby'      => 'date_created',
 			'order'        => 'DESC',
-			'status'       => 'completed',
+			'status'       => array( 'processing', 'completed' ),
 			'type'         => 'shop_order',
 			'date_created' => '>' . date( 'Y-m-d', strtotime( '-12 month' ) ),
 		);
