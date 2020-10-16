@@ -54,6 +54,10 @@ class PureClarity_Database {
 		add_option( 'pureclarity_add_bmz_basketpage', 'on' );
 		add_option( 'pureclarity_add_bmz_checkoutpage', 'on' );
 		add_option( 'pureclarity_category_feed_required', '' );
+		add_option( 'pureclarity_nightly_feed_enabled', 'no' );
+		add_option( 'pureclarity_env_subheading', '' );
+		add_option( 'pureclarity_feeds_subheading', '' );
+		add_option( 'pureclarity_zones_subheading', '' );
 
 		delete_option( 'pureclarity_brandfeed_run' );
 		delete_option( 'pureclarity_catfeed_run' );

@@ -73,6 +73,10 @@ try {
 		'pureclarity_product_deltas',
 		'pureclarity_user_deltas',
 		'pureclarity_userfeed_run',
+		'pureclarity_env_subheading',
+		'pureclarity_feeds_subheading',
+		'pureclarity_nightly_feed_enabled',
+		'pureclarity_zones_subheading',
 	);
 
 	$option_name = 'wporg_option';

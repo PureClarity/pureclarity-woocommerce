@@ -245,7 +245,7 @@ class PureClarity_Signup {
 		update_option( 'pureclarity_accesskey', $access_key );
 		update_option( 'pureclarity_secretkey', $secret_key );
 		update_option( 'pureclarity_region', $region );
-		update_option( 'pureclarity_feeds_nightly', 'on' );
+		update_option( 'pureclarity_nightly_feed_enabled', 'on' );
 		update_option( 'pureclarity_deltas_enabled', 'on' );
 	}
 
