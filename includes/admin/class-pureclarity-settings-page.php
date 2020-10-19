@@ -112,9 +112,9 @@ class PureClarity_Settings_Page {
 		$mode_select = array(
 			'name'        => 'pureclarity_mode',
 			'label_for'   => 'pureclarity_mode',
-			'label'       => 'Enable Mode',
+			'label'       => 'Display Mode',
 			'type'        => 'select',
-			'description' => 'Set PureClarity Enable Mode. When the mode is set to "Admin only" PureClarity only shows for administrators on the front end.',
+			'description' => 'Set PureClarity Display Mode. When the mode is set to "Admin only" PureClarity only shows for administrators on the front end.',
 			'value_cb'    => 'get_pureclarity_mode',
 			'options'     => array(
 				'on'    => 'On',
