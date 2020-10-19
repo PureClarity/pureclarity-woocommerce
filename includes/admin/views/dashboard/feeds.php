@@ -13,6 +13,7 @@
 			<h2><?php esc_html_e( 'Feeds', 'pureclarity' ); ?></h2>
 		</div>
 		<div class="pureclarity-info-content">
+			<p><?php esc_html_e( 'Full data feeds are sent nightly to PureClarity to ensure data is up to date in our system, below is the status of each of the data feed types:', 'pureclarity' ); ?></p>
 			<p class="pc-feed">
 				<span class="pc-feedName"><?php esc_html_e( 'Products', 'pureclarity' ); ?>:</span>
 				<span id="pc-productFeedStatusClass" class="pc-feed-status-icon <?php echo esc_attr( $this->get_product_feed_status_class() ); ?>" title="<?php echo esc_html( $this->get_product_feed_status_label() ); ?>"></span>
