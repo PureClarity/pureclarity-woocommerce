@@ -28,14 +28,6 @@ class PureClarity_Bmz {
 	private $current_product;
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @since 2.0.0
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * PureClarity Settings class
 	 *
 	 * @since 2.0.0
@@ -44,35 +36,44 @@ class PureClarity_Bmz {
 	private $settings;
 
 	/**
-	 * PureClarity State class
+	 * PureClarity Session class
 	 *
 	 * @since 2.0.0
-	 * @var PureClarity_State $state
+	 * @var PureClarity_Session $session
 	 */
-	private $state;
+	private $session;
 
 	/**
 	 * Builds class dependencies & sets up template codes
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @param PureClarity_Settings $settings - PureClarity Settings class.
+	 * @param PureClarity_Session  $session - PureClarity Session class.
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin   = $plugin;
-		$this->settings = $plugin->get_settings();
-		$this->state    = $plugin->get_state();
+	public function __construct(
+		$settings,
+		$session
+	) {
+		$this->settings = $settings;
+		$this->session  = $session;
+	}
+
+	/**
+	 * Initialisation - adds zone shortcode & template injection hooks.
+	 */
+	public function init() {
 		add_shortcode( 'pureclarity-bmz', array( $this, 'pureclarity_render_bmz' ) );
 		add_action( 'template_redirect', array( $this, 'render_bmzs' ), 10, 1 );
 	}
 
 	/**
-	 * Sets up rendering of BMZs
+	 * Sets up hooks for rendering of Zones
 	 */
 	public function render_bmzs() {
 
-		$this->current_product     = $this->state->get_product();
-		$this->current_category_id = $this->state->get_category_id();
+		$this->current_product     = $this->session->get_product();
+		$this->current_category_id = $this->session->get_category_id();
 
-		// Homepage and Order Received Page BMZs.
+		// Homepage and Order Received Page Zones.
 		if ( is_front_page() && $this->settings->is_bmz_on_home_page() ) {
 			add_filter(
 				'the_content',
@@ -83,7 +84,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Category Page BMZs.
+		// Category Page Zones.
 		if ( ( is_product_category() || ( is_shop() && ! is_search() ) )
 				&& $this->settings->is_bmz_on_category_page()
 		) {
@@ -105,7 +106,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Search Results BMZs.
+		// Search Results Zones.
 		if ( is_search()
 			&& $this->settings->is_bmz_on_search_page()
 		) {
@@ -127,7 +128,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Product Page BMZs.
+		// Product Page Zones.
 		if ( is_product() && $this->settings->is_bmz_on_product_page() ) {
 			remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
 			add_action(
@@ -164,7 +165,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Cart Page BMZs.
+		// Cart Page Zones.
 		if ( is_cart() && $this->settings->is_bmz_on_basket_page() ) {
 			add_action(
 				'woocommerce_before_cart',
@@ -184,7 +185,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Order Received Page BMZs.
+		// Order Received Page Zones.
 		if ( is_order_received_page() && $this->settings->is_bmz_on_checkout_page() ) {
 			add_filter(
 				'the_content',
@@ -201,6 +202,7 @@ class PureClarity_Bmz {
 	 * Sets up front page content
 	 *
 	 * @param string $content - existing content.
+	 * @return string
 	 */
 	public function front_page( $content ) {
 		return "[pureclarity-bmz id='HP-01' bottom='10']" . $content . "[pureclarity-bmz id='HP-02' top='10'][pureclarity-bmz id='HP-03' top='10'][pureclarity-bmz id='HP-04' top='10']";
@@ -210,6 +212,7 @@ class PureClarity_Bmz {
 	 * Sets up order received page content
 	 *
 	 * @param string $content - existing content.
+	 * @return string
 	 */
 	public function order_received_page( $content ) {
 		return "[pureclarity-bmz id='OC-01' bottom='10']" . $content . "[pureclarity-bmz id='OC-02' top='10']";
@@ -217,6 +220,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up product page zone 1 content
+	 *
+	 * @return string
 	 */
 	public function product_page_1() {
 		return $this->pureclarity_render_bmz(
@@ -230,6 +235,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up product page zone 2 content
+	 *
+	 * @return string
 	 */
 	public function product_page_2() {
 		return $this->pureclarity_render_bmz(
@@ -243,6 +250,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up product page zone 3 content
+	 *
+	 * @return string
 	 */
 	public function product_page_3() {
 		return $this->pureclarity_render_bmz(
@@ -256,6 +265,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up product page zone 4 content
+	 *
+	 * @return string
 	 */
 	public function product_page_4() {
 		return $this->pureclarity_render_bmz(
@@ -269,6 +280,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up category page zone 1 content
+	 *
+	 * @return string
 	 */
 	public function cat_page_1() {
 		return $this->pureclarity_render_bmz(
@@ -282,6 +295,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up category page zone 2 content
+	 *
+	 * @return string
 	 */
 	public function cat_page_2() {
 		return $this->pureclarity_render_bmz(
@@ -296,6 +311,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up search page zone 1 content
+	 *
+	 * @return string
 	 */
 	public function search_page_1() {
 		return $this->pureclarity_render_bmz(
@@ -310,6 +327,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up search page zone 2 content
+	 *
+	 * @return string
 	 */
 	public function search_page_2() {
 		return $this->pureclarity_render_bmz(
@@ -324,6 +343,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up cart page zone 1 content
+	 *
+	 * @return string
 	 */
 	public function cart_page_1() {
 		return $this->pureclarity_render_bmz(
@@ -337,6 +358,8 @@ class PureClarity_Bmz {
 
 	/**
 	 * Sets up cart page zone 2 content
+	 *
+	 * @return string
 	 */
 	public function cart_page_2() {
 		return $this->pureclarity_render_bmz(
@@ -351,8 +374,10 @@ class PureClarity_Bmz {
 	/**
 	 * Renders a zone
 	 *
-	 * @param array  $atts - zone attributes.
-	 * @param string $content - custom content.
+	 * @param array       $atts - zone attributes.
+	 * @param string|null $content - custom content.
+	 *
+	 * @return string
 	 */
 	public function pureclarity_render_bmz( $atts, $content = null ) {
 
@@ -373,7 +398,7 @@ class PureClarity_Bmz {
 			$html = ( ! empty( $content ) ? $content : '' );
 
 			if ( $this->settings->is_bmz_debug_enabled() && '' === $html ) {
-				$html = 'PURECLARITY BMZ: ' . $arguments['id'];
+				$html = 'PURECLARITY Zone: ' . $arguments['id'];
 			}
 
 			$class = 'pureclarity_bmz';
@@ -419,7 +444,5 @@ class PureClarity_Bmz {
 		}
 
 		return '';
-
 	}
-
 }

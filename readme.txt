@@ -3,26 +3,33 @@ Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
 Tested up to: 5.5.1
-Stable tag: 2.3.2
+Stable tag: 3.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
 Increase revenues in your WooCommerce store - integrate with PureClarity’s award-winning AI-based ecommerce personalization platform.
 
 == Description ==
-= Increase WooCommerce revenues by 26% using AI-based real-time personalization =
+= Increase revenue by 26% =
 
-Integrate your WooCommerce store with **[PureClarity](https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity)**, the leading AI-based ecommerce personalization platform proven to increase online revenue by over 26%\* with personalized real-time AI recommenders, personalized marketing campaigns, advanced audience segmentation and personalization within email and search.
+**PureClarity gives your WooCommerce store an amazing advantage over your competition by providing:**
 
-At the heart of PureClarity are its big data collection engine and machine learning algorithms that predict your website visitors’ likes of products, categories and brands based on similar users’ behavior in real-time.
+* Real-time personalised product recommendations
+* Personalised popups
+* Personalised content
+* Live chat
+* Powerful personalised emails
+* Personalised recommendations within search
 
-PureClarity collects behavioral data from every single website visitor including views, purchases, searches and even time of day or amount spent. This data is then analyzed and PureClarity identifies relationships between audience segments and the products that you sell online.
+Integrate in minutes – our plugin seamlessly links your store to PureClarity. Instantly start to increase your revenue by providing a highly personalised and engaging online shopping experience!
 
-Through this real-time AI-driven real-time personalization technology, PureClarity analyzes visitor behavior on three different levels, the individual, the customer segments the individual belongs to and the website overall,  presenting highly targeted, personalized products, banners, promotions and offers on your WooCommerce store designed to maximize response, and ultimately to boost your bottom line.
+PureClarity includes a wide range of ecommerce personalisation and customer engagement features which ensure your customers online journey is personalised to them, maximising conversion and creating customer loyalty.
 
-With PureClarity, you can present different personalized merchandising campaigns to different audience segments as they browse your website. You can choose to run PureClarity ‘hands-off’ and it will use its powerful AI engine to personalize the experience based on a number of default segments provided in PureClarity’s admin dashboard. However, you can choose further optimize PureClarity by defining your own segments or extending those configured by PureClarity using a large range of behavioral and CRM-based conditions. Conditions including time habits, visits, favorite brands or average order value, time since last order, the list goes on.
+At the heart of PureClarity is its big data collection engine and machine learning algorithms that predict your website visitors’ likes of products, categories and brands based on similar users’ behaviour in real-time.
 
-= Increase WooCommerce Sales =
+PureClarity analyses visitor behaviour on three different levels, the individual, the customer segment the individual belongs to and the website overall, presenting highly targeted, personalised real-time product recommendations, banners, promotions, pop-ups and live chat experiences. All PureClarity features are designed to maximise response, and ultimately to boost your bottom line.
+
+= Increase WooCommerce Platform Sales =
 
 * Increase online revenue by 26.6%\*
 * Increase sales conversions by 71.5%\*
@@ -32,30 +39,49 @@ With PureClarity, you can present different personalized merchandising campaigns
 
 = Key Features =
 
-* Automatically upsell and cross-sell with personalized recommenders
-* Advanced AI recommender engine orchestrates the best recommendation strategy for each visitor. The AI will place the recommender most likely to convert and adapt with each click of the customer journey
-* Recommenders can be placed on any page or within any zone of your website from your home page, product pages, category listings, search results page, cart page, through to  even your order confirmation page and email.
-* The AI gets to work from day one. You can let the AI get to work 24/7 with no intervention
-* PureClarity’s AI can evaluate which manual recommenders are on a page to ensure there is no recommender duplication
-* Ability to overlay the AI with personalized marketing campaigns throughout your site and set rules to determine which audience segment see which campaign and when.  Personalized campaigns can take the form of online banner ads, carousels and manual personalized recommenders
-* Full insights and opportunities analytics to optimize your campaigns and performance and maximize revenues. PureClarity enables you to gain **valuable insight** into the performance of your on-site recommenders, personalization within site search, behavioral merchandising campaigns and personalized email marketing.
-* Advanced audience segmentation. Ability to set up as many customer groups as your business needs.
-* Integrates with your WooCommerce store in minutes
-* Works extremely effectively with sparse data sets. The AI is constantly learning and will start from day one.
-* Fully customizable recommenders to fit your store’s theme
-* Works for both B2C and B2B WooCommerce stores
-* Multi-award winning software
+**Personalised content**
 
-= How does PureClarity work for WooCommerce stores? =
+Display different personalised banners, images & text to engage to each of your customer segments, turn them into buyers and incentivise returning customers.
 
-See screenshots below for a visually guide on how PureClarity increases your sales conversions and boosts your revenues by providing personalized experiences for your visitors and customers.
+**Intelligent recommendations**
 
-= Additional Benefits =
+Use powerful personalised recommendations to upsell and cross-sell products at the right time. Whether your webstore has very little or a lot of trading history our comprehensive recommender engine will learn what the best products are to display.
 
-* Free to get started - why not [Try For Free](https://admin.pureclarity.com/signup/create-account) or [Request a 1-1 Demo](https://www.pureclarity.com/us/request-a-demo/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=woocommercedescription)
-* Extremely competitive [pricing structure](https://www.pureclarity.com/pricing/?utm_source=woocommerce&utm_medium=listing&utm_campaign=pricing) based monthly page views for maximum ROI
+**Personalisation within search**
+
+Help customers find what they’re looking for by displaying relevant products as they search.
+
+**Personalisation within email**
+
+Use personalised email campaigns to entice customers back based on products they’ve viewed and bought in the past. Integrate into your existing Email Service Provider (Mailchimp, Dotdigital and more).
+
+**Personalised pop-ups**
+
+Keep your customers informed of your latest products, news and offers with personalised email capture pop-ups and promo pop-ups. You decide who sees which pop-up when and where on your store.
+
+**Live chat**
+
+Use a combination of real-time information about the customers current behaviours so you can help them find exactly what they want via PureClaritys live chat.
+
+**Audience segmentation**
+
+Use pre-built and custom made conditions to create customer segments and target visitors using powerful, goal orientated marketing campaigns.
+
+**Insights & analytics**
+
+Gain deeper insights into visitor behaviour and learn via PureClaritys analytics platform how to maximise your web stores potential to increase revenue.
+
+= How does PureClarity work for ecommerce stores? =
+
+See screenshots below for a visual guide on how PureClarity increases your sales conversions and boosts revenue by providing personalised experiences for your visitors and customers.
+
+= Additional benefits =
+
+* Free to get started – just download and install the plugin or [Request a 1-1 Demo](https://www.pureclarity.com/us/request-a-demo/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=woocommercedescription)
+* Extremely competitive [pricing structure](https://www.pureclarity.com/pricing/?utm_source=woocommerce&utm_medium=listing&utm_campaign=pricing) based monthly page views for maximum ROI
 * All features included in the monthly cost
 * No set up fees
+* No developer required
 * No long-term contract
 * Access to PureClarity Academy
 * Dedicated onboarding and support teams
@@ -64,43 +90,41 @@ See screenshots below for a visually guide on how PureClarity increases your sal
 
 With PureClarity you can Try for Free.
 
-* Unlimited access to all PureClarity features
-* Access to PureClarity Academy
-* Step by step implementation guide
-* Full support if needed
+* Create engaging and personalised online shopping experiences for your customers
+* Get started straight away
+* Use of all PureClarity features
+* Comprehensive onboarding and full customer support
+* Access to PureClarity documentation and Academy
+* No credit card required, no contract
 
-= Get Started with PureClarity =
+= Get started with PureClarity =
 
-For details about how to get started with PureClarity on WooCommerce, check out our [official plugin guide](https://www.pureclarity.com/docs/woocommerce/).
+Download and install this plugin into your WooCommerce site and then sign up from the PureClarity plugin dashboard page. Your account will be automatically created on signup and your stores' data synced so you can get started straight away.
+
+For more details about how to get started with PureClarity on WooCommerce, check out our [official plugin guide](https://www.pureclarity.com/docs/woocommerce/).
 
 = About PureClarity =
 
-PureClarity was founded for one purpose – to maximize sales for businesses who trade online. We found one mistake that almost every ecommerce business was committing – treating all customers as one.
+Founded in 2014, PureClarity is an award-winning powerful ecommerce personalisation and customer engagement platform that offers merchants an easy-to-manage and affordable solution creating seamless and unique personalised online experiences.
+Our range of features ensure that all retailers have the tools to hand to not only convert their customers via every touchpoint throughout their online journey but ensure they turn into loyal online customers.
+Our global clients are in a wide range of industries including homeware, charities, sport and leisure, beauty, fashion and manufacturing. We support B2C as well as complex B2B clients.
 
-The fact is that every customer is different and likes to shop in a different way. That has driven us to build a [multi-award winning](https://www.pureclarity.com/about-us/?utm_source=woocommerce&utm_medium=listing&utm_campaign=aboutpc), highly innovative platform that observes shoppers’ behavior online, creates personalized relevant experiences, and helps B2B & B2C ecommerce businesses increase their revenue.
-
-PureClarity has a wide range of B2C and B2B clients who are all experiencing great results since implementation. [Why not look at the results from a portion on our client base here](https://www.pureclarity.com/us/examples/).
-
-Our personalization software serves customers operating ecommerce stores running on WooCommerce, as well as other platforms such as Magento and Shopify, and bespoke integrations.
-
-Learn more at [www.pureclarity.com](https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity).
+We are passionate about customer success and have a dedicated team that knows each online retailer is unique. It is important that your business stands out from your competition and we regularly review how you can maximise PureClarity on your site.
+Our ecommerce personalisation and customer engagement software serves stores running on WooCommerce, as well as other platforms such as Magento, Shopify, BigCommerce, X-Cart and bespoke integrations.
+Learn more at [www.pureclarity.com](https://www.pureclarity.com/).
 
 == Screenshots ==
 
-1. PureClarity - award-winning ecommerce personalization platform for online B2C & B2B businesses using WooCommerce.
-2. AI-driven real-time ecommerce personalization for WooCommerce.
-3. Automated personalization - PureClarity selects, in real time, the most appropriate AI Recommender types based on what the AI knows about the individual.
-4. Automated personalization - PureClarity, in real time, shows relevant products, brands and categories in selected AI recommenders.
-5. Automated personalization - dynamic and real-time AI Recommendations across all page types to promote relevant products to the individual to automatically upsell and cross-sell.
-6. Enriched personalization - real-time targeting of relevant content, including banners and promotions, to target individuals, based on e.g. visitor status (new or returning), geo-location and even their local weather.
-7. Enriched personalization - real-time personalization adapting to the behavior of individuals, such as cross-selling to returning customers.
-8. Choose where to show personalized recommenders, such as on your home page, on product pages and on your cart page.
-9. Enriched personalization - build your own recommenders, choose from 30+ recommendation types, segment your audience with 100+ targeting criteria.
-10.  Personalization within Search - show behavior-based promotions in search results, including automated personalized AI recommendations.
-11. Target your searching audience with automated landing pages.
-12. Audience segmentation - includes weather & season, city & location, current & past browsing, current & past searches, purchase behavior, cart contents, age & gender, time habits, likes & dislikes, email campaigns, Google Ads campaigns and device usage.
-13. Analytics & insights - includes ROI analytics and the ability to export segment data.
-14. Omni-Channel personalization - for example, in-store receipt and eReceipt recommenders, and facilitation of clienteling.
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+8.
+9.
+10.
 
 == Changelog ==
 
@@ -143,3 +167,8 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/?utm_source=mar
 
 = 2.3.2 =
 * Fix to prevent our public code affecting API calls
+
+= 3.0.0 =
+* Added Signup from within plugin to make setup easy
+* Added new dashboard page to get tips, stats and data direct from PureClarity
+* Overhaul of plugin architecture to improve performance and organisation
