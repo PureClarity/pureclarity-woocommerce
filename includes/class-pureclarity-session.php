@@ -1,6 +1,6 @@
 <?php
 /**
- * PureClarity_State class
+ * PureClarity_Session class
  *
  * @package PureClarity for WooCommerce
  * @since 2.0.0
@@ -9,7 +9,7 @@
 /**
  * Handles session related code
  */
-class PureClarity_State {
+class PureClarity_Session {
 
 	/**
 	 * Cart Data
@@ -49,25 +49,24 @@ class PureClarity_State {
 	/**
 	 * Order Data
 	 *
-	 * @var array $order
+	 * @var array $order_data
+	 */
+	private $order_data;
+
+	/**
+	 * PureClarity Order class
+	 *
+	 * @var PureClarity_Order $order
 	 */
 	private $order;
 
 	/**
-	 * PureClarity Plugin class
-	 *
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * Builds class dependencies & starts session
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @param PureClarity_Order $order - PureClarity Order class.
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin = $plugin;
-
+	public function __construct( $order ) {
+		$this->order = $order;
 		// if not on the login page, check for the logout cookie, in order to see if we need to trigger customer_logout event.
 		// cannot check on login page as our js isn't on it.
 		if ( 'wp-login.php' !== $GLOBALS['pagenow'] ) {
@@ -87,6 +86,9 @@ class PureClarity_State {
 	 * Sets PureClarity customer data
 	 *
 	 * @param integer $user_id - customer id.
+	 *
+	 * @return null|array
+	 * @throws Exception - in WC_Customer if customer cannot be read/found and $data is set.
 	 */
 	public function set_customer( $user_id ) {
 		if ( ! empty( $user_id ) ) {
@@ -111,6 +113,9 @@ class PureClarity_State {
 
 	/**
 	 * Gets PureClarity customer data
+	 *
+	 * @return array|string|null
+	 * @throws Exception - in set_customer.
 	 */
 	public function get_customer() {
 
@@ -131,6 +136,8 @@ class PureClarity_State {
 
 	/**
 	 * Checks for logout cookie, and if present sets $this->islogout to true, for use later in config rendering
+	 *
+	 * @return bool
 	 */
 	public function is_logout() {
 		if ( ! isset( $this->islogout ) ) {
@@ -146,6 +153,8 @@ class PureClarity_State {
 
 	/**
 	 * Gets PureClarity product data
+	 *
+	 * @return array|null
 	 */
 	public function get_product() {
 		if ( ! empty( $this->current_product ) ) {
@@ -170,6 +179,8 @@ class PureClarity_State {
 
 	/**
 	 * Gets current product data
+	 *
+	 * @return false|WC_Product|null
 	 */
 	public function get_wc_product() {
 		if ( is_product() ) {
@@ -191,6 +202,8 @@ class PureClarity_State {
 
 	/**
 	 * Gets current category id
+	 *
+	 * @return int|null
 	 */
 	public function get_category_id() {
 		if ( ! empty( $this->current_category_id ) ) {
@@ -206,6 +219,8 @@ class PureClarity_State {
 
 	/**
 	 * Sets PureClarity cart data
+	 *
+	 * @return array
 	 */
 	public function set_cart() {
 
@@ -248,6 +263,8 @@ class PureClarity_State {
 
 	/**
 	 * Gets PureClarity cart data
+	 *
+	 * @return array|string
 	 */
 	public function get_cart() {
 
@@ -255,10 +272,12 @@ class PureClarity_State {
 			return $this->cart;
 		}
 
-		$cart = WC()->session->get( 'pureclarity-cart' );
-		if ( isset( $cart ) ) {
-			$this->cart = $cart;
-			return $this->cart;
+		if ( WC()->session ) {
+			$cart = WC()->session->get( 'pureclarity-cart' );
+			if ( isset( $cart ) ) {
+				$this->cart = $cart;
+				return $this->cart;
+			}
 		}
 
 		// must be new session.
@@ -276,20 +295,19 @@ class PureClarity_State {
 			return null;
 		}
 
-		if ( ! empty( $this->order ) ) {
-			return $this->order;
+		if ( ! empty( $this->order_data ) ) {
+			return $this->order_data;
 		}
 
 		global $wp;
 		$order_id = absint( $wp->query_vars['order-received'] );
 
 		if ( $order_id ) {
-			$pc_order    = new PureClarity_Order();
-			$order_data  = $pc_order->get_order_info( $order_id );
-			$this->order = $order_data;
+			$order_data       = $this->order->get_order_info( $order_id );
+			$this->order_data = $order_data;
 		}
 
-		return $this->order;
+		return $this->order_data;
 	}
 
 	/**
@@ -338,7 +356,7 @@ class PureClarity_State {
 	 * @return array
 	 */
 	protected function get_page_context( $page_type ) {
-		$context = [];
+		$context = array();
 
 		if ( $page_type ) {
 			$context['page_type'] = $page_type;

@@ -5,13 +5,13 @@
  * @package PureClarity for WooCommerce
  *
  * Plugin Name:  PureClarity for WooCommerce
- * Description:  Increase revenues by 26% in your WooCommerce store with AI-based real-time personalization. Integrates with PureClarity's multi-award winning ecommerce personalization software.
+ * Description:  Use PureClarity's wide range of ecommerce personalisation features to create engaging online shopping experiences for your customers. Drive revenue, average order value, conversion rate and customer loyalty.
  * Plugin URI:   https://www.pureclarity.com
- * Version:      2.3.2
+ * Version:      3.0.0
  * Author:       PureClarity
  * Author URI:   https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity
  * Text Domain:  pureclarity
- * WC tested up to: 4.4.1
+ * WC tested up to: 4.6.0
  **/
 
 // Abort if called directly.
@@ -20,9 +20,19 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Set version and path constants.
-define( 'PURECLARITY_VERSION', '2.3.2' );
+define( 'PURECLARITY_VERSION', '3.0.0' );
+define( 'PURECLARITY_DB_VERSION', 1 );
+
 if ( ! defined( 'PURECLARITY_PATH' ) ) {
 	define( 'PURECLARITY_PATH', plugin_dir_path( __FILE__ ) );
+}
+
+if ( ! defined( 'PURECLARITY_INCLUDES_PATH' ) ) {
+	define( 'PURECLARITY_INCLUDES_PATH', PURECLARITY_PATH . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR );
+}
+
+if ( ! defined( 'PURECLARITY_BASE_URL' ) ) {
+	define( 'PURECLARITY_BASE_URL', plugin_dir_url( __FILE__ ) );
 }
 
 // Ensure woocommerce is enabled.
@@ -35,10 +45,9 @@ if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 		}
 	);
 } else {
-
+	require_once PURECLARITY_INCLUDES_PATH . 'class-pureclarity-plugin.php';
 	// include classes.
-	require_once PURECLARITY_PATH . 'class-includes.php';
+	require_once PURECLARITY_INCLUDES_PATH . 'php-sdk' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
 	require_once PURECLARITY_PATH . 'functions.php';
 	$pureclarity = new PureClarity_Plugin();
-
 }

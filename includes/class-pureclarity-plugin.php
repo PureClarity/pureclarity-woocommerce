@@ -12,108 +12,48 @@
 class PureClarity_Plugin {
 
 	/**
-	 * PureClarity Bmz class
+	 * PureClarity_Class_Loader class
 	 *
-	 * @var PureClarity_Bmz $bmz
+	 * @var PureClarity_Class_Loader $loader
 	 */
-	private $bmz;
-
-	/**
-	 * PureClarity Feed class
-	 *
-	 * @var PureClarity_Feed $feed
-	 */
-	private $feed;
-
-	/**
-	 * PureClarity Settings class
-	 *
-	 * @var PureClarity_Settings $settings
-	 */
-	private $settings;
-
-	/**
-	 * PureClarity State class
-	 *
-	 * @var PureClarity_State $state
-	 */
-	private $state;
+	private $loader;
 
 	/**
 	 * Sets up dependencies and adds some init actions
 	 */
 	public function __construct() {
-
-		$this->settings = new PureClarity_Settings();
-
-		$this->feed = new PureClarity_Feed( $this );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
 		add_action( 'init', array( $this, 'init' ), 15 );
 	}
 
 	/**
-	 * Returns the settings class
-	 *
-	 * @return PureClarity_Settings
+	 * Sets up dependencies
 	 */
-	public function get_settings() {
-		return $this->settings;
-	}
-
-	/**
-	 * Returns the feed class
-	 *
-	 * @return PureClarity_Feed
-	 */
-	public function get_feed() {
-		return $this->feed;
-	}
-
-	/**
-	 * Returns the state class
-	 *
-	 * @return PureClarity_State
-	 */
-	public function get_state() {
-		return $this->state;
-	}
-
-	/**
-	 * Returns the bmz class
-	 *
-	 * @return PureClarity_Bmz
-	 */
-	public function get_bmz() {
-		return $this->bmz;
-	}
-
-	/**
-	 * Registers PureClarity CSS & JS
-	 */
-	public function register_assets() {
-		wp_register_style( 'pureclarity-css', plugin_dir_url( __FILE__ ) . '../css/pc.css', array(), PURECLARITY_VERSION, 'screen' );
-		wp_enqueue_style( 'pureclarity-css' );
-
-		wp_register_script( 'pureclarity-js', plugin_dir_url( __FILE__ ) . '../js/pc.js', array( 'jquery', 'wp-util' ), PURECLARITY_VERSION, true );
-		wp_enqueue_script( 'pureclarity-js' );
+	public function load_dependencies() {
+		require_once PURECLARITY_INCLUDES_PATH . 'class-pureclarity-class-loader.php';
+		$this->loader = new PureClarity_Class_Loader();
 	}
 
 	/**
 	 * Initializes the plugin
 	 */
 	public function init() {
+		$this->load_dependencies();
+
+		// this just schedules cron, needs to be always run to ensure scheduling happens.
+		$cron = $this->loader->get_cron();
+		$cron->init();
+
+		// watchers always need to be run, so that we can pick up on any events in frontend / backend.
+		$watcher = $this->loader->get_products_watcher();
+		$watcher->init();
+
 		if ( is_admin() ) {
-			new PureClarity_Admin( $this );
-		} else if ( ! $this->is_rest_api_request() ) {
-			if ( $this->settings->is_pureclarity_enabled() ) {
-				add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
-			}
-			$this->state = new PureClarity_State( $this );
-			$this->bmz   = new PureClarity_Bmz( $this );
-			new PureClarity_Template( $this );
+			$admin = $this->loader->get_admin();
+			$admin->init();
+		} elseif ( ! defined( 'DOING_CRON' ) && ! wp_doing_ajax() && ! $this->is_rest_api_request() ) {
+			$public = $this->loader->get_public();
+			$public->init();
 		}
-		new PureClarity_Products_Watcher( $this );
-		new PureClarity_Cron( $this );
 	}
 
 	/**
@@ -132,5 +72,4 @@ class PureClarity_Plugin {
 
 		return apply_filters( 'pureclarity_is_rest_api_request', $is_rest_api_request );
 	}
-
 }

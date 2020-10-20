@@ -12,20 +12,6 @@
 class PureClarity_Products_Watcher {
 
 	/**
-	 * PureClarity Feed class
-	 *
-	 * @var PureClarity_Feed $feed
-	 */
-	private $feed;
-
-	/**
-	 * PureClarity Plugin class
-	 *
-	 * @var PureClarity_Plugin $plugin
-	 */
-	private $plugin;
-
-	/**
 	 * PureClarity Settings class
 	 *
 	 * @var PureClarity_Settings $settings
@@ -33,23 +19,40 @@ class PureClarity_Products_Watcher {
 	private $settings;
 
 	/**
-	 * PureClarity State class
+	 * PureClarity Session class
 	 *
-	 * @var PureClarity_State $state
+	 * @var PureClarity_Session $session
 	 */
-	private $state;
+	private $session;
 
 	/**
-	 * Builds class dependencies & sets up watchers
+	 * PureClarity Delta class
 	 *
-	 * @param PureClarity_Plugin $plugin PureClarity Plugin class.
+	 * @var PureClarity_Delta $delta
 	 */
-	public function __construct( &$plugin ) {
-		$this->plugin   = $plugin;
-		$this->feed     = $plugin->get_feed();
-		$this->settings = $plugin->get_settings();
-		$this->state    = $plugin->get_state();
+	private $delta;
 
+	/**
+	 * Builds class dependencies
+	 *
+	 * @param PureClarity_Settings $settings - PureClarity Settings class.
+	 * @param PureClarity_Session  $session - PureClarity Session class.
+	 * @param PureClarity_Delta    $delta - PureClarity Delta class.
+	 */
+	public function __construct(
+		$settings,
+		$session,
+		$delta
+	) {
+		$this->settings = $settings;
+		$this->session  = $session;
+		$this->delta    = $delta;
+	}
+
+	/**
+	 * Sets up watchers
+	 */
+	public function init() {
 		if ( ! $this->settings->is_pureclarity_enabled() ) {
 			return;
 		}
@@ -145,13 +148,14 @@ class PureClarity_Products_Watcher {
 	 * @param integer $user_id - Id of user being added/edited/deleted.
 	 */
 	public function trigger_user_delta( $user_id ) {
-		$this->settings->add_user_delta( $user_id );
+		$this->delta->add_user_delta( $user_id );
 	}
 
 	/**
 	 * Triggers delta for product save
 	 *
 	 * @param integer $id - Id of product being updated.
+	 * @return mixed
 	 */
 	public function trigger_product_delta( $id ) {
 
@@ -159,7 +163,7 @@ class PureClarity_Products_Watcher {
 			return $id;
 		}
 
-		$this->settings->add_product_delta( $id );
+		$this->delta->add_product_delta( $id );
 	}
 
 	/**
@@ -170,7 +174,7 @@ class PureClarity_Products_Watcher {
 	public function delete_item( $id ) {
 		$post = get_post( $id );
 		if ( 'product' === $post->post_type && 'trash' === $post->post_status ) {
-			$this->settings->add_product_delta( $id );
+			$this->delta->add_product_delta( $id );
 		}
 	}
 
@@ -186,7 +190,7 @@ class PureClarity_Products_Watcher {
 			// remove logout cookie if it's present (just in case user logged in immediately after logout).
 			$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
 			wc_setcookie( 'pc_logout', '1', time() - YEAR_IN_SECONDS, $secure, true );
-			$this->state->set_customer( $user->ID );
+			$this->session->set_customer( $user->ID );
 		}
 	}
 
@@ -197,7 +201,7 @@ class PureClarity_Products_Watcher {
 		// add pc_logout cookie so that customer_logout can be triggered on next page load.
 		$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
 		wc_setcookie( 'pc_logout', '1', time() + YEAR_IN_SECONDS, $secure, true );
-		$this->state->clear_customer();
+		$this->session->clear_customer();
 	}
 
 	/**
@@ -216,7 +220,7 @@ class PureClarity_Products_Watcher {
 	 */
 	public function set_cart( $update ) {
 		try {
-			$this->state->set_cart();
+			$this->session->set_cart();
 		} catch ( \Exception $exception ) {
 			error_log( "PureClarity: Can't build cart changes tracking event: " . $exception->getMessage() );
 		}
