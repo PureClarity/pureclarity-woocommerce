@@ -5,7 +5,7 @@
  * @package PureClarity for WooCommerce
  *
  * Plugin Name:  PureClarity for WooCommerce
- * Description:  Increase revenues by 26% in your WooCommerce store with AI-based real-time personalization. Integrates with PureClarity's multi-award winning ecommerce personalization software.
+ * Description:  Use PureClarity's wide range of ecommerce personalisation features to create engaging online shopping experiences for your customers. Drive revenue, average order value, conversion rate and customer loyalty.
  * Plugin URI:   https://www.pureclarity.com
  * Version:      3.0.0
  * Author:       PureClarity

@@ -1,4 +1,4 @@
-=== PureClarity - eCommerce Personalization for WooCommerce ===
+=== PureClarity - award-winning ecommerce personalisation for WooCommerce ===
 Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
@@ -7,7 +7,7 @@ Stable tag: 3.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
-Increase revenues in your WooCommerce store - integrate with PureClarity’s award-winning AI-based ecommerce personalization platform.
+Use PureClarity's wide range of ecommerce personalisation features to create engaging online shopping experiences for your customers. Drive revenue, average order value, conversion rate and customer loyalty.
 
 == Description ==
 = Increase revenue by 26% =
@@ -115,16 +115,16 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/).
 
 == Screenshots ==
 
-1.
-2.
-3.
-4.
-5.
-6.
-7.
-8.
-9.
-10.
+1. Introducing PureClarity
+2. How PureClarity Works
+3. Personalised Content
+4. Intelligent Recommendations
+5. Personalisation within search
+6. Personalisation within email
+7. Personalised Pop ups
+8. Live chat
+9. Audience segmentation
+10. Insights & analytics
 
 == Changelog ==
 
