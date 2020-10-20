@@ -37,7 +37,7 @@ class PureClarity_Public {
 	 *
 	 * @param PureClarity_Settings              $settings - PureClarity Settings class.
 	 * @param PureClarity_Configuration_Display $configuration_display - PureClarity Configuration Display class.
-	 * @param PureClarity_Bmz                   $bmz - PureClarity BMZ class.
+	 * @param PureClarity_Bmz                   $bmz - PureClarity Zone class.
 	 */
 	public function __construct(
 		$settings,

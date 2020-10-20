@@ -158,7 +158,7 @@ class PureClarity_Settings_Page {
 			'label_for'   => 'pureclarity_bmz_debug',
 			'label'       => 'Enable Zone Debugging',
 			'type'        => 'checkbox',
-			'description' => 'Check to activate debugging for PureClarity BMZs. They will show even if empty.',
+			'description' => 'Check to activate debugging for PureClarity Zones. They will show even if empty.',
 			'value_cb'    => 'is_bmz_debug_enabled',
 		);
 
@@ -167,7 +167,7 @@ class PureClarity_Settings_Page {
 			'label_for'   => 'pureclarity_add_bmz_homepage',
 			'label'       => 'Show Home Page Zones',
 			'type'        => 'checkbox',
-			'description' => 'Auto-insert BMZs on Home page',
+			'description' => 'Auto-insert Zones on Home page',
 			'value_cb'    => 'is_bmz_on_home_page',
 		);
 
@@ -176,7 +176,7 @@ class PureClarity_Settings_Page {
 			'label_for'   => 'pureclarity_add_bmz_categorypage',
 			'label'       => 'Show Product Listing Zones',
 			'type'        => 'checkbox',
-			'description' => 'Auto-insert BMZs on Product Listing page',
+			'description' => 'Auto-insert Zones on Product Listing page',
 			'value_cb'    => 'is_bmz_on_category_page',
 		);
 
@@ -185,7 +185,7 @@ class PureClarity_Settings_Page {
 			'label_for'   => 'pureclarity_add_bmz_searchpage',
 			'label'       => 'Show Search Results Zones',
 			'type'        => 'checkbox',
-			'description' => 'Auto-insert BMZs on Search Results page',
+			'description' => 'Auto-insert Zones on Search Results page',
 			'value_cb'    => 'is_bmz_on_search_page',
 		);
 
@@ -194,7 +194,7 @@ class PureClarity_Settings_Page {
 			'label_for'   => 'pureclarity_add_bmz_productpage',
 			'label'       => 'Show Product Page Zones',
 			'type'        => 'checkbox',
-			'description' => 'Auto-insert BMZs on Product page',
+			'description' => 'Auto-insert Zones on Product page',
 			'value_cb'    => 'is_bmz_on_product_page',
 		);
 
@@ -203,7 +203,7 @@ class PureClarity_Settings_Page {
 			'label_for'   => 'pureclarity_add_bmz_basketpage',
 			'label'       => 'Show Cart Page Zones',
 			'type'        => 'checkbox',
-			'description' => 'Auto-insert BMZs on Cart page',
+			'description' => 'Auto-insert Zones on Cart page',
 			'value_cb'    => 'is_bmz_on_basket_page',
 		);
 
@@ -212,7 +212,7 @@ class PureClarity_Settings_Page {
 			'label_for'   => 'pureclarity_add_bmz_checkoutpage',
 			'label'       => 'Show Order Confirmation Zones',
 			'type'        => 'checkbox',
-			'description' => 'Auto-insert BMZs on Order Confirmation page',
+			'description' => 'Auto-insert Zones on Order Confirmation page',
 			'value_cb'    => 'is_bmz_on_checkout_page',
 		);
 

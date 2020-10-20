@@ -66,14 +66,14 @@ class PureClarity_Bmz {
 	}
 
 	/**
-	 * Sets up hooks for rendering of BMZs
+	 * Sets up hooks for rendering of Zones
 	 */
 	public function render_bmzs() {
 
 		$this->current_product     = $this->session->get_product();
 		$this->current_category_id = $this->session->get_category_id();
 
-		// Homepage and Order Received Page BMZs.
+		// Homepage and Order Received Page Zones.
 		if ( is_front_page() && $this->settings->is_bmz_on_home_page() ) {
 			add_filter(
 				'the_content',
@@ -84,7 +84,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Category Page BMZs.
+		// Category Page Zones.
 		if ( ( is_product_category() || ( is_shop() && ! is_search() ) )
 				&& $this->settings->is_bmz_on_category_page()
 		) {
@@ -106,7 +106,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Search Results BMZs.
+		// Search Results Zones.
 		if ( is_search()
 			&& $this->settings->is_bmz_on_search_page()
 		) {
@@ -128,7 +128,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Product Page BMZs.
+		// Product Page Zones.
 		if ( is_product() && $this->settings->is_bmz_on_product_page() ) {
 			remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
 			add_action(
@@ -165,7 +165,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Cart Page BMZs.
+		// Cart Page Zones.
 		if ( is_cart() && $this->settings->is_bmz_on_basket_page() ) {
 			add_action(
 				'woocommerce_before_cart',
@@ -185,7 +185,7 @@ class PureClarity_Bmz {
 			);
 		}
 
-		// Order Received Page BMZs.
+		// Order Received Page Zones.
 		if ( is_order_received_page() && $this->settings->is_bmz_on_checkout_page() ) {
 			add_filter(
 				'the_content',
@@ -398,7 +398,7 @@ class PureClarity_Bmz {
 			$html = ( ! empty( $content ) ? $content : '' );
 
 			if ( $this->settings->is_bmz_debug_enabled() && '' === $html ) {
-				$html = 'PURECLARITY BMZ: ' . $arguments['id'];
+				$html = 'PURECLARITY Zone: ' . $arguments['id'];
 			}
 
 			$class = 'pureclarity_bmz';
