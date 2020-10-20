@@ -165,7 +165,7 @@ if ( self::STATE_WAITING !== $this->get_state_name() ) : ?>
 				<div class="pc-link-account-submit-button">
 					<button id="pc-link-account-submit-button" type="button" title="<?php esc_html_e( 'Sign up', 'pureclarity' ); ?>"
 							class="thickbox">
-						<?php esc_html_e( 'Sign up', 'pureclarity' ); ?>
+						<?php esc_html_e( 'Link account', 'pureclarity' ); ?>
 					</button>
 				</div>
 			</form>
