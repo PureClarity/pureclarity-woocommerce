@@ -18,7 +18,6 @@
     background: white;
     width: 100%;
     padding: 20px;
-    position: fixed;
     z-index: 10000;
     display: flex;
     justify-content: space-between;
@@ -48,7 +47,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    position: fixed;
+    position: relative;
     right: 0;
 }
 
@@ -83,27 +82,25 @@
 
 #pc-dashboard {
     border-radius: 3px;
-    padding: 0 0 24px 0;
     font-family: Lato, sans-serif;
+    padding:20px;
 }
 
 .pc-clearfix {
     clear:both;
 }
 
-#pc-dashboard {
-    margin-top: 80px;
-    padding:20px;
-}
-
 /** DASHBOARD CONTENT BOXES - GENERIC **/
 
 #pc-dashboard .pc-box {
     float:left;
-    width: 31.5%;
     min-width: 420px;
     margin-left: 1.31%;
     margin-top: 23px;
+}
+
+#pc-dashboard #pc-signup-col2 .pc-box {
+    width: 100%;
 }
 
 #pc-dashboard .pc-box:last-child {
@@ -132,9 +129,9 @@
 }
 
 #pc-dashboard .pc-box .pc-box-content {
-    height: 175px;
+    /*height: 175px;*/
     background: #fff;
-    padding: 28px 33px;
+    padding: 23px 33px;
     font-size: 1.15em;
     font-weight: 400;
     position: relative;
@@ -183,7 +180,18 @@
 
 /** WELCOME PAGE - MARKETING CONTENT **/
 
-#pc-dashboard #pc-marketing-info .pc-box-content,
+#pc-dashboard #pc-marketing-info .pc-box-content {
+    height: 185px;
+    border-radius: 3px;
+    width: 454px;
+    margin: 0 auto;
+}
+
+#pc-dashboard #pc-marketing-info .pc-box-content p {
+    margin-top:0;
+    line-height: 1.0em;
+}
+
 #pc-dashboard #pc-features .pc-box-content {
     min-height: 349px;
     border-radius: 3px;
@@ -197,10 +205,6 @@
 }
 
 /* stat donuts */
-
-.pc_stat_donut {
-    margin-bottom: 2.3rem;
-}
 
 .pc_stat_donut {
     display: block;
@@ -243,7 +247,7 @@ svg .pc_donut_text {
 @keyframes pc_donut {
 
     0% {
-        stroke-dasharray: 0, 510;
+        stroke-dasharray: 0, 263.89;
     }
 
     100% {
@@ -252,20 +256,47 @@ svg .pc_donut_text {
 
 /** WELCOME PAGE - FEATURES BOX **/
 
+
+.pc-feature img {
+    width: 200px;
+    margin: 0 auto;
+}
+
+#pc-features p {
+    margin-top: 0;
+    text-align: center;
+}
+
+#pc-dashboard #pc-features .pc-box-content {
+    height: 329px;
+    width: 454px;
+    margin: 0 auto;
+}
+
+#pc-features h3 {
+    margin-bottom: 0.5em;
+}
+
 .pc-feature {
     text-align: center;
 }
 .pc-feature img {
-    width: 250px;
+    width: 200px;
     margin: 0 auto;
 }
 
 /** WELCOME PAGE - SIGNUP BOX **/
 
+#pc-dashboard #pc-sign-up .pc-box-content {
+    min-height: 531px;
+}
+
 #pc-dashboard #pc-sign-up ul {
     list-style: none;
+    margin-top:0;
     margin-left: 20px;
     margin-bottom: 30px;
+    height: 40px;
 }
 
 #pc-dashboard #pc-sign-up ul li::before {
@@ -279,20 +310,40 @@ svg .pc_donut_text {
     font-size: 1.2em;
 }
 
-#pc-dashboard .pc-box .pc-box-content {
-    min-height: 277px;
+#pc-dashboard #pc-sign-up ul li {
+    float:left;
+    width: 50%;
+}
+
+#pc-dashboard #pc-sign-up .pc-box-content p {
+    clear:both;
 }
 
 #pc-dashboard #pc-sign-up p.sign-up-subheading {
     font-weight: 500;
     font-size: 1.2rem;
     margin-top: 0;
+    margin-bottom: 0.5em;
+}
+
+#pc-dashboard #pc-sign-up p.sign-up-instruction {
+    font-weight: 600;
+    margin-top: 1em;
+    margin-bottom: 1.2em;
+    clear:both;
+    display:block;
 }
 
 #pc-dashboard #pc-link-account-button {
     font-size: 0.9em;
     margin-left: 0.5rem;
+    font-weight: 400;
 }
+
+#pc-dashboard #pc-sign-up form h3 {
+    margin-top: 0;
+}
+
 
 /** WELCOME PAGE - SIGNUP & LINK ACCOUNT FORMS **/
 
@@ -342,7 +393,7 @@ svg .pc_donut_text {
 #pc-link-account-form-content p.details {
     clear: both;
     vertical-align: middle;
-    height: 50px;
+    height: 40px;
     position: relative;
 }
 
@@ -391,6 +442,9 @@ svg .pc_donut_text {
 #pc-link-account-form-content input.pc-error,
 #pc-link-account-form-content select.pc-error  {
     border: 1px solid #f00;
+}
+
+#pc-sign-up-password.pc-error {
     border-radius: 4px 4px 0 0;
 }
 
@@ -404,22 +458,35 @@ svg .pc_donut_text {
     top: -1px;
     background: #ffaaaa;
     width: 264px;
-    left: 140px;
+    left: 28px;
     text-align: center;
     border-radius: 0 0 4px 4px;
+    font-size: 0.8rem;
 }
 
 #pc-sign-up-form-content .right span.pc-error-message {
     left: 129px;
 }
 
-#pc-sign-up-form-content #pc-sign-up-response-holder,
+#pc-sign-up-form-content #pc-sign-up-response-holder {
+    clear: left;
+    float:left;
+    width: 75%;
+    padding: 8px;
+    height: 20px;
+    margin-top: 15px;
+    display: inline-block;
+    color: #000;
+}
+
 #pc-link-account-form-content #pc-link-account-response-holder {
     clear: both;
     width: 94%;
     padding: 8px;
     height: 20px;
-    margin-top: 15px;
+    margin-top: 15px;#pc-dashboard #pc-sign-up form h3 {
+    margin-top: 0;
+}
     display: inline-block;
     color: #000;
 }
@@ -438,7 +505,11 @@ svg .pc_donut_text {
     background-color:rgba(0,255,0,0.4);
 }
 
-#pc-sign-up-form-content .pc-sign-up-submit-button,
+#pc-sign-up-form-content .pc-sign-up-submit-button {
+    float:right;
+    margin-top: 15px;
+}
+
 #pc-link-account-form-content .pc-link-account-submit-button {
     clear:both;
     text-align: center;
@@ -462,7 +533,6 @@ svg .pc_donut_text {
 /** WAITING BOX **/
 
 #pc-dashboard #pc-waiting .pc-box {
-    width: 63%;
     text-align:center;
 }
 
@@ -470,7 +540,7 @@ svg .pc_donut_text {
     height: 310px;
     background-image: url('images/setting-up-account.jpg');
     background-repeat: no-repeat;
-    background-size: 1083px 339px;
+    background-size: 1126px 339px;
     padding:23px 0 0 0;
 }
 
@@ -658,35 +728,83 @@ svg .pc_donut_text {
 
 @media only screen and (max-width: 1500px) {
     #pc-dashboard {
-        width:75%;
+        width:90%;
         min-width:500px;
         margin: 0 auto;
     }
 
     #pc-dashboard .pc-box {
-        width:75%;
-        margin: 23px 12.5% 0 ;
+        float: none;
+    }
+}
+
+
+
+@media only screen and (max-width: 1200px) {
+
+    #pc-dashboard #pc-sign-up form h3 {
+        text-align: center;
+    }
+
+    #pc-dashboard #pc-sign-up form:after {
+        content: "";
+        display: block;
+        clear: both;
     }
 
     #pc-sign-up-form-content .left {
         float:none;
-        width:100%;
+        width:65%;
         border-right: none;
+        margin: 0 auto;
     }
 
     #pc-sign-up-form-content .right {
+        clear:both;
         float:none;
-        width:100%;
+        width:65%;
+        margin: 1rem auto;
     }
+
+    #pc-dashboard #pc-features {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #pc-sign-up-form-content .label {
+        width: 28%;
+    }
+
 }
 
 @media only screen and (max-width: 1000px) {
     #pc-dashboard {
         margin: 0;
     }
+
+    #pc-sign-up-form-content .left {
+        width:85%;
+    }
+
+    #pc-sign-up-form-content .right {
+        width:85%;
+    }
+
 }
 
 @media only screen and (min-width: 1501px) {
+
+    #pc-signup-col1 {
+        width: 33%;
+        float:left;
+    }
+
+    #pc-signup-col2 {
+        width: 63%;
+        float:left;
+        margin-right:3%;
+    }
+
     #pc-col1 {
         width: 60%;
         float:left;
