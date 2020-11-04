@@ -63,7 +63,6 @@ class PureClarity_Feedback {
 						break;
 				}
 			}
-			$fb = 'Reason Chosen: ' . $reason . ' | Additional Comments: ' . $notes . ' | Website URL: ' . get_site_url();
 
 			$feedback = new \PureClarity\Api\Feedback\Submit(
 				$this->settings->get_access_key(),
