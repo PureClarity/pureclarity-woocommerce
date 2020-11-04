@@ -9,6 +9,11 @@
 /** Dashboard class containing functions used by this view. @var PureClarity_Dashboard_Page $this */
 ?>
 <div class="pureclarity-info-box">
+	<div class="pureclarity-info-title">
+		<h2>
+			<?php esc_html_e( 'Display Mode', 'pureclarity' ); ?>
+		</h2>
+	</div>
 	<div class="pureclarity-info-content">
 		<p>
 			<strong><?php esc_html_e( 'Current Display Mode:', 'pureclarity' ); ?></strong>

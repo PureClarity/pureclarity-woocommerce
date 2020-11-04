@@ -9,19 +9,14 @@
 /** Dashboard class containing functions used by this view. @var PureClarity_Dashboard_Page $this */
 ?>
 <div id="pc-col1">
-	<?php if ( $this->get_mode() !== self::MODE_LIVE ) : ?>
-		<?php $this->get_mode_content(); ?>
-	<?php endif; ?>
 	<?php $this->get_next_steps_content(); ?>
-	<?php if ( $this->get_mode() === self::MODE_LIVE ) : ?>
-		<?php $this->get_mode_content(); ?>
-	<?php endif; ?>
 </div>
 <div id="pc-col2">
 	<?php if ( $this->get_are_feeds_in_progress() ) : ?>
 		<?php $this->get_feeds_content(); ?>
 	<?php endif; ?>
 	<?php $this->get_account_status_content(); ?>
+	<?php $this->get_mode_content(); ?>
 	<?php $this->get_stats_content(); ?>
 	<div class="pureclarity-info-box">
 		<div class="pureclarity-info-title">
