@@ -10,6 +10,7 @@
 	let signupForm = $('#pc-sign-up-form');
 	let linkAccountForm = $('#pc-link-account-form');
 	let linkAccountButton = $('#pc-link-account-submit-button');
+	let signupSubmitted = false;
 
 	function submitSignUp()
 	{
@@ -128,21 +129,31 @@
 			regionErr.css('display', 'none');
 		}
 
-		if (isValid) {
-			$.post(ajaxurl, signupForm.serialize(), function(data) {
-				if (data.success) {
-					tb_remove();
-					$('.pc-signup-boxes').fadeOut(200, function () {
-						$('#pc-waiting').fadeIn(200);
+		if (isValid && !signupSubmitted) {
+			signupSubmitted = true;
+			$('#pc-sign-up').fadeOut(200, function () {
+				$('#pc-waiting').fadeIn(200);
+				$.post(ajaxurl, signupForm.serialize(), function(data) {
+					if (data.success) {
+						tb_remove();
+						currentState = 'waiting';
+						setTimeout(checkStatus, 5000);
+					} else {
+						$('#pc-waiting').fadeOut(200, function () {
+							$('#pc-sign-up').fadeIn(200);
+						});
+						$('#pc-sign-up-response-holder').html(data.error).addClass('pc-error-response');
+						signupSubmitted = false;
+					}
+				}).fail(function(jqXHR, status, err) {
+					$('#pc-waiting').fadeOut(200, function () {
+						$('#pc-sign-up').fadeIn(200);
 					});
-					currentState = 'waiting';
-					setTimeout(checkStatus, 5000);
-				} else {
-					$('#pc-sign-up-response-holder').html(data.error).addClass('pc-error-response');
-				}
-			}).fail(function(jqXHR, status, err) {
-				$('#pc-sign-up-response-holder').html('Error: Please reload the page and try again  E3').addClass('pc-error-response');
+					$('#pc-sign-up-response-holder').html('Error: Please reload the page and try again').addClass('pc-error-response');
+					signupSubmitted = false;
+				});
 			});
+
 		}
 	}
 
