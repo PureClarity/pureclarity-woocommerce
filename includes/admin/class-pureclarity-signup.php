@@ -53,14 +53,17 @@ class PureClarity_Signup {
 			'platform'   => 'woocommerce',
 		);
 
-		$signup_data = $this->get_signup_data();
-		if ( empty( $signup_data ) ) {
+		if ( '1' !== $this->get_pureclarity_state( 'signup_started' ) ) {
+			$this->update_pureclarity_state( 'signup_started', '1' );
 			$result = $this->submit_signup( $params );
-
 			$response = array(
-				'error'   => $result['error'],
-				'success' => empty( $result['error'] ),
+				'error'   => $result['errors'],
+				'success' => empty( $result['errors'] ),
 			);
+
+			if ( $result['errors'] ) {
+				$this->delete_pureclarity_state( 'signup_started' );
+			}
 		} else {
 			$response = array(
 				'error'   => false,
@@ -230,6 +233,7 @@ class PureClarity_Signup {
 				$this->save_config( $request_data['AccessKey'], $request_data['SecretKey'], $signup_data['region'] );
 				$this->delete_pureclarity_state( 'signup_request' );
 				$this->update_pureclarity_state( 'show_welcome_banner', '1' );
+				$this->delete_pureclarity_state( 'signup_started' );
 				$this->trigger_feeds();
 			} else {
 				$result['errors'][] = 'Error processing request';
