@@ -33,20 +33,30 @@ class PureClarity_Cron {
 	private $feeds_cron;
 
 	/**
+	 * PureClarity Signup Cron class
+	 *
+	 * @var PureClarity_Cron_Signup $signup_cron
+	 */
+	private $signup_cron;
+
+	/**
 	 * Builds class dependencies
 	 *
 	 * @param PureClarity_Settings    $settings PureClarity Settings class.
 	 * @param PureClarity_Cron_Deltas $delta_cron PureClarity Delta Cron class.
 	 * @param PureClarity_Cron_Feeds  $feeds_cron PureClarity Feeds Cron class.
+	 * @param PureClarity_Cron_Signup $signup_cron PureClarity Signup Cron class.
 	 */
 	public function __construct(
 		$settings,
 		$delta_cron,
-		$feeds_cron
+		$feeds_cron,
+		$signup_cron
 	) {
-		$this->settings   = $settings;
-		$this->delta_cron = $delta_cron;
-		$this->feeds_cron = $feeds_cron;
+		$this->settings    = $settings;
+		$this->delta_cron  = $delta_cron;
+		$this->feeds_cron  = $feeds_cron;
+		$this->signup_cron = $signup_cron;
 	}
 
 	/**
@@ -85,6 +95,10 @@ class PureClarity_Cron {
 	private function create_schedule() {
 		$this->schedule_requested_feeds();
 		$this->schedule_nightly_feeds();
+
+		if ( ! $this->settings->get_access_key() && ! $this->settings->get_secret_key() ) {
+			$this->schedule_signup_status();
+		}
 
 		if ( $this->settings->is_deltas_enabled() ) {
 			$this->schedule_deltas();
@@ -139,6 +153,27 @@ class PureClarity_Cron {
 				$time,
 				'daily',
 				'pureclarity_nightly_feeds_cron'
+			);
+		}
+	}
+
+	/**
+	 * Schedules the check signup task
+	 */
+	private function schedule_signup_status() {
+		add_action(
+			'pureclarity_check_signup_status_cron',
+			array(
+				$this->signup_cron,
+				'check_signup_status',
+			)
+		);
+
+		if ( ! wp_next_scheduled( 'pureclarity_check_signup_status_cron' ) ) {
+			wp_schedule_event(
+				time(),
+				'pureclarity_every_minute',
+				'pureclarity_check_signup_status_cron'
 			);
 		}
 	}

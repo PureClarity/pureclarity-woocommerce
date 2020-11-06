@@ -89,6 +89,13 @@ class PureClarity_Class_Loader {
 	private $cron_feeds;
 
 	/**
+	 * PureClarity Cron Signup class
+	 *
+	 * @var PureClarity_Cron_Signup $cron_signup
+	 */
+	private $cron_signup;
+
+	/**
 	 * PureClarity Admin class
 	 *
 	 * @var PureClarity_Admin $admin
@@ -298,7 +305,8 @@ class PureClarity_Class_Loader {
 			$this->cron = new PureClarity_Cron(
 				$this->get_settings(),
 				$this->get_cron_deltas(),
-				$this->get_cron_feeds()
+				$this->get_cron_feeds(),
+				$this->get_cron_signup()
 			);
 		}
 		return $this->cron;
@@ -336,6 +344,21 @@ class PureClarity_Class_Loader {
 			);
 		}
 		return $this->cron_feeds;
+	}
+
+	/**
+	 * Returns the PureClarity_Cron_Signup class
+	 *
+	 * @return PureClarity_Cron_Signup
+	 */
+	public function get_cron_signup() {
+		if ( is_null( $this->cron_signup ) ) {
+			$this->require_cron_class( 'signup' );
+			$this->cron_signup = new PureClarity_Cron_Signup(
+				$this->get_admin_signup()
+			);
+		}
+		return $this->cron_signup;
 	}
 
 	/**

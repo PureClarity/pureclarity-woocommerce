@@ -489,7 +489,7 @@ class PureClarity_Dashboard_Page {
 	 */
 	private function get_signup_started() {
 		if ( null === $this->signup_started ) {
-			$signup_started       = $this->state_manager->get_state_value( 'signup_request' );
+			$signup_started       = $this->state_manager->get_state_value( 'signup_started' );
 			$this->signup_started = ( false === empty( $signup_started ) );
 		}
 

@@ -173,10 +173,10 @@
 			</div>
 		</form>
 	</div>
-</div>
 	<?php
 endif;
 ?>
+</div>
 <div id="pc-signup-col1">
 	<div id="pc-marketing-info" class="pc-box pc-signup-boxes">
 		<div class="pc-box-content">
