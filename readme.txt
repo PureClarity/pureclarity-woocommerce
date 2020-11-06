@@ -3,7 +3,7 @@ Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
 Tested up to: 5.5.1
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -176,3 +176,8 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/).
 = 3.0.1 =
 * Made signup form display by default on dashboard
 * Fixed double signup issue
+
+= 3.0.2 =
+* display issue when displaying waiting page by default
+* fixing double signup possibility if you refresh the signup page before the signup submission has been submitted to PureClarity
+* signup doesnt automatically complete if you navigate away from the signup while it's waiting, added cron job
