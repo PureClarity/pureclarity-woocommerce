@@ -53,12 +53,20 @@ class PureClarity_Signup {
 			'platform'   => 'woocommerce',
 		);
 
-		$result = $this->submit_signup( $params );
+		$signup_data = $this->get_signup_data();
+		if ( empty( $signup_data ) ) {
+			$result = $this->submit_signup( $params );
 
-		$response = array(
-			'error'   => $result['error'],
-			'success' => empty( $result['error'] ),
-		);
+			$response = array(
+				'error'   => $result['error'],
+				'success' => empty( $result['error'] ),
+			);
+		} else {
+			$response = array(
+				'error'   => false,
+				'success' => true,
+			);
+		}
 
 		wp_send_json( $response );
 	}
