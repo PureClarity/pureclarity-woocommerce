@@ -387,17 +387,61 @@ svg .pc_donut_text {
     width:45%;
 }
 
+.pc-tooltip {
+    position: relative;
+    border-bottom: 1px dotted black;
+    display: inline-block;
+    font-size: 1.0rem;
+    margin-top:3px;
+    margin-left:5px;
+}
+
+.pc-tooltip .pc-tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #379cba;
+    color: #000;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -110px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.9rem;
+}
+
+.pc-tooltip .pc-tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #379cba transparent transparent transparent;
+}
+
+.pc-tooltip:hover .pc-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
 #pc-sign-up-form-content p.pc-field,
 #pc-sign-up-form-content p.details,
 #pc-link-account-form-content p.pc-field,
 #pc-link-account-form-content p.details {
     clear: both;
     vertical-align: middle;
-    height: 40px;
+    height: 30px;
     position: relative;
 }
 
 #pc-sign-up-form-content .label,
+#pc-sign-up-form-content .label-nr,
 #pc-link-account-form-content label {
     display: block;
     margin: 0.5em 0.25em;
@@ -462,6 +506,7 @@ svg .pc_donut_text {
     text-align: center;
     border-radius: 0 0 4px 4px;
     font-size: 0.8rem;
+    line-height: 1.2rem;
 }
 
 #pc-sign-up-form-content .right span.pc-error-message {
@@ -484,9 +529,7 @@ svg .pc_donut_text {
     width: 94%;
     padding: 8px;
     height: 20px;
-    margin-top: 15px;#pc-dashboard #pc-sign-up form h3 {
-    margin-top: 0;
-}
+    margin-top: 15px;
     display: inline-block;
     color: #000;
 }
