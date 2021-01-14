@@ -54,17 +54,26 @@
 								<label class="label" for="pc-sign-up-firstname">
 									<?php esc_html_e( 'First Name', 'pureclarity' ); ?>
 								</label>
-								<input type="text" name="firstname" id="pc-sign-up-firstname"/>
+								<input type="text" name="first_name" id="pc-sign-up-firstname"/>
 							</p>
 							<p class="pc-field">
 								<label class="label" for="pc-sign-up-lastname">
 									<?php esc_html_e( 'Last Name', 'pureclarity' ); ?>
 								</label>
-								<input type="text" name="lastname" id="pc-sign-up-lastname"/>
+								<input type="text" name="last_name" id="pc-sign-up-lastname"/>
 							</p>
 							<p class="pc-field">
 								<label class="label" for="pc-sign-up-email"><?php esc_html_e( 'Email', 'pureclarity' ); ?></label>
 								<input type="text" name="email" id="pc-sign-up-email" />
+							</p>
+							<p class="pc-field">
+								<label class="label-nr" for="pc-sign-up-phone"><?php esc_html_e( 'Phone Number', 'pureclarity' ); ?></label>
+								<input type="text" name="phone" id="pc-sign-up-phone" />
+								<span class="pc-tooltip" id="pc-sign-up-phone-tooltip">?
+									<span class="pc-tooltip-text" id="pc-sign-up-phone-tooltip">
+									<?php esc_html_e( 'If you provide a phone number we will use it to contact you during your free trial and for support. It will not be used for sales calls.', 'pureclarity' ); ?>
+									</span>
+								</span>
 							</p>
 							<p class="pc-field">
 								<label class="label" for="pc-sign-up-company"><?php esc_html_e( 'Company', 'pureclarity' ); ?></label>
