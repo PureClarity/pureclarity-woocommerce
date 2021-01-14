@@ -67,6 +67,15 @@
 								<input type="text" name="email" id="pc-sign-up-email" />
 							</p>
 							<p class="pc-field">
+								<label class="label-nr" for="pc-sign-up-phone"><?php esc_html_e( 'Phone Number', 'pureclarity' ); ?></label>
+								<input type="text" name="phone" id="pc-sign-up-phone" />
+								<span class="pc-tooltip" id="pc-sign-up-phone-tooltip">?
+									<span class="pc-tooltip-text" id="pc-sign-up-phone-tooltip">
+									<?php esc_html_e( 'If you provide a phone number we will use it to contact you during your free trial and for support. It will not be used for sales calls.', 'pureclarity' ); ?>
+									</span>
+								</span>
+							</p>
+							<p class="pc-field">
 								<label class="label" for="pc-sign-up-company"><?php esc_html_e( 'Company', 'pureclarity' ); ?></label>
 								<input type="text" name="company" id="pc-sign-up-company" />
 							</p>
