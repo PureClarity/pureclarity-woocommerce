@@ -54,13 +54,13 @@
 								<label class="label" for="pc-sign-up-firstname">
 									<?php esc_html_e( 'First Name', 'pureclarity' ); ?>
 								</label>
-								<input type="text" name="firstname" id="pc-sign-up-firstname"/>
+								<input type="text" name="first_name" id="pc-sign-up-firstname"/>
 							</p>
 							<p class="pc-field">
 								<label class="label" for="pc-sign-up-lastname">
 									<?php esc_html_e( 'Last Name', 'pureclarity' ); ?>
 								</label>
-								<input type="text" name="lastname" id="pc-sign-up-lastname"/>
+								<input type="text" name="last_name" id="pc-sign-up-lastname"/>
 							</p>
 							<p class="pc-field">
 								<label class="label" for="pc-sign-up-email"><?php esc_html_e( 'Email', 'pureclarity' ); ?></label>
