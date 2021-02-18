@@ -7,11 +7,11 @@
  * Plugin Name:  PureClarity for WooCommerce
  * Description:  Use PureClarity's wide range of ecommerce personalisation features to create engaging online shopping experiences for your customers. Drive revenue, average order value, conversion rate and customer loyalty.
  * Plugin URI:   https://www.pureclarity.com
- * Version:      3.0.3
+ * Version:      3.1.0
  * Author:       PureClarity
  * Author URI:   https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity
  * Text Domain:  pureclarity
- * WC tested up to: 4.6.0
+ * WC tested up to: 5.0.0
  **/
 
 // Abort if called directly.
@@ -20,7 +20,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Set version and path constants.
-define( 'PURECLARITY_VERSION', '3.0.3' );
+define( 'PURECLARITY_VERSION', '3.1.0' );
 define( 'PURECLARITY_DB_VERSION', 1 );
 
 if ( ! defined( 'PURECLARITY_PATH' ) ) {
