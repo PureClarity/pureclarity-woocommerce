@@ -344,7 +344,7 @@ class PureClarity_Feed {
 			return null;
 		}
 
-		return $product_data;
+		return apply_filters( 'pureclarity_feed_get_product_data', $product_data, $product );
 	}
 
 	/**
@@ -557,7 +557,8 @@ class PureClarity_Feed {
 					$data['Image'] = $this->remove_url_protocol( $image_url );
 				}
 			}
-			$category_data[] = $data;
+
+			$category_data[] = apply_filters( 'pureclarity_feed_get_category_data', $data, $category );
 		}
 		return $category_data;
 	}
@@ -600,7 +601,7 @@ class PureClarity_Feed {
 		foreach ( $users->get_results() as $user ) {
 			$data = $this->parse_user( $user->ID );
 			if ( ! empty( $data ) ) {
-				$user_data[] = $data;
+				$user_data[] = apply_filters( 'pureclarity_feed_get_user_data', $data, $user );
 			}
 		}
 		return $user_data;
