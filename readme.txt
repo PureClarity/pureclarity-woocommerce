@@ -187,4 +187,4 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/).
 * Fixed issue with name not being sent correctly on signup
 
 = 3.1.0 =
-* Added ability to modify feed data using apply_filters
+* Added ability to modify feed data using add_filter
