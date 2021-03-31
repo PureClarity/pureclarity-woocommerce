@@ -56,8 +56,8 @@ class PureClarity_Public {
 		if ( $this->settings->is_pureclarity_enabled() ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
 			$this->configuration_display->init();
-			$this->bmz->init();
 		}
+		$this->bmz->init();
 	}
 
 	/**
