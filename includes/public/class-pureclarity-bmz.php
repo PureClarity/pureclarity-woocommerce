@@ -61,8 +61,12 @@ class PureClarity_Bmz {
 	 * Initialisation - adds zone shortcode & template injection hooks.
 	 */
 	public function init() {
-		add_shortcode( 'pureclarity-bmz', array( $this, 'pureclarity_render_bmz' ) );
-		add_action( 'template_redirect', array( $this, 'render_bmzs' ), 10, 1 );
+		if ( $this->settings->is_pureclarity_enabled() ) {
+			add_shortcode( 'pureclarity-bmz', array( $this, 'pureclarity_render_bmz' ) );
+			add_action( 'template_redirect', array( $this, 'render_bmzs' ), 10, 1 );
+		} else {
+			add_shortcode( 'pureclarity-bmz', array( $this, 'pureclarity_render_empty_bmz' ) );
+		}
 	}
 
 	/**
@@ -369,6 +373,15 @@ class PureClarity_Bmz {
 				'echo' => true,
 			)
 		);
+	}
+
+	/**
+	 * Renders an empty zone (for when PC is disabled and shortcodes exist).
+	 *
+	 * @return string
+	 */
+	public function pureclarity_render_empty_bmz() {
+		return '';
 	}
 
 	/**
