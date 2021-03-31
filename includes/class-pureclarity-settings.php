@@ -91,7 +91,7 @@ class PureClarity_Settings {
 			case 'on':
 				return true;
 			case 'admin':
-				return current_user_can( 'administrator' ) || defined( 'DOING_CRON' );
+				return current_user_can( 'edit_pages' ) || defined( 'DOING_CRON' );
 		}
 		return false;
 	}
