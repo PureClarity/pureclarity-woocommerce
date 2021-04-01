@@ -108,8 +108,8 @@ class PureClarity_Signup {
 		if ( true === $response['complete'] ) {
 			$this->process_auto_signup( $response['response'] );
 			$result['success'] = true;
-		} elseif ( $response['error'] ) {
-			$result['error'] = $response['error'];
+		} elseif ( $response['errors'] ) {
+			$result['error'] = implode( ' | ', $response['errors'] );
 		}
 
 		wp_send_json( $result );
