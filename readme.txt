@@ -3,7 +3,7 @@ Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
 Tested up to: 5.6.1
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -188,3 +188,8 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/).
 
 = 3.1.0 =
 * Added ability to modify feed data using add_filter
+
+= 3.1.1 =
+* Tweaking admin only mode so that anyone who has "edit page" permissions can see Zones on the frontend
+* Fixed an issue with shortcodes displaying to customers when in admin-only mode
+* Fixing undefined index error being logged on signup
