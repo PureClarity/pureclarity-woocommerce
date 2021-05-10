@@ -273,7 +273,6 @@ class PureClarity_Feed {
 
 		$product_data = array(
 			'Id'          => (string) $product->get_id(),
-			'Sku'         => $product->get_sku(),
 			'Title'       => $product->get_title(),
 			'Description' => $product->get_description() . ' ' . $product->get_short_description(),
 			'Categories'  => $category_ids,
@@ -282,6 +281,11 @@ class PureClarity_Feed {
 			'Image'       => $image_url,
 			'ProductType' => $product->get_type(),
 		);
+
+		if ( $product->get_sku() ) {
+			$product_data['Sku'] = $product->get_sku();
+		}
+
 
 		if ( $product->get_type() === 'external' && ! empty( $product->get_button_text() ) ) {
 			$product_data['ButtonText'] = $product->get_button_text();
@@ -330,9 +334,6 @@ class PureClarity_Feed {
 			) {
 				$error[] = 'Prices';
 		}
-		if ( ! array_key_exists( 'Sku', $product_data ) || empty( $product_data['Sku'] ) ) {
-			$error[] = 'Sku';
-		}
 		if ( ! array_key_exists( 'Title', $product_data ) || empty( $product_data['Title'] ) ) {
 			$error[] = 'Title';
 		}
@@ -379,7 +380,10 @@ class PureClarity_Feed {
 
 		foreach ( $product->get_available_variations() as $variant ) {
 
-			$this->add_to_array( 'AssociatedSkus', $json, $variant['sku'] );
+			$this->add_to_array( 'AssociatedIds', $json, $variant['variation_id'] );
+			if ( isset( $variant['sku'] ) && ! empty( $variant['sku'] ) ) {
+				$this->add_to_array( 'AssociatedSkus', $json, $variant['sku'] );
+			}
 
 			$price         = $variant['display_price'] . ' ' . get_woocommerce_currency();
 			$regular_price = $variant['display_regular_price'] . ' ' . get_woocommerce_currency();
@@ -414,7 +418,9 @@ class PureClarity_Feed {
 			$child_product = wc_get_product( $child_id );
 			if ( ! empty( $child_product ) && $this->product_is_visible( $child_product ) ) {
 				$this->add_to_array( 'AssociatedIds', $json, $child_product->get_id() );
-				$this->add_to_array( 'AssociatedSkus', $json, $child_product->get_sku() );
+				if ( $child_product->get_sku() ) {
+					$this->add_to_array( 'AssociatedSkus', $json, $child_product->get_sku() );
+				}
 				$this->add_to_array( 'AssociatedTitles', $json, $child_product->get_title() );
 				$this->set_search_tags( $json, $child_product );
 				$this->set_product_price( $json, $child_product );
