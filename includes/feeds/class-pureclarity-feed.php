@@ -282,7 +282,7 @@ class PureClarity_Feed {
 			'ProductType' => $product->get_type(),
 		);
 
-		if ($product->get_sku()) {
+		if ( $product->get_sku() ) {
 			$product_data['Sku'] = $product->get_sku();
 		}
 
@@ -380,7 +380,10 @@ class PureClarity_Feed {
 
 		foreach ( $product->get_available_variations() as $variant ) {
 
-			$this->add_to_array( 'AssociatedSkus', $json, $variant['sku'] );
+			$this->add_to_array( 'AssociatedIds', $json, $variant['variation_id'] );
+			if ( isset( $variant['sku'] ) && ! empty( $variant['sku'] ) ) {
+				$this->add_to_array( 'AssociatedSkus', $json, $variant['sku'] );
+			}
 
 			$price         = $variant['display_price'] . ' ' . get_woocommerce_currency();
 			$regular_price = $variant['display_regular_price'] . ' ' . get_woocommerce_currency();
@@ -415,7 +418,9 @@ class PureClarity_Feed {
 			$child_product = wc_get_product( $child_id );
 			if ( ! empty( $child_product ) && $this->product_is_visible( $child_product ) ) {
 				$this->add_to_array( 'AssociatedIds', $json, $child_product->get_id() );
-				$this->add_to_array( 'AssociatedSkus', $json, $child_product->get_sku() );
+				if ( $child_product->get_sku() ) {
+					$this->add_to_array( 'AssociatedSkus', $json, $child_product->get_sku() );
+				}
 				$this->add_to_array( 'AssociatedTitles', $json, $child_product->get_title() );
 				$this->set_search_tags( $json, $child_product );
 				$this->set_product_price( $json, $child_product );
