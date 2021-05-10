@@ -273,7 +273,6 @@ class PureClarity_Feed {
 
 		$product_data = array(
 			'Id'          => (string) $product->get_id(),
-			'Sku'         => $product->get_sku(),
 			'Title'       => $product->get_title(),
 			'Description' => $product->get_description() . ' ' . $product->get_short_description(),
 			'Categories'  => $category_ids,
@@ -282,6 +281,11 @@ class PureClarity_Feed {
 			'Image'       => $image_url,
 			'ProductType' => $product->get_type(),
 		);
+
+		if ($product->get_sku()) {
+			$product_data['Sku'] = $product->get_sku();
+		}
+
 
 		if ( $product->get_type() === 'external' && ! empty( $product->get_button_text() ) ) {
 			$product_data['ButtonText'] = $product->get_button_text();
