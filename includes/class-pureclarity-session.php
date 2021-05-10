@@ -192,7 +192,7 @@ class PureClarity_Session {
 						return null;
 					}
 				}
-				if ( $product->get_sku() ) {
+				if ( $product->get_id() ) {
 					return $product;
 				}
 			}
