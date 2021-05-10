@@ -167,9 +167,13 @@ class PureClarity_Session {
 			$category   = ( count( $categories ) > 0 ) ? array_shift( $categories ) : null;
 			$data       = array(
 				'id'          => (string) $product->get_id(),
-				'sku'         => $product->get_sku(),
 				'category_id' => $category,
 			);
+
+			if ( $product->get_sku() ) {
+				$data['sku'] = $product->get_sku();
+			}
+
 			wp_reset_postdata();
 			$this->current_product = $data;
 			return $this->current_product;
