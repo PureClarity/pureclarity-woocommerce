@@ -330,9 +330,6 @@ class PureClarity_Feed {
 			) {
 				$error[] = 'Prices';
 		}
-		if ( ! array_key_exists( 'Sku', $product_data ) || empty( $product_data['Sku'] ) ) {
-			$error[] = 'Sku';
-		}
 		if ( ! array_key_exists( 'Title', $product_data ) || empty( $product_data['Title'] ) ) {
 			$error[] = 'Title';
 		}
