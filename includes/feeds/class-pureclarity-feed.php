@@ -79,9 +79,10 @@ class PureClarity_Feed {
 			case 'product':
 				$query = new WP_Query(
 					array(
-						'post_type'        => $type,
-						'post_status'      => 'publish',
-						'suppress_filters' => true,
+						'post_type'              => $type,
+						'post_status'            => 'publish',
+						'suppress_filters'       => true,
+						'update_post_meta_cache' => false,
 					)
 				);
 				return (int) $query->found_posts;
@@ -101,14 +102,22 @@ class PureClarity_Feed {
 	 * @param string $type - Type of feed to run.
 	 */
 	public function run_feed( $type ) {
+		$enable_cache = false;
+		if ( ! wp_suspend_cache_addition() ) {
+			$enable_cache = true;
+			wp_suspend_cache_addition( true );
+		}
+
 		try {
 			$feed_class = $this->get_feed_class( $type );
 
 			$total_pages_count = $this->get_total_pages( $type );
 
+			$this->log_debug( $type, 'Total pages of data found: ' . $total_pages_count );
 			if ( $total_pages_count > 0 ) {
 				$feed_class->start();
 				for ( $current_page = 1; $current_page <= $total_pages_count; $current_page++ ) {
+					$this->log_debug( $type, 'Processing page ' . $current_page . ' of ' . $total_pages_count );
 					$data = $this->get_page_data( $type, $current_page );
 					foreach ( $data as $row ) {
 						$feed_class->append( $row );
@@ -118,9 +127,16 @@ class PureClarity_Feed {
 				$feed_class->end();
 			}
 
+			$this->log_debug( $type, 'Feed finished' );
+
 			$this->state_manager->set_state_value( $type . '_feed_last_run', time() );
 		} catch ( \Exception $e ) {
+			$this->log_error( $type, $e->getMessage() );
 			$this->state_manager->set_state_value( $type . '_feed_error', $e->getMessage() );
+		}
+
+		if ( $enable_cache ) {
+			wp_suspend_cache_addition( false );
 		}
 	}
 
@@ -216,13 +232,14 @@ class PureClarity_Feed {
 	public function get_products( $current_page, $page_size ) {
 		$query = new WP_Query(
 			array(
-				'post_type'        => 'product',
-				'posts_per_page'   => $page_size,
-				'post_status'      => 'publish',
-				'orderby'          => 'ID',
-				'order'            => 'ASC',
-				'paged'            => $current_page,
-				'suppress_filters' => true,
+				'post_type'              => 'product',
+				'posts_per_page'         => $page_size,
+				'post_status'            => 'publish',
+				'orderby'                => 'ID',
+				'order'                  => 'ASC',
+				'paged'                  => $current_page,
+				'suppress_filters'       => true,
+				'update_post_meta_cache' => false,
 			)
 		);
 
@@ -248,9 +265,12 @@ class PureClarity_Feed {
 	 * @return array|null
 	 */
 	public function get_product_data( $product, $log_error = true ) {
+
+		$this->log_debug( 'product', 'Processing product ' . $product->get_id() );
+
 		if ( $product->get_catalog_visibility() === 'hidden' ) {
 			if ( $log_error ) {
-				error_log( 'PureClarity: Product ' . $product->get_id() . ' excluded from the feed. Reason: Catalog visibility = hidden.' );
+				$this->log_debug( 'product', 'Product ' . $product->get_id() . ' excluded from the feed. Reason: Catalog visibility = hidden.' );
 			}
 			return null;
 		}
@@ -340,7 +360,7 @@ class PureClarity_Feed {
 
 		if ( count( $error ) > 0 ) {
 			if ( $log_error ) {
-				error_log( 'PureClarity: Product ' . $product->get_id() . ' excluded from the feed. Reason: Missing required fields = ' . implode( ', ', $error ) );
+				$this->log_debug( 'product', 'Product ' . $product->get_id() . ' excluded from the feed. Reason: Missing required fields = ' . implode( ', ', $error ) );
 			}
 			return null;
 		}
@@ -541,6 +561,9 @@ class PureClarity_Feed {
 		$category_data[] = $data;
 
 		foreach ( $categories as $category ) {
+
+			$this->log_debug( 'category', 'Processing category ' . $category->term_id );
+
 			$url = $this->remove_url_protocol(
 				get_term_link( $category->term_id, 'product_cat' )
 			);
@@ -576,8 +599,19 @@ class PureClarity_Feed {
 	 */
 	public function get_users_count() {
 		$args = array(
-			'order'   => 'ASC',
-			'orderby' => 'ID',
+			'order'                  => 'ASC',
+			'orderby'                => 'ID',
+			'fields'                 => 'ids',
+			'update_post_meta_cache' => false,
+			'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'relation' => 'AND',
+				array(
+					'key'     => 'wc_last_active',
+					'value'   => (string) strtotime( '-3 months' ),
+					'compare' => '>',
+					'type'    => 'NUMERIC',
+				),
+			),
 		);
 
 		$users = new WP_User_Query( $args );
@@ -595,83 +629,95 @@ class PureClarity_Feed {
 	 */
 	public function get_users( $current_page, $page_size ) {
 
+		add_action( 'pre_user_query', array( $this, 'user_query_add_billing_address' ) );
+
 		$args = array(
-			'order'   => 'ASC',
-			'orderby' => 'ID',
-			'offset'  => $page_size * ( $current_page - 1 ),
-			'number'  => $page_size,
+			'order'                  => 'ASC',
+			'orderby'                => 'ID',
+			'offset'                 => $page_size * ( $current_page - 1 ),
+			'number'                 => $page_size,
+			'update_post_meta_cache' => false,
+			'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'relation' => 'AND',
+				array(
+					'key'     => 'wc_last_active',
+					'value'   => (string) strtotime( '-3 months' ),
+					'compare' => '>',
+					'type'    => 'NUMERIC',
+				),
+			),
 		);
 
 		$users     = new WP_User_Query( $args );
 		$user_data = array();
 		foreach ( $users->get_results() as $user ) {
-			$data = $this->parse_user( $user->ID );
+			$data = $this->parse_user( $user );
 			if ( ! empty( $data ) ) {
 				$user_data[] = apply_filters( 'pureclarity_feed_get_user_data', $data, $user );
 			}
 		}
+
+		remove_action( 'pre_user_query', array( $this, 'add_my_custom_queries' ) );
+
 		return $user_data;
 	}
 
 	/**
-	 * Gets roles for provided user id
+	 * Adds billing address fields to user query.
 	 *
-	 * @param integer $user_id - user id to process.
-	 *
-	 * @return array
+	 * @param WP_User_Query $query - User Query to add to.
 	 */
-	public function get_roles( $user_id ) {
-		$user_roles = get_user_meta( $user_id, 'wp_capabilities' );
-		return array_keys( $user_roles[0] );
+	public function user_query_add_billing_address( $query ) {
+		global $wpdb;
+
+		// Add the billing city / state/ country to the meta fields in our query.
+		$query->query_fields .= ', billing_city.meta_value as billing_city';
+		$query->query_fields .= ', billing_state.meta_value as billing_state';
+		$query->query_fields .= ', billing_country.meta_value as billing_country';
+
+		// add a left join to actually gather the billing address info for the users.
+		$query->query_from .= " LEFT JOIN $wpdb->usermeta billing_city ON $wpdb->users.ID = "
+							. "billing_city.user_id and billing_city.meta_key = 'billing_city'";
+
+		$query->query_from .= " LEFT JOIN $wpdb->usermeta billing_state ON $wpdb->users.ID = "
+							. "billing_state.user_id and billing_state.meta_key = 'billing_state'";
+		$query->query_from .= " LEFT JOIN $wpdb->usermeta billing_country ON $wpdb->users.ID = "
+							. "billing_country.user_id and billing_country.meta_key = 'billing_country'";
 	}
 
 	/**
 	 * Processes a user for the feed
 	 *
-	 * @param integer $user_id - user id to process.
+	 * @param Wp_User $user - user id to process.
 	 *
 	 * @return array|null
 	 * @throws Exception - in WC_Customer - If customer cannot be read/found and $data is set.
 	 */
-	public function parse_user( $user_id ) {
-		$customer = new WC_Customer( $user_id );
+	public function parse_user( $user ) {
 
-		if ( ! empty( $customer ) && $customer->get_id() > 0 ) {
-			$data = array(
-				'UserId'    => $customer->get_id(),
-				'Email'     => $customer->get_email(),
-				'FirstName' => $customer->get_first_name(),
-				'LastName'  => $customer->get_last_name(),
-				'Roles'     => $this->get_roles( $user_id ),
-			);
+		$this->log_debug( 'user', 'Processing user ' . $user->ID );
 
-			if ( method_exists( $customer, 'get_billing' ) ) { // doesn't in earlier WC versions.
-				$billing = $customer->get_billing();
-				if ( ! empty( $billing ) ) {
-					if ( ! empty( $billing['city'] ) ) {
-						$data['City'] = $billing['city'];
-					}
-					if ( ! empty( $billing['state'] ) ) {
-						$data['State'] = $billing['state'];
-					}
-					if ( ! empty( $billing['country'] ) ) {
-						$data['Country'] = $billing['country'];
-					}
-				}
-			} else {
-				if ( method_exists( $customer, 'get_billing_city' ) ) {
-					$data['City'] = $customer->get_billing_city();
-				}
-				if ( method_exists( $customer, 'get_billing_state' ) ) {
-					$data['State'] = $customer->get_billing_state();
-				}
-				if ( method_exists( $customer, 'get_billing_country' ) ) {
-					$data['Country'] = $customer->get_billing_country();
-				}
-			}
-			return $data;
+		$user_data = array(
+			'UserId'    => $user->ID,
+			'Email'     => $user->user_email,
+			'FirstName' => $user->first_name,
+			'LastName'  => $user->last_name,
+			'Roles'     => $user->roles,
+		);
+
+		if ( $user->billing_city ) {
+			$user_data['City'] = $user->billing_city;
 		}
-		return null;
+
+		if ( $user->billing_state ) {
+			$user_data['State'] = $user->billing_state;
+		}
+
+		if ( $user->billing_country ) {
+			$user_data['Country'] = $user->billing_country;
+		}
+
+		return $user_data;
 	}
 
 	/**
@@ -683,7 +729,7 @@ class PureClarity_Feed {
 		$args = array(
 			'status'       => array( 'processing', 'completed' ),
 			'type'         => 'shop_order',
-			'date_created' => '>' . date( 'Y-m-d', strtotime( '-12 month' ) ),
+			'date_created' => '>' . date( 'Y-m-d', strtotime( '-3 month' ) ),
 			'paginate'     => true,
 		);
 
@@ -702,40 +748,62 @@ class PureClarity_Feed {
 	 * @throws Exception - When WC_Data_Store validation fails.
 	 */
 	public function get_orders( $current_page, $page_size ) {
-		$args = array(
-			'limit'        => $page_size,
-			'offset'       => $page_size * ( $current_page - 1 ),
-			'orderby'      => 'date_created',
-			'order'        => 'DESC',
-			'status'       => array( 'processing', 'completed' ),
-			'type'         => 'shop_order',
-			'date_created' => '>' . date( 'Y-m-d', strtotime( '-12 month' ) ),
+
+		global $wpdb;
+
+		$order_data  = array();
+		$page_offset = $page_size * ( $current_page - 1 );
+
+		$result = (array) $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT ID FROM $wpdb->posts 
+		            WHERE post_type = 'shop_order'
+           			AND post_status IN (%s,%s)
+		            AND post_date > NOW() - INTERVAL 3 MONTH
+					ORDER BY post_date DESC
+					LIMIT %d
+					OFFSET %d
+		        ",
+				array( 'wc-processing', 'wc-completed', $page_size, $page_offset )
+			),
+			ARRAY_A
 		);
 
-		$orders     = new WC_Order_Query( $args );
-		$order_data = array();
-		foreach ( $orders->get_orders() as $order ) {
+		foreach ( $result as $order_id ) {
+			$order = wc_get_order( $order_id['ID'] );
+			$this->log_debug( 'order', 'Processing order ' . $order_id['ID'] );
 			/** WooCommerce Order Class. @var WC_Order $order */
 			$order_lines = array();
 			foreach ( $order->get_items() as $item_id => $item ) {
 				/** WooCommerce Order Item Class. @var WC_Order_Item $item */
-				$product = $order->get_product_from_item( $item );
-				if ( is_object( $product ) ) {
-					$customer_data = get_userdata( $order->get_user_id() );
+				$email = $order->get_billing_email();
+				if ( $order->get_user_id() ) {
+					$user = get_userdata( $order->get_user_id() );
+					if ( $user ) {
+						$email = $user->user_email;
+					}
+				}
+				$unit_price = $order->get_item_total( $item, false, false );
+				$line_price = $order->get_item_subtotal( $item, true, false );
+				if ( $unit_price > 0 && $line_price > 0 && $item->get_product_id() && ceil( $item['qty'] ) > 0 ) {
 					$order_lines[] = array(
 						'OrderID'   => $order->get_id(),
 						'UserId'    => $order->get_user_id() ? $order->get_user_id() : '',
-						'Email'     => $order->get_user_id() ? $customer_data->user_email : $order->get_billing_email(),
+						'Email'     => $email,
 						'DateTime'  => (string) $order->get_date_created( 'c' ),
 						'ProdCode'  => $item->get_product_id(),
-						'Quantity'  => $item['qty'],
-						'UnitPrice' => wc_format_decimal( $order->get_item_total( $item, false, false ) ),
-						'LinePrice' => wc_format_decimal( $order->get_item_subtotal( $item, true, false ) ),
+						'Quantity'  => ceil( $item['qty'] ),
+						'UnitPrice' => wc_format_decimal( $unit_price ),
+						'LinePrice' => wc_format_decimal( $line_price ),
 					);
+				} else {
+					$this->log_debug( 'order', 'Skipping order item on order ' . $order->get_id() . ' due to missing unit price / product id / quantity' );
 				}
 			}
 			if ( ! empty( $order_lines ) ) {
 				$order_data[] = $order_lines;
+			} else {
+				$this->log_debug( 'order', 'Skipping order ' . $order->get_id() . ' due to no order items' );
 			}
 		}
 
@@ -760,4 +828,31 @@ class PureClarity_Feed {
 		);
 	}
 
+	/**
+	 * Logs an error using WooCommerce Logging.
+	 *
+	 * @param string $type - feed type.
+	 * @param string $message - error message.
+	 */
+	private function log_error( $type, $message ) {
+		$logger = wc_get_logger();
+		if ( $logger ) {
+			$logger->error( "PureClarity {$type} feed error: {$message}" );
+		}
+	}
+
+	/**
+	 * Logs an error using WooCommerce Logging.
+	 *
+	 * @param string $type - feed type.
+	 * @param string $message - error message.
+	 */
+	private function log_debug( $type, $message ) {
+		if ( $this->settings->is_feed_logging_enabled() ) {
+			$logger = wc_get_logger();
+			if ( $logger ) {
+				$logger->debug( "PureClarity {$type} feed debug: {$message}" );
+			}
+		}
+	}
 }

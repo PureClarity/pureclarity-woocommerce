@@ -2,8 +2,8 @@
 Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
-Tested up to: 5.6.1
-Stable tag: 3.1.2
+Tested up to: 5.7.1
+Stable tag: 3.2.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -196,3 +196,11 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/).
 
 = 3.1.2 =
 * Tweaking usage of SKU in feeds process & product context to make it optional
+
+= 3.2.0 =
+* Improvements to memory usage in feeds and deltas
+* Changed feed error logging so that it goes to a proper log location
+* Fixed a bug with the feed status panel which prevented it from showing an error status
+* Added a new debug logging option to feeds and deltas, do give more detailed information about the process when it runs
+* Fixes to order feed to prevent errors due to unexpected data formats
+* Tweaked the data ranges for user & order feeds so they only pull in the most relevant data
