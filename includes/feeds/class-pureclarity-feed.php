@@ -101,6 +101,7 @@ class PureClarity_Feed {
 	 * @param string $type - Type of feed to run.
 	 */
 	public function run_feed( $type ) {
+		wp_suspend_cache_addition( true );
 		try {
 			$feed_class = $this->get_feed_class( $type );
 
@@ -122,6 +123,7 @@ class PureClarity_Feed {
 		} catch ( \Exception $e ) {
 			$this->state_manager->set_state_value( $type . '_feed_error', $e->getMessage() );
 		}
+		wp_suspend_cache_addition( false );
 	}
 
 	/**
