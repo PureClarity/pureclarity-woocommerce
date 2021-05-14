@@ -136,7 +136,7 @@ class PureClarity_Feed {
 		}
 
 		if ( $enable_cache ) {
-			$this->log_error('system', 'enabling cache');
+			wp_suspend_cache_addition( false );
 		}
 	}
 
