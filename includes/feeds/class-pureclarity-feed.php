@@ -122,6 +122,7 @@ class PureClarity_Feed {
 
 			$this->state_manager->set_state_value( $type . '_feed_last_run', time() );
 		} catch ( \Exception $e ) {
+			$this->log_error( $type, $e->getMessage() );
 			$this->state_manager->set_state_value( $type . '_feed_error', $e->getMessage() );
 		}
 		wp_suspend_cache_addition( false );
@@ -783,4 +784,16 @@ class PureClarity_Feed {
 		);
 	}
 
+	/**
+	 * Logs an error using WooCommerce Logging.
+	 *
+	 * @param string $type - feed type.
+	 * @param string $message - error message.
+	 */
+	private function log_error( $type, $message ) {
+		$logger = wc_get_logger();
+		if ( $logger ) {
+			$logger->error( "PureClarity {$type} feed error: {$message}" );
+		}
+	}
 }
