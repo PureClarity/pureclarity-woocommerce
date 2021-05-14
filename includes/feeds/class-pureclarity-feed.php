@@ -108,9 +108,11 @@ class PureClarity_Feed {
 
 			$total_pages_count = $this->get_total_pages( $type );
 
+			$this->log_debug( $type, 'Total pages of data found: ' . $total_pages_count );
 			if ( $total_pages_count > 0 ) {
 				$feed_class->start();
 				for ( $current_page = 1; $current_page <= $total_pages_count; $current_page++ ) {
+					$this->log_debug( $type, 'Processing page ' . $current_page . ' of ' . $total_pages_count );
 					$data = $this->get_page_data( $type, $current_page );
 					foreach ( $data as $row ) {
 						$feed_class->append( $row );
@@ -119,6 +121,8 @@ class PureClarity_Feed {
 				}
 				$feed_class->end();
 			}
+
+			$this->log_debug( $type, 'Feed finished' );
 
 			$this->state_manager->set_state_value( $type . '_feed_last_run', time() );
 		} catch ( \Exception $e ) {
@@ -253,9 +257,12 @@ class PureClarity_Feed {
 	 * @return array|null
 	 */
 	public function get_product_data( $product, $log_error = true ) {
+
+		$this->log_debug( 'product', 'Processing product ' . $product->get_id() );
+
 		if ( $product->get_catalog_visibility() === 'hidden' ) {
 			if ( $log_error ) {
-				error_log( 'PureClarity: Product ' . $product->get_id() . ' excluded from the feed. Reason: Catalog visibility = hidden.' );
+				$this->log_debug( 'product', 'Product ' . $product->get_id() . ' excluded from the feed. Reason: Catalog visibility = hidden.' );
 			}
 			return null;
 		}
@@ -345,7 +352,7 @@ class PureClarity_Feed {
 
 		if ( count( $error ) > 0 ) {
 			if ( $log_error ) {
-				error_log( 'PureClarity: Product ' . $product->get_id() . ' excluded from the feed. Reason: Missing required fields = ' . implode( ', ', $error ) );
+				$this->log_debug( 'product', 'Product ' . $product->get_id() . ' excluded from the feed. Reason: Missing required fields = ' . implode( ', ', $error ) );
 			}
 			return null;
 		}
@@ -546,6 +553,9 @@ class PureClarity_Feed {
 		$category_data[] = $data;
 
 		foreach ( $categories as $category ) {
+
+			$this->log_debug( 'category', 'Processing category ' . $category->term_id );
+
 			$url = $this->remove_url_protocol(
 				get_term_link( $category->term_id, 'product_cat' )
 			);
@@ -676,6 +686,9 @@ class PureClarity_Feed {
 	 * @throws Exception - in WC_Customer - If customer cannot be read/found and $data is set.
 	 */
 	public function parse_user( $user ) {
+
+		$this->log_debug( 'user', 'Processing user ' . $user->ID );
+
 		$user_data = array(
 			'UserId'    => $user->ID,
 			'Email'     => $user->user_email,
@@ -750,6 +763,7 @@ class PureClarity_Feed {
 
 		foreach ( $result as $order_id ) {
 			$order = wc_get_order( $order_id['ID'] );
+			$this->log_debug( 'order', 'Processing order ' . $order_id['ID'] );
 			/** WooCommerce Order Class. @var WC_Order $order */
 			$order_lines = array();
 			foreach ( $order->get_items() as $item_id => $item ) {
@@ -774,10 +788,14 @@ class PureClarity_Feed {
 						'UnitPrice' => wc_format_decimal( $unit_price ),
 						'LinePrice' => wc_format_decimal( $line_price ),
 					);
+				} else {
+					$this->log_debug( 'order', 'Skipping order item on order ' . $order->get_id() . ' due to missing unit price / product id / quantity' );
 				}
 			}
 			if ( ! empty( $order_lines ) ) {
 				$order_data[] = $order_lines;
+			} else {
+				$this->log_debug( 'order', 'Skipping order ' . $order->get_id() . ' due to no order items' );
 			}
 		}
 
@@ -812,6 +830,21 @@ class PureClarity_Feed {
 		$logger = wc_get_logger();
 		if ( $logger ) {
 			$logger->error( "PureClarity {$type} feed error: {$message}" );
+		}
+	}
+
+	/**
+	 * Logs an error using WooCommerce Logging.
+	 *
+	 * @param string $type - feed type.
+	 * @param string $message - error message.
+	 */
+	private function log_debug( $type, $message ) {
+		if ( $this->settings->is_feed_logging_enabled() ) {
+			$logger = wc_get_logger();
+			if ( $logger ) {
+				$logger->debug( "PureClarity {$type} feed debug: {$message}" );
+			}
 		}
 	}
 }
