@@ -240,7 +240,7 @@ class PureClarity_Session {
 			foreach ( $cart_items as $cart_item_key => $cart_item ) {
 				$item    = array(
 					'id'        => $cart_item['product_id'],
-					'qty'       => $cart_item['quantity'],
+					'qty'       => ceil( $cart_item['quantity'] ),
 					'unitprice' => get_post_meta( $cart_item['product_id'], '_price', true ),
 				);
 				$items[] = $item;

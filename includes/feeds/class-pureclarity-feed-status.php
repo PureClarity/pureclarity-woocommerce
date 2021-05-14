@@ -102,7 +102,7 @@ class PureClarity_Feed_Status {
 				return $this->feed_status_data[ $type ];
 			}
 
-			if ( $this->get_feed_error( $type ) === true ) {
+			if ( $this->get_feed_error( $type ) ) {
 				$status['error']                 = true;
 				$status['label']                 = __( 'Error, please see logs for more information', 'pureclarity' );
 				$status['class']                 = 'pc-feed-error';

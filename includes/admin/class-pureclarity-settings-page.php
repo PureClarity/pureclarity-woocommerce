@@ -147,6 +147,15 @@ class PureClarity_Settings_Page {
 			'value_cb'    => 'is_nightly_feed_enabled',
 		);
 
+		$feeds_logging_enabled_checkbox = array(
+			'name'        => 'pureclarity_feed_debug_logging',
+			'label_for'   => 'pureclarity_feed_debug_logging',
+			'label'       => 'Enable Debug Logging',
+			'type'        => 'checkbox',
+			'description' => 'Check to enable extra logging for feeds & deltas, to show what items are being processed / skipped. Please only enable when troubleshooting feeds & deltas, as it can produce large log files.',
+			'value_cb'    => 'is_feed_logging_enabled',
+		);
+
 		$zones_subheading = array(
 			'name'  => 'pureclarity_zones_subheading',
 			'label' => 'Zones',
@@ -225,6 +234,7 @@ class PureClarity_Settings_Page {
 			$feeds_subheading,
 			$deltas_enabled_checkbox,
 			$nightly_feeds_enabled_checkbox,
+			$feeds_logging_enabled_checkbox,
 			$zones_subheading,
 			$bmz_debug_checkbox,
 			$add_bmz_homepage_checkbox,
