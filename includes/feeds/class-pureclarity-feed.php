@@ -585,6 +585,15 @@ class PureClarity_Feed {
 			'orderby'                => 'ID',
 			'fields'                 => 'ids',
 			'update_post_meta_cache' => false,
+			'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'relation' => 'AND',
+				array(
+					'key'     => 'wc_last_active',
+					'value'   => (string) strtotime( '-3 months' ),
+					'compare' => '>',
+					'type'    => 'NUMERIC',
+				),
+			),
 		);
 
 		$users = new WP_User_Query( $args );
@@ -610,6 +619,15 @@ class PureClarity_Feed {
 			'offset'                 => $page_size * ( $current_page - 1 ),
 			'number'                 => $page_size,
 			'update_post_meta_cache' => false,
+			'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'relation' => 'AND',
+				array(
+					'key'     => 'wc_last_active',
+					'value'   => (string) strtotime( '-3 months' ),
+					'compare' => '>',
+					'type'    => 'NUMERIC',
+				),
+			),
 		);
 
 		$users     = new WP_User_Query( $args );
