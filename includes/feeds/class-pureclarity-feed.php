@@ -689,7 +689,7 @@ class PureClarity_Feed {
 		$args = array(
 			'status'       => array( 'processing', 'completed' ),
 			'type'         => 'shop_order',
-			'date_created' => '>' . date( 'Y-m-d', strtotime( '-12 month' ) ),
+			'date_created' => '>' . date( 'Y-m-d', strtotime( '-3 month' ) ),
 			'paginate'     => true,
 		);
 
@@ -708,36 +708,52 @@ class PureClarity_Feed {
 	 * @throws Exception - When WC_Data_Store validation fails.
 	 */
 	public function get_orders( $current_page, $page_size ) {
-		$args = array(
-			'limit'        => $page_size,
-			'offset'       => $page_size * ( $current_page - 1 ),
-			'orderby'      => 'date_created',
-			'order'        => 'DESC',
-			'status'       => array( 'processing', 'completed' ),
-			'type'         => 'shop_order',
-			'date_created' => '>' . date( 'Y-m-d', strtotime( '-12 month' ) ),
+
+		global $wpdb;
+
+		$order_data  = array();
+		$page_offset = $page_size * ( $current_page - 1 );
+
+		$result = (array) $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT ID FROM $wpdb->posts 
+		            WHERE post_type = 'shop_order'
+           			AND post_status IN (%s,%s)
+		            AND post_date > NOW() - INTERVAL 3 MONTH
+					ORDER BY post_date DESC
+					LIMIT %d
+					OFFSET %d
+		        ",
+				array( 'wc-processing', 'wc-completed', $page_size, $page_offset )
+			),
+			ARRAY_A
 		);
 
-		$orders     = new WC_Order_Query( $args );
-		$order_data = array();
-		foreach ( $orders->get_orders() as $order ) {
+		foreach ( $result as $order_id ) {
+			$order = wc_get_order( $order_id['ID'] );
 			/** WooCommerce Order Class. @var WC_Order $order */
 			$order_lines = array();
 			foreach ( $order->get_items() as $item_id => $item ) {
 				/** WooCommerce Order Item Class. @var WC_Order_Item $item */
+				$email = $order->get_billing_email();
+				if ( $order->get_user_id() ) {
+					$user = get_userdata( $order->get_user_id() );
+					if ( $user ) {
+						$email = $user->user_email;
+					}
+				}
 				$unit_price = $order->get_item_total( $item, false, false );
 				$line_price = $order->get_item_subtotal( $item, true, false );
 				if ( $unit_price > 0 && $line_price > 0 && $item->get_product_id() && ceil( $item['qty'] ) > 0 ) {
-					$customer_data = get_userdata( $order->get_user_id() );
 					$order_lines[] = array(
 						'OrderID'   => $order->get_id(),
 						'UserId'    => $order->get_user_id() ? $order->get_user_id() : '',
-						'Email'     => $order->get_user_id() ? $customer_data->user_email : $order->get_billing_email(),
+						'Email'     => $email,
 						'DateTime'  => (string) $order->get_date_created( 'c' ),
 						'ProdCode'  => $item->get_product_id(),
-						'Quantity'  => $item['qty'],
-						'UnitPrice' => wc_format_decimal( $order->get_item_total( $item, false, false ) ),
-						'LinePrice' => wc_format_decimal( $order->get_item_subtotal( $item, true, false ) ),
+						'Quantity'  => ceil( $item['qty'] ),
+						'UnitPrice' => wc_format_decimal( $unit_price ),
+						'LinePrice' => wc_format_decimal( $line_price ),
 					);
 				}
 			}
