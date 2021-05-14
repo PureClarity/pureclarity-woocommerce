@@ -221,4 +221,13 @@ class PureClarity_Settings {
 	public function get_category_feed_required() {
 		return get_option( 'pureclarity_category_feed_required', '' );
 	}
+
+	/**
+	 * Returns whether feed logging is turned on
+	 *
+	 * @return boolean
+	 */
+	public function is_feed_logging_enabled() {
+		return ( get_option( 'pureclarity_feed_debug_logging', 'no' ) === 'on' );
+	}
 }
