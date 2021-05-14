@@ -79,9 +79,10 @@ class PureClarity_Feed {
 			case 'product':
 				$query = new WP_Query(
 					array(
-						'post_type'        => $type,
-						'post_status'      => 'publish',
-						'suppress_filters' => true,
+						'post_type'              => $type,
+						'post_status'            => 'publish',
+						'suppress_filters'       => true,
+						'update_post_meta_cache' => false,
 					)
 				);
 				return (int) $query->found_posts;
@@ -218,13 +219,14 @@ class PureClarity_Feed {
 	public function get_products( $current_page, $page_size ) {
 		$query = new WP_Query(
 			array(
-				'post_type'        => 'product',
-				'posts_per_page'   => $page_size,
-				'post_status'      => 'publish',
-				'orderby'          => 'ID',
-				'order'            => 'ASC',
-				'paged'            => $current_page,
-				'suppress_filters' => true,
+				'post_type'              => 'product',
+				'posts_per_page'         => $page_size,
+				'post_status'            => 'publish',
+				'orderby'                => 'ID',
+				'order'                  => 'ASC',
+				'paged'                  => $current_page,
+				'suppress_filters'       => true,
+				'update_post_meta_cache' => false,
 			)
 		);
 
