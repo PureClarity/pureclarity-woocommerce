@@ -57,13 +57,19 @@ class PureClarity_Cron_Deltas {
 	 */
 	public function run_delta_schedule() {
 		if ( false === $this->deltas->is_delta_running() ) {
-			wp_suspend_cache_addition( true );
+			$enable_cache = false;
+			if ( ! wp_suspend_cache_addition() ) {
+				$enable_cache = true;
+				wp_suspend_cache_addition( true );
+			}
 			$this->deltas->set_is_delta_running( '1' );
 			$this->process_products();
 			$this->process_categories();
 			$this->process_users();
 			$this->deltas->set_is_delta_running( '0' );
-			wp_suspend_cache_addition( false );
+			if ( $enable_cache ) {
+				wp_suspend_cache_addition( false );
+			}
 		}
 	}
 

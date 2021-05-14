@@ -102,7 +102,12 @@ class PureClarity_Feed {
 	 * @param string $type - Type of feed to run.
 	 */
 	public function run_feed( $type ) {
-		wp_suspend_cache_addition( true );
+		$enable_cache = false;
+		if ( ! wp_suspend_cache_addition() ) {
+			$enable_cache = true;
+			wp_suspend_cache_addition( true );
+		}
+
 		try {
 			$feed_class = $this->get_feed_class( $type );
 
@@ -129,7 +134,10 @@ class PureClarity_Feed {
 			$this->log_error( $type, $e->getMessage() );
 			$this->state_manager->set_state_value( $type . '_feed_error', $e->getMessage() );
 		}
-		wp_suspend_cache_addition( false );
+
+		if ( $enable_cache ) {
+			$this->log_error('system', 'enabling cache');
+		}
 	}
 
 	/**
