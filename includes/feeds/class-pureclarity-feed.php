@@ -576,8 +576,10 @@ class PureClarity_Feed {
 	 */
 	public function get_users_count() {
 		$args = array(
-			'order'   => 'ASC',
-			'orderby' => 'ID',
+			'order'                  => 'ASC',
+			'orderby'                => 'ID',
+			'fields'                 => 'ids',
+			'update_post_meta_cache' => false,
 		);
 
 		$users = new WP_User_Query( $args );
@@ -595,83 +597,83 @@ class PureClarity_Feed {
 	 */
 	public function get_users( $current_page, $page_size ) {
 
+		add_action( 'pre_user_query', array( $this, 'user_query_add_billing_address' ) );
+
 		$args = array(
-			'order'   => 'ASC',
-			'orderby' => 'ID',
-			'offset'  => $page_size * ( $current_page - 1 ),
-			'number'  => $page_size,
+			'order'                  => 'ASC',
+			'orderby'                => 'ID',
+			'offset'                 => $page_size * ( $current_page - 1 ),
+			'number'                 => $page_size,
+			'update_post_meta_cache' => false,
 		);
 
 		$users     = new WP_User_Query( $args );
 		$user_data = array();
 		foreach ( $users->get_results() as $user ) {
-			$data = $this->parse_user( $user->ID );
+			$data = $this->parse_user( $user );
 			if ( ! empty( $data ) ) {
 				$user_data[] = apply_filters( 'pureclarity_feed_get_user_data', $data, $user );
 			}
 		}
+
+		remove_action( 'pre_user_query', array( $this, 'add_my_custom_queries' ) );
+
 		return $user_data;
 	}
 
 	/**
-	 * Gets roles for provided user id
+	 * Adds billing address fields to user query.
 	 *
-	 * @param integer $user_id - user id to process.
-	 *
-	 * @return array
+	 * @param WP_User_Query $query - User Query to add to.
 	 */
-	public function get_roles( $user_id ) {
-		$user_roles = get_user_meta( $user_id, 'wp_capabilities' );
-		return array_keys( $user_roles[0] );
+	public function user_query_add_billing_address( $query ) {
+		global $wpdb;
+
+		// Add the billing city / state/ country to the meta fields in our query.
+		$query->query_fields .= ', billing_city.meta_value as billing_city';
+		$query->query_fields .= ', billing_state.meta_value as billing_state';
+		$query->query_fields .= ', billing_country.meta_value as billing_country';
+
+		// add a left join to actually gather the billing address info for the users.
+		$query->query_from .= " LEFT JOIN $wpdb->usermeta billing_city ON $wpdb->users.ID = "
+							. "billing_city.user_id and billing_city.meta_key = 'billing_city'";
+
+		$query->query_from .= " LEFT JOIN $wpdb->usermeta billing_state ON $wpdb->users.ID = "
+							. "billing_state.user_id and billing_state.meta_key = 'billing_state'";
+		$query->query_from .= " LEFT JOIN $wpdb->usermeta billing_country ON $wpdb->users.ID = "
+							. "billing_country.user_id and billing_country.meta_key = 'billing_country'";
 	}
 
 	/**
 	 * Processes a user for the feed
 	 *
-	 * @param integer $user_id - user id to process.
+	 * @param Wp_User $user - user id to process.
 	 *
 	 * @return array|null
 	 * @throws Exception - in WC_Customer - If customer cannot be read/found and $data is set.
 	 */
-	public function parse_user( $user_id ) {
-		$customer = new WC_Customer( $user_id );
+	public function parse_user( $user ) {
+		$user_data = array(
+			'UserId'    => $user->ID,
+			'Email'     => $user->user_email,
+			'FirstName' => $user->first_name,
+			'LastName'  => $user->last_name,
+			'Roles'     => $user->roles,
+		);
 
-		if ( ! empty( $customer ) && $customer->get_id() > 0 ) {
-			$data = array(
-				'UserId'    => $customer->get_id(),
-				'Email'     => $customer->get_email(),
-				'FirstName' => $customer->get_first_name(),
-				'LastName'  => $customer->get_last_name(),
-				'Roles'     => $this->get_roles( $user_id ),
-			);
-
-			if ( method_exists( $customer, 'get_billing' ) ) { // doesn't in earlier WC versions.
-				$billing = $customer->get_billing();
-				if ( ! empty( $billing ) ) {
-					if ( ! empty( $billing['city'] ) ) {
-						$data['City'] = $billing['city'];
-					}
-					if ( ! empty( $billing['state'] ) ) {
-						$data['State'] = $billing['state'];
-					}
-					if ( ! empty( $billing['country'] ) ) {
-						$data['Country'] = $billing['country'];
-					}
-				}
-			} else {
-				if ( method_exists( $customer, 'get_billing_city' ) ) {
-					$data['City'] = $customer->get_billing_city();
-				}
-				if ( method_exists( $customer, 'get_billing_state' ) ) {
-					$data['State'] = $customer->get_billing_state();
-				}
-				if ( method_exists( $customer, 'get_billing_country' ) ) {
-					$data['Country'] = $customer->get_billing_country();
-				}
-			}
-			return $data;
+		if ( $user->billing_city ) {
+			$user_data['City'] = $user->billing_city;
 		}
-		return null;
+
+		if ( $user->billing_state ) {
+			$user_data['State'] = $user->billing_state;
+		}
+
+		if ( $user->billing_country ) {
+			$user_data['Country'] = $user->billing_country;
+		}
+
+		return $user_data;
 	}
 
 	/**
