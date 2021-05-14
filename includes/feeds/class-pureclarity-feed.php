@@ -725,8 +725,9 @@ class PureClarity_Feed {
 			$order_lines = array();
 			foreach ( $order->get_items() as $item_id => $item ) {
 				/** WooCommerce Order Item Class. @var WC_Order_Item $item */
-				$product = $order->get_product_from_item( $item );
-				if ( is_object( $product ) ) {
+				$unit_price = $order->get_item_total( $item, false, false );
+				$line_price = $order->get_item_subtotal( $item, true, false );
+				if ( $unit_price > 0 && $line_price > 0 && $item->get_product_id() && ceil( $item['qty'] ) > 0 ) {
 					$customer_data = get_userdata( $order->get_user_id() );
 					$order_lines[] = array(
 						'OrderID'   => $order->get_id(),
