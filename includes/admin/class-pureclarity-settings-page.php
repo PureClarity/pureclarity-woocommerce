@@ -152,7 +152,7 @@ class PureClarity_Settings_Page {
 			'label_for'   => 'pureclarity_feed_debug_logging',
 			'label'       => 'Enable Debug Logging',
 			'type'        => 'checkbox',
-			'description' => 'Check to enable extra logging for feeds & deltas, to show what items are being process / skipped. Please only enable as a temporary measure, as it can produce large log files.',
+			'description' => 'Check to enable extra logging for feeds & deltas, to show what items are being processed / skipped. Please only enable as a temporary measure, as it can produce large log files.',
 			'value_cb'    => 'is_feed_logging_enabled',
 		);
 
