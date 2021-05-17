@@ -695,26 +695,30 @@ class PureClarity_Feed {
 	 */
 	public function parse_user( $user ) {
 
-		$this->log_debug( 'user', 'Processing user ' . $user->ID );
+		if ( is_object( $user ) ) {
+			$this->log_debug( 'user', 'Processing user ' . $user->ID );
 
-		$user_data = array(
-			'UserId'    => $user->ID,
-			'Email'     => $user->user_email,
-			'FirstName' => $user->first_name,
-			'LastName'  => $user->last_name,
-			'Roles'     => $user->roles,
-		);
+			$user_data = array(
+				'UserId'    => $user->ID,
+				'Email'     => $user->user_email,
+				'FirstName' => $user->first_name,
+				'LastName'  => $user->last_name,
+				'Roles'     => $user->roles,
+			);
 
-		if ( $user->billing_city ) {
-			$user_data['City'] = $user->billing_city;
-		}
+			if ( $user->billing_city ) {
+				$user_data['City'] = $user->billing_city;
+			}
 
-		if ( $user->billing_state ) {
-			$user_data['State'] = $user->billing_state;
-		}
+			if ( $user->billing_state ) {
+				$user_data['State'] = $user->billing_state;
+			}
 
-		if ( $user->billing_country ) {
-			$user_data['Country'] = $user->billing_country;
+			if ( $user->billing_country ) {
+				$user_data['Country'] = $user->billing_country;
+			}
+		} else {
+			$user_data = [];
 		}
 
 		return $user_data;
