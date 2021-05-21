@@ -325,6 +325,10 @@ class PureClarity_Feed {
 			$product_data['StockQty'] = $product->get_stock_quantity();
 		}
 
+		if ( ! $product->is_in_stock() && $this->settings->is_product_feed_exclude_oos_enabled() ) {
+			$product_data['ExcludeFromRecommenders'] = true;
+		}
+
 		if ( $product->get_catalog_visibility() === 'catalog' ) {
 			$product_data['ExcludeFromSearch'] = true;
 		}

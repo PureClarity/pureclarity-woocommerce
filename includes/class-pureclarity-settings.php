@@ -230,4 +230,13 @@ class PureClarity_Settings {
 	public function is_feed_logging_enabled() {
 		return ( get_option( 'pureclarity_feed_debug_logging', 'no' ) === 'on' );
 	}
+
+	/**
+	 * Returns whether product feed out of stock exclusion is turned on
+	 *
+	 * @return boolean
+	 */
+	public function is_product_feed_exclude_oos_enabled() {
+		return ( get_option( 'pureclarity_product_feed_exclude_oos', 'no' ) === 'on' );
+	}
 }

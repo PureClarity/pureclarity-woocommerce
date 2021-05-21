@@ -56,6 +56,7 @@ class PureClarity_Database {
 		add_option( 'pureclarity_category_feed_required', '' );
 		add_option( 'pureclarity_nightly_feed_enabled', 'no' );
 		add_option( 'pureclarity_feed_debug_logging', 'no' );
+		add_option( 'pureclarity_product_feed_exclude_oos', 'no' );
 		add_option( 'pureclarity_env_subheading', '' );
 		add_option( 'pureclarity_feeds_subheading', '' );
 		add_option( 'pureclarity_zones_subheading', '' );
