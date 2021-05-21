@@ -147,6 +147,15 @@ class PureClarity_Settings_Page {
 			'value_cb'    => 'is_nightly_feed_enabled',
 		);
 
+		$exclude_oos_enabled_checkbox = array(
+			'name'        => 'pureclarity_product_feed_exclude_oos',
+			'label_for'   => 'pureclarity_product_feed_exclude_oos',
+			'label'       => 'Exclude Out Of Stock Products From Recommenders',
+			'type'        => 'checkbox',
+			'description' => 'Sets the "Exclude from recommenders" flag to true for out of stock products in feeds / deltas',
+			'value_cb'    => 'is_product_feed_exclude_oos_enabled',
+		);
+
 		$feeds_logging_enabled_checkbox = array(
 			'name'        => 'pureclarity_feed_debug_logging',
 			'label_for'   => 'pureclarity_feed_debug_logging',
@@ -234,6 +243,7 @@ class PureClarity_Settings_Page {
 			$feeds_subheading,
 			$deltas_enabled_checkbox,
 			$nightly_feeds_enabled_checkbox,
+			$exclude_oos_enabled_checkbox,
 			$feeds_logging_enabled_checkbox,
 			$zones_subheading,
 			$bmz_debug_checkbox,
