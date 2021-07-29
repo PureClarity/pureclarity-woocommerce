@@ -3,7 +3,7 @@ Contributors: pureclaritytechnologies
 Tags: woocommerce, ecommerce, cross-sell, upsell, personalization, personalisation, ecommerce personalization, ecommerce personalisation, marketing automation, online merchandising software, advanced recommender technology
 Requires at least: 4.7
 Tested up to: 5.7.1
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -210,3 +210,6 @@ Learn more at [www.pureclarity.com](https://www.pureclarity.com/).
 
 = 3.3.0 =
 * Added new setting to allow exclusion of out of stock products from recommenders
+
+= 3.3.1 =
+* Fix to cart update tracking hook so event data propagates correctly

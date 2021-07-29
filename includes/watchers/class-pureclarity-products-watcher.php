@@ -224,5 +224,6 @@ class PureClarity_Products_Watcher {
 		} catch ( \Exception $exception ) {
 			error_log( "PureClarity: Can't build cart changes tracking event: " . $exception->getMessage() );
 		}
+		return $update;
 	}
 }
