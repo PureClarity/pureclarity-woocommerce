@@ -6,8 +6,6 @@
  * @since 2.0.0
  */
 
-use PureClarity\Api\Resource\Regions;
-
 /**
  * Handles config getting pureclarity settings
  */
@@ -19,13 +17,6 @@ class PureClarity_Settings {
 	 * @var string $script_url
 	 */
 	public $script_url = '//pcs.pureclarity.net';
-
-	/**
-	 * PureClarity region for use in dropdowns
-	 *
-	 * @var array $display_regions
-	 */
-	private $display_regions;
 
 	/**
 	 * Gets Access Key config value
@@ -46,30 +37,12 @@ class PureClarity_Settings {
 	}
 
 	/**
-	 * Gets display friendly region list
-	 *
-	 * @return string[]
-	 */
-	public function get_display_regions() {
-		if ( null === $this->display_regions ) {
-			$this->display_regions = array();
-			$region_class          = new Regions();
-			$pc_regions            = $region_class->getRegionLabels();
-			foreach ( $pc_regions as $region ) {
-				$this->display_regions[ (string) $region['value'] ] = $region['label'];
-			}
-		}
-
-		return $this->display_regions;
-	}
-
-	/**
-	 * Gets region config value
+	 * Gets region config value - hardcoded to eu-west-1
 	 *
 	 * @return string
 	 */
 	public function get_region() {
-		return (string) get_option( 'pureclarity_region', '1' );
+		return '1';
 	}
 
 	/**
