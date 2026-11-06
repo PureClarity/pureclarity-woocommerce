@@ -539,12 +539,12 @@ svg .pc_donut_text {
 }
 
 #pc-sign-up-form-content #pc-sign-up-response-holder.pc-error-response,
-#pc-link-account-form-content #pc-sign-up-response-holder.pc-error-response {
+#pc-link-account-form-content #pc-link-account-response-holder.pc-error-response {
     background-color: rgba(255, 0, 0, 0.4);
 }
 
 #pc-sign-up-form-content #pc-sign-up-response-holder.pc-success-response,
-#pc-link-account-form-content #pc-sign-up-response-holder.pc-success-response {
+#pc-link-account-form-content #pc-link-account-response-holder.pc-success-response {
     background-color:rgba(0,255,0,0.4);
 }
 

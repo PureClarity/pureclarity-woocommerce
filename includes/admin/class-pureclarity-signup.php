@@ -8,6 +8,7 @@
 
 use PureClarity\Api\Signup\Submit;
 use PureClarity\Api\Signup\Status;
+use PureClarity\Api\Account\Validate;
 
 /**
  * Handles PureClarity Signup
@@ -156,7 +157,7 @@ class PureClarity_Signup {
 
 		$response = array(
 			'error'   => implode( ',', $result['errors'] ),
-			'success' => empty( $result['error'] ),
+			'success' => empty( $result['errors'] ),
 		);
 
 		wp_send_json( $response );
@@ -177,6 +178,10 @@ class PureClarity_Signup {
 		);
 
 		$result['errors'] = $this->validate_manual_configure( $request_data );
+
+		if ( empty( $result['errors'] ) ) {
+			$result['errors'] = $this->validate_account_keys( $request_data );
+		}
 
 		if ( empty( $result['errors'] ) ) {
 			try {
@@ -213,6 +218,33 @@ class PureClarity_Signup {
 		}
 
 		return $errors;
+	}
+
+	/**
+	 * Checks the access key and secret key with PureClarity
+	 *
+	 * @param mixed[] $request_data - Data submitted by the user on the Dashboard.
+	 * @return string[]
+	 */
+	protected function validate_account_keys( $request_data ) {
+		$validate = new Validate();
+		$result   = $validate->request(
+			array(
+				Validate::PARAM_ACCESS_KEY => $request_data['access_key'],
+				Validate::PARAM_SECRET_KEY => $request_data['secret_key'],
+				Validate::PARAM_REGION     => (int) $request_data['region'],
+			)
+		);
+
+		if ( ! empty( $result['errors'] ) ) {
+			return $result['errors'];
+		}
+
+		if ( empty( $result['response']['IsValid'] ) ) {
+			return array( __( 'Invalid Access Key or Secret Key', 'pureclarity' ) );
+		}
+
+		return array();
 	}
 
 	/**
