@@ -11,7 +11,9 @@
  * Author:       PureClarity
  * Author URI:   https://www.pureclarity.com/?utm_source=marketplace&utm_medium=woocommerce&utm_campaign=aboutpureclarity
  * Text Domain:  pureclarity
- * WC tested up to: 5.2.2
+ * Requires PHP: 7.4
+ * Requires Plugins: woocommerce
+ * WC tested up to: 11.2.2
  **/
 
 // Abort if called directly.
@@ -34,6 +36,17 @@ if ( ! defined( 'PURECLARITY_INCLUDES_PATH' ) ) {
 if ( ! defined( 'PURECLARITY_BASE_URL' ) ) {
 	define( 'PURECLARITY_BASE_URL', plugin_dir_url( __FILE__ ) );
 }
+
+// Declare compatibility with WooCommerce High-Performance Order Storage and Cart & Checkout blocks.
+add_action(
+	'before_woocommerce_init',
+	function() {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
+		}
+	}
+);
 
 // Ensure woocommerce is enabled.
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
