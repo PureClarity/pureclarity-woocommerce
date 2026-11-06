@@ -602,24 +602,7 @@ class PureClarity_Feed {
 	 * @return int
 	 */
 	public function get_users_count() {
-		$args = array(
-			'order'                  => 'ASC',
-			'orderby'                => 'ID',
-			'fields'                 => 'ids',
-			'update_post_meta_cache' => false,
-			'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				'relation' => 'AND',
-				array(
-					'key'     => 'wc_last_active',
-					'value'   => (string) strtotime( '-3 months' ),
-					'compare' => '>',
-					'type'    => 'NUMERIC',
-				),
-			),
-		);
-
-		$users = new WP_User_Query( $args );
-		return $users->get_total();
+		return count( $this->get_active_user_ids() );
 	}
 
 	/**
@@ -633,26 +616,21 @@ class PureClarity_Feed {
 	 */
 	public function get_users( $current_page, $page_size ) {
 
+		$user_ids = array_slice( $this->get_active_user_ids(), $page_size * ( $current_page - 1 ), $page_size );
+		if ( empty( $user_ids ) ) {
+			return array();
+		}
+
 		add_action( 'pre_user_query', array( $this, 'user_query_add_billing_address' ) );
 
-		$args = array(
-			'order'                  => 'ASC',
-			'orderby'                => 'ID',
-			'offset'                 => $page_size * ( $current_page - 1 ),
-			'number'                 => $page_size,
-			'update_post_meta_cache' => false,
-			'meta_query'             => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				'relation' => 'AND',
-				array(
-					'key'     => 'wc_last_active',
-					'value'   => (string) strtotime( '-3 months' ),
-					'compare' => '>',
-					'type'    => 'NUMERIC',
-				),
-			),
+		$users = new WP_User_Query(
+			array(
+				'include' => $user_ids,
+				'orderby' => 'ID',
+				'order'   => 'ASC',
+			)
 		);
 
-		$users     = new WP_User_Query( $args );
 		$user_data = array();
 		foreach ( $users->get_results() as $user ) {
 			$data = $this->parse_user( $user );
@@ -661,9 +639,69 @@ class PureClarity_Feed {
 			}
 		}
 
-		remove_action( 'pre_user_query', array( $this, 'add_my_custom_queries' ) );
+		remove_action( 'pre_user_query', array( $this, 'user_query_add_billing_address' ) );
 
 		return $user_data;
+	}
+
+	/**
+	 * Gets the IDs of users active in the last 3 months: either WooCommerce recorded them as
+	 * active, or they placed an order. HPOS does not update wc_last_active when an order is
+	 * created, so the order check is needed to include all recent customers.
+	 *
+	 * @return int[]
+	 */
+	private function get_active_user_ids() {
+		$since = strtotime( '-3 months' );
+
+		$user_ids = get_users(
+			array(
+				'fields'     => 'ids',
+				'meta_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					array(
+						'key'     => 'wc_last_active',
+						'value'   => (string) $since,
+						'compare' => '>',
+						'type'    => 'NUMERIC',
+					),
+				),
+			)
+		);
+
+		$user_ids = array_unique( array_map( 'intval', array_merge( $user_ids, $this->get_recent_customer_ids( $since ) ) ) );
+		sort( $user_ids );
+
+		return $user_ids;
+	}
+
+	/**
+	 * Gets the IDs of registered customers who have placed an order since the given time.
+	 *
+	 * @param int $since - unix timestamp.
+	 *
+	 * @return int[]
+	 */
+	private function get_recent_customer_ids( $since ) {
+		global $wpdb;
+
+		$date = gmdate( 'Y-m-d H:i:s', $since );
+
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' )
+			&& \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$orders_table = \Automattic\WooCommerce\Utilities\OrderUtil::get_table_for_orders();
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name comes from OrderUtil.
+			return $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT customer_id FROM {$orders_table} WHERE type = 'shop_order' AND customer_id > 0 AND date_created_gmt > %s", $date ) );
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT meta.meta_value FROM {$wpdb->posts} posts
+				INNER JOIN {$wpdb->postmeta} meta ON meta.post_id = posts.ID AND meta.meta_key = '_customer_user'
+				WHERE posts.post_type = 'shop_order' AND posts.post_date_gmt > %s AND meta.meta_value > 0",
+				$date
+			)
+		);
 	}
 
 	/**
