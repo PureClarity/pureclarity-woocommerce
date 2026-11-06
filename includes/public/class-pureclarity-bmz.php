@@ -28,6 +28,20 @@ class PureClarity_Bmz {
 	private $current_product;
 
 	/**
+	 * Whether the order received zones were added through the page content
+	 *
+	 * @var bool $order_received_zones_in_content
+	 */
+	private $order_received_zones_in_content = false;
+
+	/**
+	 * Whether the order received zones were added around the Order Confirmation blocks
+	 *
+	 * @var bool $order_received_zones_in_blocks
+	 */
+	private $order_received_zones_in_blocks = false;
+
+	/**
 	 * PureClarity Settings class
 	 *
 	 * @since 2.0.0
@@ -135,6 +149,11 @@ class PureClarity_Bmz {
 		// Product Page Zones.
 		if ( is_product() && $this->settings->is_bmz_on_product_page() ) {
 			remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
+			// Block themes show related products with blocks instead of the action above.
+			add_filter( 'render_block_woocommerce/product-collection', array( $this, 'remove_related_products_block' ), 10, 2 );
+			add_filter( 'render_block_woocommerce/related-products', '__return_empty_string' );
+			// In block themes, put zone 1 after the store notices, where the classic template has it.
+			add_filter( 'render_block_woocommerce/store-notices', array( $this, 'product_page_1_block' ) );
 			add_action(
 				'woocommerce_before_single_product',
 				array(
@@ -206,6 +225,9 @@ class PureClarity_Bmz {
 					'order_received_page',
 				)
 			);
+			// Block themes render the order confirmation with blocks and no page content.
+			add_filter( 'render_block_woocommerce/order-confirmation-status', array( $this, 'order_confirmation_block_1' ) );
+			add_filter( 'render_block_woocommerce/order-confirmation-additional-information', array( $this, 'order_confirmation_block_2' ) );
 		}
 
 	}
@@ -227,7 +249,63 @@ class PureClarity_Bmz {
 	 * @return string
 	 */
 	public function order_received_page( $content ) {
+		if ( $this->order_received_zones_in_blocks ) {
+			return $content;
+		}
+		$this->order_received_zones_in_content = true;
 		return "[pureclarity-bmz id='OC-01' bottom='10']" . $content . "[pureclarity-bmz id='OC-02' top='10']";
+	}
+
+	/**
+	 * Adds order received zone 1 before the Order Confirmation Status block
+	 *
+	 * @param string $block_content - rendered block.
+	 * @return string
+	 */
+	public function order_confirmation_block_1( $block_content ) {
+		if ( $this->order_received_zones_in_content ) {
+			return $block_content;
+		}
+		$this->order_received_zones_in_blocks = true;
+		return $this->pureclarity_render_bmz(
+			array(
+				'id'     => 'OC-01',
+				'bottom' => '10',
+			)
+		) . $block_content;
+	}
+
+	/**
+	 * Adds order received zone 2 after the Order Confirmation Additional Information block
+	 *
+	 * @param string $block_content - rendered block.
+	 * @return string
+	 */
+	public function order_confirmation_block_2( $block_content ) {
+		if ( $this->order_received_zones_in_content ) {
+			return $block_content;
+		}
+		$this->order_received_zones_in_blocks = true;
+		return $block_content . $this->pureclarity_render_bmz(
+			array(
+				'id'  => 'OC-02',
+				'top' => '10',
+			)
+		);
+	}
+
+	/**
+	 * Removes the related products Product Collection block, as the product page zones replace it
+	 *
+	 * @param string $block_content - rendered block.
+	 * @param array  $block - parsed block.
+	 * @return string
+	 */
+	public function remove_related_products_block( $block_content, $block ) {
+		if ( isset( $block['attrs']['collection'] ) && 'woocommerce/product-collection/related' === $block['attrs']['collection'] ) {
+			return '';
+		}
+		return $block_content;
 	}
 
 	/**
@@ -236,11 +314,31 @@ class PureClarity_Bmz {
 	 * @return string
 	 */
 	public function product_page_1() {
+		// WooCommerce's block template compatibility layer fires this hook from a render_block filter on the
+		// template's first block, which is the site header, so block themes get zone 1 from product_page_1_block.
+		if ( doing_filter( 'render_block' ) ) {
+			return '';
+		}
 		return $this->pureclarity_render_bmz(
 			array(
 				'id'     => 'PP-01',
 				'bottom' => '10',
 				'echo'   => true,
+			)
+		);
+	}
+
+	/**
+	 * Adds product page zone 1 after the Store Notices block
+	 *
+	 * @param string $block_content - rendered block.
+	 * @return string
+	 */
+	public function product_page_1_block( $block_content ) {
+		return $block_content . $this->pureclarity_render_bmz(
+			array(
+				'id'     => 'PP-01',
+				'bottom' => '10',
 			)
 		);
 	}
