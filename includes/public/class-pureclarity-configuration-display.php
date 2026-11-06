@@ -103,12 +103,14 @@ class PureClarity_Configuration_Display {
 				'categoryId' => ( is_shop() ? '*' : $this->session->get_category_id() ),
 				'page_view'  => $this->session->get_page_view_context(),
 				'tracking'   => array(
-					'accessKey' => $this->settings->get_access_key(),
-					'apiUrl'    => $this->settings->get_api_url(),
-					'customer'  => $this->session->get_customer(),
-					'islogout'  => $this->session->is_logout(),
-					'order'     => $this->session->get_order(),
-					'cart'      => $this->cart_config,
+					'accessKey'       => $this->settings->get_access_key(),
+					'apiUrl'          => $this->settings->get_api_url(),
+					'customer'        => $this->session->get_customer(),
+					'islogout'        => $this->session->is_logout(),
+					'order'           => $this->session->get_order(),
+					'cart'            => $this->cart_config,
+					// Only set when the Store API supports the PureClarity cart extension data.
+					'storeApiCartUrl' => function_exists( 'woocommerce_store_api_register_endpoint_data' ) ? rest_url( 'wc/store/v1/cart' ) : null,
 				),
 			);
 		}

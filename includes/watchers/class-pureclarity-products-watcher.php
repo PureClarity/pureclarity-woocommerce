@@ -117,6 +117,42 @@ class PureClarity_Products_Watcher {
 		add_action( 'woocommerce_add_to_cart', array( $this, 'set_cart' ), 10, 1 );
 		add_action( 'woocommerce_update_cart_action_cart_updated', array( $this, 'set_cart' ), 10, 1 );
 		add_action( 'woocommerce_cart_item_removed', array( $this, 'set_cart' ), 10, 1 );
+		// The Cart and Checkout blocks change quantities and empty the cart through the Store API, which skips the classic cart form hooks.
+		add_action( 'woocommerce_cart_item_set_quantity', array( $this, 'set_cart' ), 10, 1 );
+		add_action( 'woocommerce_cart_emptied', array( $this, 'set_cart' ), 10, 1 );
+
+		// Expose the PureClarity basket on the Store API cart, so the block cart can send set_basket without a page load.
+		if ( function_exists( 'woocommerce_store_api_register_endpoint_data' ) ) {
+			woocommerce_store_api_register_endpoint_data(
+				array(
+					'endpoint'        => \Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema::IDENTIFIER,
+					'namespace'       => 'pureclarity',
+					'data_callback'   => array( $this->session, 'get_cart' ),
+					'schema_callback' => array( $this, 'get_store_api_cart_schema' ),
+					'schema_type'     => ARRAY_A,
+				)
+			);
+		}
+	}
+
+	/**
+	 * Schema for the PureClarity basket added to the Store API cart response.
+	 *
+	 * @return array
+	 */
+	public function get_store_api_cart_schema() {
+		return array(
+			'id'    => array(
+				'description' => 'PureClarity basket id, changes whenever the basket contents change.',
+				'type'        => 'string',
+				'readonly'    => true,
+			),
+			'items' => array(
+				'description' => 'PureClarity basket items.',
+				'type'        => 'array',
+				'readonly'    => true,
+			),
+		);
 	}
 
 	/**

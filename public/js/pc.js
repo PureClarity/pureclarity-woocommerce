@@ -49,6 +49,52 @@ var PureClarity = {
                 _pc("set_basket", this.config.tracking.cart.items);
             }
         }
+
+        this.watchBlockCart();
+    },
+    // Cart blocks change the basket through the Store API without a page load, so send set_basket
+    // from the PureClarity basket that the plugin adds to Store API cart responses.
+    watchBlockCart: function() {
+        var self = this;
+        var storeApiCartUrl = this.config.tracking.storeApiCartUrl;
+        if (!storeApiCartUrl) return;
+
+        // Product buttons and the mini cart announce changes with these events.
+        ['wc-blocks_added_to_cart', 'wc-blocks_removed_from_cart'].forEach(function(name) {
+            document.body.addEventListener(name, function() {
+                fetch(storeApiCartUrl, { credentials: 'same-origin' })
+                    .then(function(response) { return response.json(); })
+                    .then(function(data) { self.sendBasket(data.extensions && data.extensions.pureclarity); })
+                    .catch(function() {});
+            });
+        });
+
+        // The Cart and Checkout blocks keep the cart in the wc/store/cart data store.
+        var watchStore = function() {
+            if (!window.wp || !wp.data) return;
+            var store;
+            try {
+                store = wp.data.select('wc/store/cart');
+            } catch (e) {
+                return;
+            }
+            if (!store || !store.getCartData) return;
+            wp.data.subscribe(function() {
+                var data = store.getCartData();
+                self.sendBasket(data && data.extensions && data.extensions.pureclarity);
+            });
+        };
+        if (document.readyState === 'complete') {
+            watchStore();
+        } else {
+            window.addEventListener('load', watchStore);
+        }
+    },
+    sendBasket: function(cart) {
+        if (cart && cart.id && cart.id != this.getCookie("pc_cart_id")) {
+            this.setCookie("pc_cart_id", cart.id);
+            _pc("set_basket", cart.items);
+        }
     },
     getCookie: function(cname) {
         var name = cname + "=";

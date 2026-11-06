@@ -187,6 +187,14 @@ class PureClarity_Bmz {
 				),
 				10
 			);
+			// The Cart block does not run the classic cart template hooks.
+			add_filter(
+				'render_block_woocommerce/cart',
+				array(
+					$this,
+					'cart_block',
+				)
+			);
 		}
 
 		// Order Received Page Zones.
@@ -371,6 +379,26 @@ class PureClarity_Bmz {
 				'id'   => 'BP-02',
 				'top'  => '10',
 				'echo' => true,
+			)
+		);
+	}
+
+	/**
+	 * Adds cart page zones around the Cart block
+	 *
+	 * @param string $block_content - rendered Cart block.
+	 * @return string
+	 */
+	public function cart_block( $block_content ) {
+		return $this->pureclarity_render_bmz(
+			array(
+				'id'     => 'BP-01',
+				'bottom' => '10',
+			)
+		) . $block_content . $this->pureclarity_render_bmz(
+			array(
+				'id'  => 'BP-02',
+				'top' => '10',
 			)
 		);
 	}
