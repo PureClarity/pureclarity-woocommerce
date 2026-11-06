@@ -22,6 +22,7 @@ try {
 	}
 
 	require_once PURECLARITY_INCLUDES_PATH . 'php-sdk' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
+	\PureClarity\Api\Transfer\Curl::setFallbackCaBundle( ABSPATH . WPINC . '/certificates/ca-bundle.crt' );
 
 	$access_key = get_option( 'pureclarity_accesskey' );
 	$secret_key = get_option( 'pureclarity_secretkey' );

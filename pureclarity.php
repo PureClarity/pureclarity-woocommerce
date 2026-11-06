@@ -48,6 +48,7 @@ if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 	require_once PURECLARITY_INCLUDES_PATH . 'class-pureclarity-plugin.php';
 	// include classes.
 	require_once PURECLARITY_INCLUDES_PATH . 'php-sdk' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
+	\PureClarity\Api\Transfer\Curl::setFallbackCaBundle( ABSPATH . WPINC . '/certificates/ca-bundle.crt' );
 	require_once PURECLARITY_PATH . 'functions.php';
 	$pureclarity = new PureClarity_Plugin();
 }
