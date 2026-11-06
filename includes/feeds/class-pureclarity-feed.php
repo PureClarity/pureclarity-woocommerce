@@ -737,7 +737,7 @@ class PureClarity_Feed {
 		$args = array(
 			'status'       => array( 'processing', 'completed' ),
 			'type'         => 'shop_order',
-			'date_created' => '>' . date( 'Y-m-d', strtotime( '-3 month' ) ),
+			'date_created' => '>' . gmdate( 'Y-m-d', strtotime( '-3 month' ) ),
 			'paginate'     => true,
 		);
 
@@ -757,29 +757,25 @@ class PureClarity_Feed {
 	 */
 	public function get_orders( $current_page, $page_size ) {
 
-		global $wpdb;
+		$order_data = array();
 
-		$order_data  = array();
-		$page_offset = $page_size * ( $current_page - 1 );
-
-		$result = (array) $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT ID FROM $wpdb->posts 
-		            WHERE post_type = 'shop_order'
-           			AND post_status IN (%s,%s)
-		            AND post_date > NOW() - INTERVAL 3 MONTH
-					ORDER BY post_date DESC
-					LIMIT %d
-					OFFSET %d
-		        ",
-				array( 'wc-processing', 'wc-completed', $page_size, $page_offset )
-			),
-			ARRAY_A
+		// Uses wc_get_orders so it works with both posts and HPOS order storage.
+		$order_ids = wc_get_orders(
+			array(
+				'status'       => array( 'processing', 'completed' ),
+				'type'         => 'shop_order',
+				'date_created' => '>' . gmdate( 'Y-m-d', strtotime( '-3 month' ) ),
+				'orderby'      => 'date',
+				'order'        => 'DESC',
+				'limit'        => $page_size,
+				'page'         => $current_page,
+				'return'       => 'ids',
+			)
 		);
 
-		foreach ( $result as $order_id ) {
-			$order = wc_get_order( $order_id['ID'] );
-			$this->log_debug( 'order', 'Processing order ' . $order_id['ID'] );
+		foreach ( $order_ids as $order_id ) {
+			$order = wc_get_order( $order_id );
+			$this->log_debug( 'order', 'Processing order ' . $order_id );
 			/** WooCommerce Order Class. @var WC_Order $order */
 			$order_lines = array();
 			foreach ( $order->get_items() as $item_id => $item ) {
@@ -792,7 +788,8 @@ class PureClarity_Feed {
 					}
 				}
 				$unit_price = $order->get_item_total( $item, false, false );
-				$line_price = $order->get_item_subtotal( $item, true, false );
+				// PureClarity derives the unit price as LinePrice / Quantity, so this must be the line total.
+				$line_price = $order->get_line_total( $item, false, false );
 				if ( $unit_price > 0 && $line_price > 0 && $item->get_product_id() && ceil( $item['qty'] ) > 0 ) {
 					$order_lines[] = array(
 						'OrderID'   => $order->get_id(),
