@@ -56,6 +56,14 @@ class PureClarity_Signup {
 
 		if ( '1' !== $this->get_pureclarity_state( 'signup_started' ) ) {
 			$this->update_pureclarity_state( 'signup_started', '1' );
+
+			// The signup request can wait 30 seconds for PureClarity. On Windows that wait counts towards
+			// max_execution_time, so give it time to finish: otherwise PHP stops it with signup_started still set.
+			$time_limit = (int) ini_get( 'max_execution_time' );
+			if ( $time_limit > 0 && $time_limit < 60 && function_exists( 'set_time_limit' ) ) {
+				@set_time_limit( 60 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- hosts can forbid it.
+			}
+
 			$result = $this->submit_signup( $params );
 			$response = array(
 				'error'   => $result['errors'],
