@@ -99,16 +99,6 @@ class PureClarity_Settings_Page {
 			'value_cb'    => 'get_secret_key',
 		);
 
-		$region_field = array(
-			'name'        => 'pureclarity_region',
-			'label_for'   => 'pureclarity_region',
-			'label'       => 'Region',
-			'type'        => 'select',
-			'description' => 'Select the region for your PureClarity enviroment',
-			'value_cb'    => 'get_region',
-			'options'     => $this->settings->get_display_regions(),
-		);
-
 		$mode_select = array(
 			'name'        => 'pureclarity_mode',
 			'label_for'   => 'pureclarity_mode',
@@ -238,7 +228,6 @@ class PureClarity_Settings_Page {
 			$env_subheading,
 			$access_key_field,
 			$secret_key_field,
-			$region_field,
 			$mode_select,
 			$feeds_subheading,
 			$deltas_enabled_checkbox,

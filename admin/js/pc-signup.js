@@ -117,18 +117,6 @@
 			timezoneErr.css('display', 'none');
 		}
 
-		// Region
-		let region = $('#pc-sign-up-region');
-		let regionErr = $('#pc-sign-up-region-error');
-		if (region.val() === '') {
-			isValid = false;
-			region.addClass('pc-error');
-			regionErr.css('display', 'inline-block');
-		} else {
-			region.removeClass('pc-error');
-			regionErr.css('display', 'none');
-		}
-
 		if (isValid && !signupSubmitted) {
 			signupSubmitted = true;
 			$('#pc-sign-up').fadeOut(200, function () {
@@ -176,15 +164,6 @@
 			secretKey.addClass('pc-error');
 		} else {
 			secretKey.removeClass('pc-error');
-		}
-
-		// Region
-		let region = $('#pc-details-region');
-		if (region.val() === '') {
-			isValid = false;
-			region.addClass('pc-error');
-		} else {
-			region.removeClass('pc-error');
 		}
 
 		if (isValid) {

@@ -47,7 +47,7 @@ class PureClarity_Signup {
 			'password'   => isset( $_POST['password'] ) ? sanitize_text_field( wp_unslash( $_POST['password'] ) ) : '',
 			'url'        => isset( $_POST['url'] ) ? sanitize_text_field( wp_unslash( $_POST['url'] ) ) : '',
 			'store_name' => isset( $_POST['store_name'] ) ? sanitize_text_field( wp_unslash( $_POST['store_name'] ) ) : '',
-			'region'     => isset( $_POST['region'] ) ? sanitize_text_field( wp_unslash( $_POST['region'] ) ) : '',
+			'region'     => '1',
 			'currency'   => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
 			'timezone'   => isset( $_POST['timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['timezone'] ) ) : '',
 			'phone'      => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
@@ -149,7 +149,7 @@ class PureClarity_Signup {
 		$params = array(
 			'access_key' => isset( $_POST['access_key'] ) ? sanitize_text_field( wp_unslash( $_POST['access_key'] ) ) : '',
 			'secret_key' => isset( $_POST['secret_key'] ) ? sanitize_text_field( wp_unslash( $_POST['secret_key'] ) ) : '',
-			'region'     => isset( $_POST['region'] ) ? sanitize_text_field( wp_unslash( $_POST['region'] ) ) : '',
+			'region'     => '1',
 		);
 
 		$result = $this->process_manual_configure( $params );
@@ -206,10 +206,6 @@ class PureClarity_Signup {
 
 		if ( ! isset( $request_data['secret_key'] ) || empty( $request_data['secret_key'] ) ) {
 			$errors[] = 'Missing Secret Key';
-		}
-
-		if ( ! isset( $request_data['region'] ) || empty( $request_data['region'] ) ) {
-			$errors[] = 'Missing Region';
 		}
 
 		return $errors;

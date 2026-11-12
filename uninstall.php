@@ -30,7 +30,7 @@ try {
 		$delete = new PureClarity\Api\Delete\Submit(
 			$access_key,
 			$secret_key,
-			get_option( 'pureclarity_region' )
+			1
 		);
 
 		$delete->request();

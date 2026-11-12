@@ -7,7 +7,6 @@
  */
 
 use PureClarity\Api\Feed\Feed;
-use PureClarity\Api\Resource\Regions;
 use PureClarity\Api\Resource\Timezones;
 
 /**
@@ -521,16 +520,6 @@ class PureClarity_Dashboard_Page {
 	 */
 	public function get_store_currency() {
 		return get_woocommerce_currency();
-	}
-
-	/**
-	 * Gets an array of supported timezones from the PureClarity SDK
-	 *
-	 * @return array
-	 */
-	public function get_pureclarity_regions() {
-		$region_class = new Regions();
-		return $region_class->getRegionLabels();
 	}
 
 	/**

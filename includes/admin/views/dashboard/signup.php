@@ -120,17 +120,7 @@
 								</select>
 								<span class="pc-error-message" id="pc-sign-up-timezone-error"><?php esc_html_e( 'Please choose a timezone', 'pureclarity' ); ?></span>
 							</p>
-							<p class="pc-field">
-								<label class="label" for="pc-sign-up-region"><?php esc_html_e( 'Region' ); ?></label>
-								<select name="region" id="pc-sign-up-region">
-									<?php foreach ( $this->get_pureclarity_regions() as $region ) : ?>
-										<option value="<?php echo esc_attr( $region['value'] ); ?>">
-											<?php echo esc_html( $region['label'] ); ?>
-										</option>
-									<?php endforeach ?>
-								</select>
-								<span class="pc-error-message" id="pc-sign-up-region-error"><?php esc_html_e( 'Please choose a Region', 'pureclarity' ); ?></span>
-							</p>
+
 						</div>
 						<div id="pc-sign-up-response-holder">&nbsp;</div>
 						<div class="pc-sign-up-submit-button">
@@ -162,16 +152,7 @@
 					<label for="pc-details-secret-key"><?php esc_html_e( 'Secret Key', 'pureclarity' ); ?></label>
 					<input type="text" name="secret_key" id="pc-details-secret-key"/>
 				</p>
-				<p class="pc-field">
-					<label for="pc-details-region"><?php esc_html_e( 'Region', 'pureclarity' ); ?></label>
-					<select name="region" id="pc-details-region">
-						<?php foreach ( $this->get_pureclarity_regions() as $region ) : ?>
-							<option value="<?php echo esc_attr( $region['value'] ); ?>">
-								<?php echo esc_html( $region['label'] ); ?>
-							</option>
-						<?php endforeach ?>
-					</select>
-				</p>
+
 			</div>
 			<div id="pc-link-account-response-holder">&nbsp;</div>
 			<div class="pc-link-account-submit-button">
