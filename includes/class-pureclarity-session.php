@@ -228,35 +228,18 @@ class PureClarity_Session {
 	 */
 	public function set_cart() {
 
-		$items      = array();
-		$cart_items = WC()->cart->get_cart();
-		$cart_id    = time();
-
-		if ( empty( $cart_items ) && isset( $_COOKIE['pc_empty_cart'] ) ) {
-			$cart_id = (int) $_COOKIE['pc_empty_cart'];
+		$items = array();
+		foreach ( WC()->cart->get_cart() as $cart_item ) {
+			$items[] = array(
+				'id'        => $cart_item['product_id'],
+				'qty'       => ceil( $cart_item['quantity'] ),
+				'unitprice' => wc_format_decimal( $cart_item['data']->get_price(), wc_get_price_decimals() ),
+			);
 		}
 
-		if ( ! empty( $cart_items ) ) {
-			foreach ( $cart_items as $cart_item_key => $cart_item ) {
-				$item    = array(
-					'id'        => $cart_item['product_id'],
-					'qty'       => ceil( $cart_item['quantity'] ),
-					'unitprice' => get_post_meta( $cart_item['product_id'], '_price', true ),
-				);
-				$items[] = $item;
-			}
-
-			if ( isset( $_COOKIE['pc_empty_cart'] ) ) {
-				$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
-				wc_setcookie( 'pc_empty_cart', $cart_id, time() - YEAR_IN_SECONDS, $secure, true );
-			}
-		} else {
-			$secure = apply_filters( 'wc_session_use_secure_cookie', wc_site_is_https() && is_ssl() );
-			wc_setcookie( 'pc_empty_cart', $cart_id, time() + YEAR_IN_SECONDS, $secure, true );
-		}
-
+		// The id is derived from the contents, so the browser sends set_basket only when the basket actually changes.
 		$this->cart = array(
-			'id'    => $cart_id,
+			'id'    => md5( wp_json_encode( $items ) ),
 			'items' => $items,
 		);
 

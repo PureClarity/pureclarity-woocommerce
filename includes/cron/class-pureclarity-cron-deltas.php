@@ -162,7 +162,7 @@ class PureClarity_Cron_Deltas {
 				foreach ( $deltas as $user ) {
 					$id = $user['id'];
 
-					$user_data = $this->feed->parse_user( $id );
+					$user_data = $this->feed->parse_user( get_userdata( $id ) );
 					if ( ! empty( $user_data ) ) {
 						$this->log_debug( 'user', 'Sending update delta for user ' . $id );
 						$delta_handler->addData( $user_data );

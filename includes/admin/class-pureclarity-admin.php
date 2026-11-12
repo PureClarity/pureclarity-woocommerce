@@ -297,7 +297,7 @@ class PureClarity_Admin {
 			try {
 				$feedback = new \PureClarity\Api\NextSteps\Complete(
 					$this->settings->get_access_key(),
-					$this->settings->get_secret_key(),
+					$action_id,
 					(int) $this->settings->get_region()
 				);
 
