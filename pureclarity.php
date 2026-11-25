@@ -41,7 +41,7 @@ if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 	add_action(
 		'admin_notices',
 		function() {
-			echo '<div class="error notice"><p>' . esc_html_e( 'The PureClarity plugin requires WooCommerce to be enabled.', 'pureclarity' ) . '</p></div>';
+			echo '<div class="error notice"><p>' . esc_html__( 'The PureClarity plugin requires WooCommerce to be enabled.', 'pureclarity' ) . '</p></div>';
 		}
 	);
 } else {
